@@ -122,10 +122,10 @@ export default function ReportsPage() {
           {/* Primary Action Button: [ Export Audit Report (PDF) ] */}
           <button
             onClick={handlePrint}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold font-mono transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold font-mono transition-all ${
               isMorning
-                ? 'bg-[#c51636] hover:bg-[#a8132e] text-white shadow-sm'
-                : 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                ? 'bg-[#c51636] hover:bg-[#a8132e] text-white shadow-xs'
+                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs'
             }`}
           >
             <Printer className="h-3.5 w-3.5" />
@@ -141,8 +141,8 @@ export default function ReportsPage() {
         <div
           className={`rounded-2xl border backdrop-blur-xl p-6 space-y-6 transition-all ${
             isMorning
-              ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
-              : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+              ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
+              : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
           }`}
         >
           <div className={`flex flex-col md:flex-row md:items-center justify-between gap-5 border-b pb-5 ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>

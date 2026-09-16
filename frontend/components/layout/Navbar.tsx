@@ -32,8 +32,8 @@ export function Navbar() {
       <div
         className={`flex h-14 items-center justify-between px-5 rounded-2xl backdrop-blur-xl transition-all ${
           isMorning
-            ? 'bg-white/85 border border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
-            : 'bg-slate-900/60 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+            ? 'bg-white border border-[#eadbce] shadow-xs text-[#1c1917]'
+            : 'bg-slate-900/60 border border-white/10 shadow-sm text-white'
         }`}
       >
         {/* Brand & Organization */}
@@ -42,8 +42,8 @@ export function Navbar() {
             <div
               className={`flex h-9 w-9 items-center justify-center rounded-xl transition-all ${
                 isMorning
-                  ? 'bg-rose-50 border border-rose-200 text-[#c51636]'
-                  : 'bg-gradient-to-br from-emerald-500/20 to-indigo-500/20 border border-emerald-500/30 text-emerald-400'
+                  ? 'bg-[#fcfaf6] border border-[#eadbce] text-[#c51636]'
+                  : 'bg-white/[0.04] border border-white/10 text-white'
               }`}
             >
               <Shield className="h-4 w-4" />
@@ -53,7 +53,7 @@ export function Navbar() {
                 Fin-Sentinel
                 <span
                   className={`h-2 w-2 rounded-full ${
-                    isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'
+                    isMorning ? 'bg-[#ffffff]' : 'bg-emerald-400'
                   }`}
                 />
               </span>
@@ -72,7 +72,7 @@ export function Navbar() {
                   : 'bg-white/[0.04] hover:bg-white/[0.07] border border-white/10'
               }`}
             >
-              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`} />
+            
               <span className={`text-[11px] font-medium ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>ORG:</span>
               <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
                 Acme Manufacturing Pvt. Ltd.

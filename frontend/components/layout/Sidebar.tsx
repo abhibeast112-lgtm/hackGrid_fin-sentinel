@@ -48,7 +48,7 @@ export function Sidebar() {
       active: isReports,
       badge: 'SOX Ready',
       badgeClass: isMorning
-        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+        ? ' border border-emerald-200'
         : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
     },
   ];
@@ -57,8 +57,8 @@ export function Sidebar() {
     <aside
       className={`w-64 shrink-0 mx-4 md:ml-6 md:mr-0 my-2 rounded-2xl backdrop-blur-xl flex flex-col justify-between p-4 select-none transition-all ${
         isMorning
-          ? 'bg-white/85 border border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
-          : 'bg-slate-900/60 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+          ? 'bg-white border border-[#eadbce] shadow-xs text-[#1c1917]'
+          : 'bg-slate-900/60 border border-white/10 shadow-sm text-white'
       }`}
     >
       <div className="space-y-6">
@@ -125,9 +125,7 @@ export function Sidebar() {
               <Cpu className={`h-4 w-4 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`} />
               <span>Agent Core Mesh</span>
             </div>
-            <span
-              className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`}
-            />
+            
           </div>
 
           <div className={`space-y-1.5 text-xs font-mono pt-1 border-t ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/5 text-slate-400'}`}>

@@ -36,8 +36,8 @@ export function CashflowTrendChart() {
     <div
       className={`rounded-2xl border backdrop-blur-md p-6 transition-all ${
         isMorning
-          ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
-          : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+          ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
+          : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
       }`}
     >
       {/* Chart Header */}
@@ -48,13 +48,13 @@ export function CashflowTrendChart() {
               Cash Outflow & Anomaly Envelope
             </h3>
             <span
-              className={`px-3 py-1 rounded-full text-xs font-mono font-semibold flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-full text-xs font-mono font-medium flex items-center gap-1.5 ${
                 isMorning
-                  ? 'bg-rose-100 text-[#c51636] border border-rose-200'
-                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                  ? 'bg-rose-50 text-rose-800 border border-rose-200'
+                  : 'bg-slate-800/90 text-rose-400 border border-rose-500/20'
               }`}
             >
-              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-rose-400'}`} />
+              <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-rose-600' : 'bg-rose-500'}`} />
               +18.4% Variance Detected
             </span>
           </div>
@@ -82,11 +82,11 @@ export function CashflowTrendChart() {
           <AreaChart data={CASHFLOW_TREND_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>
               <linearGradient id="chartRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={isMorning ? '#059669' : '#10b981'} stopOpacity={isMorning ? 0.25 : 0.35} />
+                <stop offset="5%" stopColor={isMorning ? '#059669' : '#10b981'} stopOpacity={isMorning ? 0.15 : 0.14} />
                 <stop offset="95%" stopColor={isMorning ? '#059669' : '#10b981'} stopOpacity={0.0} />
               </linearGradient>
               <linearGradient id="chartExpense" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={isMorning ? '#c51636' : '#6366f1'} stopOpacity={isMorning ? 0.3 : 0.35} />
+                <stop offset="5%" stopColor={isMorning ? '#c51636' : '#6366f1'} stopOpacity={isMorning ? 0.15 : 0.14} />
                 <stop offset="95%" stopColor={isMorning ? '#c51636' : '#6366f1'} stopOpacity={0.0} />
               </linearGradient>
             </defs>
@@ -113,7 +113,7 @@ export function CashflowTrendChart() {
                 fontSize: '13px',
                 color: isMorning ? '#1c1917' : '#ffffff',
                 fontFamily: 'monospace',
-                boxShadow: isMorning ? '0 8px 24px rgba(197,22,54,0.08)' : '0 10px 30px rgba(0,0,0,0.5)',
+                boxShadow: isMorning ? '0 4px 12px rgba(0,0,0,0.06)' : '0 8px 24px rgba(0,0,0,0.4)',
               }}
               formatter={(value: any, name: any) => [
                 name === 'anomalies' ? `₹${value} L` : `₹${value} Cr`,
@@ -158,8 +158,8 @@ export function CashflowTrendChart() {
           <AlertTriangle className={`h-4 w-4 shrink-0 ${isMorning ? 'text-[#c51636]' : 'text-amber-400'}`} />
           <span>Outflow increased ₹20.4L above baseline due to duplicate ERP batch generation</span>
         </div>
-        <span className={`font-semibold flex items-center gap-1.5 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
-          <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-emerald-600' : 'bg-emerald-400'}`} />
+        <span className={`font-medium flex items-center gap-1.5 ${isMorning ? 'text-stone-600' : 'text-slate-400'}`}>
+          <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-stone-500' : 'bg-emerald-500'}`} />
           Surveillance Stream Active: 142 tx/min
         </span>
       </div>

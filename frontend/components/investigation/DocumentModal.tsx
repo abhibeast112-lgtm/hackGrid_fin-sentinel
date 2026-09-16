@@ -18,7 +18,7 @@ export function DocumentModal({ document, onClose }: DocumentModalProps) {
         {/* Header */}
         <div className="flex items-start justify-between border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
               <FileText className="h-5 w-5" />
             </div>
             <div>
@@ -81,7 +81,7 @@ export function DocumentModal({ document, onClose }: DocumentModalProps) {
             </button>
             <button
               onClick={() => alert(`Downloaded verification payload for ${document.filename}`)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-sm transition-all"
             >
               <Download className="h-3.5 w-3.5" />
               Download RAW

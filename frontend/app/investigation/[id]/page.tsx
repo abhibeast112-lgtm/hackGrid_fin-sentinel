@@ -305,8 +305,8 @@ export default function InvestigationRoomPage() {
           <div
             className={`rounded-2xl border backdrop-blur-xl p-5 transition-all ${
               isMorning
-                ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
-                : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+                ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
+                : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
             }`}
           >
             
@@ -489,8 +489,8 @@ export default function InvestigationRoomPage() {
           <div
             className={`rounded-2xl border backdrop-blur-xl p-5 transition-all ${
               isMorning
-                ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
-                : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+                ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
+                : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
             }`}
           >
             <div className="flex items-start justify-between gap-4">
@@ -731,8 +731,8 @@ export default function InvestigationRoomPage() {
           <div
             className={`sticky top-20 rounded-2xl border backdrop-blur-xl p-5 space-y-5 transition-all ${
               isMorning
-                ? 'bg-white/90 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.06)] text-[#1c1917]'
-                : 'bg-slate-900/70 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] text-white'
+                ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
+                : 'bg-slate-900/70 border-white/10 shadow-sm text-white'
             }`}
           >
             
@@ -850,7 +850,7 @@ export default function InvestigationRoomPage() {
                   allGatesCompleted
                     ? isMorning
                       ? 'text-white bg-[#c51636] hover:bg-[#a8132e] shadow-sm active:scale-[0.98]'
-                      : 'text-white bg-rose-600 hover:bg-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.35)] active:scale-[0.98]'
+                      : 'text-white bg-rose-600 hover:bg-rose-500 shadow-sm active:scale-[0.98]'
                     : isMorning
                     ? 'text-[#a8a29e] bg-stone-100 border border-stone-200 cursor-not-allowed'
                     : 'text-slate-500 bg-white/[0.04] border border-white/5 cursor-not-allowed'
@@ -869,7 +869,7 @@ export default function InvestigationRoomPage() {
                   allGatesCompleted
                     ? isMorning
                       ? 'text-white bg-amber-600 hover:bg-amber-700 shadow-sm active:scale-[0.98]'
-                      : 'text-slate-950 bg-amber-400 hover:bg-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.35)] active:scale-[0.98]'
+                      : 'text-slate-950 bg-amber-400 hover:bg-amber-300 shadow-sm active:scale-[0.98]'
                     : isMorning
                     ? 'text-[#a8a29e] bg-stone-100 border border-stone-200 cursor-not-allowed'
                     : 'text-slate-500 bg-white/[0.04] border border-white/5 cursor-not-allowed'
@@ -888,7 +888,7 @@ export default function InvestigationRoomPage() {
                   allGatesCompleted
                     ? isMorning
                       ? 'text-white bg-emerald-700 hover:bg-emerald-800 shadow-sm active:scale-[0.98]'
-                      : 'text-white bg-emerald-500 hover:bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.35)] active:scale-[0.98]'
+                      : 'text-white bg-emerald-600 hover:bg-emerald-500 shadow-sm active:scale-[0.98]'
                     : isMorning
                     ? 'text-[#a8a29e] bg-stone-100 border border-stone-200 cursor-not-allowed'
                     : 'text-slate-500 bg-white/[0.04] border border-white/5 cursor-not-allowed'

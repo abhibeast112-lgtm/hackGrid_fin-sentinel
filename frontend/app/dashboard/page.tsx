@@ -62,13 +62,13 @@ export default function DashboardPage() {
               Executive Control Tower
             </h1>
             <span
-              className={`hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold ${
+              className={`hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium ${
                 isMorning
-                  ? 'bg-rose-100 text-[#c51636] border border-rose-200'
-                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                  ? 'bg-stone-100 text-stone-700 border border-stone-200'
+                  : 'bg-slate-800/80 text-slate-300 border border-white/10'
               }`}
             >
-              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`} />
+              <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-stone-500' : 'bg-emerald-500'}`} />
               Surveillance Mesh Active
             </span>
           </div>
@@ -100,17 +100,17 @@ export default function DashboardPage() {
         <div
           className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
             isMorning
-              ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] hover:border-[#dfcebe]'
-              : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-white/20'
+              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
           }`}
         >
           <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>TOTAL CASH POSITION</span>
             <span
-              className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${
+              className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
                 isMorning
-                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                  : 'bg-slate-800/90 text-emerald-400 border border-emerald-500/20'
               }`}
             >
               <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
@@ -130,17 +130,17 @@ export default function DashboardPage() {
         <div
           className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
             isMorning
-              ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] hover:border-[#dfcebe]'
-              : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-white/20'
+              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
           }`}
         >
           <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>MONTHLY REVENUE</span>
             <span
-              className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${
+              className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
                 isMorning
-                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                  : 'bg-slate-800/90 text-emerald-400 border border-emerald-500/20'
               }`}
             >
               <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
@@ -152,71 +152,71 @@ export default function DashboardPage() {
           </div>
           <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
             <span>Target: ₹1.62 Cr</span>
-            <span className={`font-mono font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>112% Target</span>
+            <span className={`font-mono font-medium ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>112% Target</span>
           </div>
         </div>
 
-        {/* Card 3: Monthly Expenses (Amber warning badge) */}
+        {/* Card 3: Monthly Expenses */}
         <div
           className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
             isMorning
-              ? 'bg-white/85 border-amber-200/80 shadow-[0_4px_20px_rgba(217,119,6,0.05)] hover:border-amber-300'
-              : 'bg-slate-900/60 border-amber-500/25 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-amber-500/40'
+              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
           }`}
         >
           <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>MONTHLY EXPENSES</span>
             <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
                 isMorning
-                  ? 'bg-amber-100 text-amber-900 border border-amber-300'
-                  : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
+                  ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                  : 'bg-slate-800/90 text-amber-400 border border-amber-500/20'
               }`}
             >
               <AlertTriangle className="h-3 w-3" />
               +18.4%
             </span>
           </div>
-          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#c51636]' : 'text-amber-200'}`}>
+          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
             ₹1.31 Cr
           </div>
           <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
-            <span className={isMorning ? 'text-[#c51636] font-medium' : 'text-amber-400 font-medium'}>Budget Inflection</span>
+            <span className={isMorning ? 'text-amber-800 font-medium' : 'text-amber-400 font-medium'}>Budget Inflection</span>
             <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>+₹20.4 L delta</span>
           </div>
         </div>
 
-        {/* Card 4: Active Exceptions Flagged (Red badge) */}
+        {/* Card 4: Active Exceptions Flagged */}
         <div
           className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
             isMorning
-              ? 'bg-white/85 border-rose-200 shadow-[0_4px_20px_rgba(197,22,54,0.08)] hover:border-rose-300'
-              : 'bg-slate-900/60 border-rose-500/30 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-rose-500/50'
+              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
           }`}
         >
           <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>ACTIVE EXCEPTIONS</span>
             <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
                 isMorning
-                  ? 'bg-rose-100 text-[#c51636] border border-rose-200'
-                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
+                  ? 'bg-rose-50 text-rose-800 border border-rose-200'
+                  : 'bg-slate-800/90 text-rose-400 border border-rose-500/20'
               }`}
             >
-              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-rose-500'}`} />
+              <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-rose-600' : 'bg-rose-500'}`} />
               3 Critical
             </span>
           </div>
           <div className="mt-3 flex items-baseline justify-between">
-            <span className={`text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>
+            <span className={`text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
               {activeExceptionsCount} Pending
             </span>
-            <span className={`text-xs font-mono font-bold ${isMorning ? 'text-[#1c1917]' : 'text-slate-300'}`}>
+            <span className={`text-xs font-mono font-medium ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
               ₹{(totalAtRisk / 1000).toFixed(1)}k At Risk
             </span>
           </div>
           <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
-            <span className={isMorning ? 'text-[#c51636] font-medium' : 'text-rose-400 font-medium'}>Tiered Gates Armed</span>
+            <span className={isMorning ? 'text-rose-800 font-medium' : 'text-rose-400 font-medium'}>Tiered Gates Armed</span>
             <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>SOX Escalation</span>
           </div>
         </div>
