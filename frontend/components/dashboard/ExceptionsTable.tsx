@@ -4,17 +4,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { FinancialException } from '@/lib/types';
 import { 
-  AlertTriangle, 
-  ShieldAlert, 
-  ArrowRight, 
   Search, 
-  Filter, 
-  Clock, 
+  ArrowRight, 
   CheckCircle2, 
   XCircle, 
-  FileSearch,
-  Check,
-  Building2
+  Clock, 
+  Building2,
+  AlertTriangle
 } from 'lucide-react';
 
 interface ExceptionsTableProps {
@@ -22,7 +18,7 @@ interface ExceptionsTableProps {
   onRefresh?: () => void;
 }
 
-export function ExceptionsTable({ exceptions, onRefresh }: ExceptionsTableProps) {
+export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRisk, setSelectedRisk] = useState<string>('ALL');
 
@@ -41,204 +37,177 @@ export function ExceptionsTable({ exceptions, onRefresh }: ExceptionsTableProps)
     return matchesSearch && matchesRisk;
   });
 
-  const getRiskBadge = (score: number, level: string) => {
-    if (score >= 90) {
-      return (
-        <div className="flex items-center gap-1.5">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
-          </span>
-          <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-rose-950/70 border border-rose-600/50 text-rose-300 shadow-sm shadow-rose-950">
-            {level} ({score}%)
-          </span>
-        </div>
-      );
-    }
+  const renderRiskBadge = (score: number, level: string) => {
     if (score >= 80) {
       return (
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-rose-400" />
-          <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-rose-950/50 border border-rose-500/40 text-rose-300">
-            {level} ({score}%)
-          </span>
-        </div>
+        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+          <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+          {level} ({score}%)
+        </span>
       );
     }
     return (
-      <div className="flex items-center gap-1.5">
-        <span className="h-2 w-2 rounded-full bg-amber-400" />
-        <span className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-amber-950/60 border border-amber-500/40 text-amber-300">
-          {level} ({score}%)
-        </span>
-      </div>
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono font-medium bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#EBAE29]" />
+        {level} ({score}%)
+      </span>
     );
   };
 
-  const getStatusBadge = (status: string) => {
+  const renderStatusBadge = (status: string) => {
     if (status.includes('Resolved: REJECT') || status.includes('RESOLVED_REJECT')) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono bg-rose-900/30 text-rose-300 border border-rose-800">
-          <XCircle className="h-3.5 w-3.5 text-rose-400" />
-          Blocked / Rejected
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-mono bg-red-500/10 text-red-400 border border-red-500/20">
+          <XCircle className="h-3 w-3" />
+          Blocked
         </span>
       );
     }
     if (status.includes('Resolved: APPROVE') || status.includes('RESOLVED_APPROVE')) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-900/30 text-emerald-300 border border-emerald-800">
-          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-          Approved by Controller
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20">
+          <CheckCircle2 className="h-3 w-3" />
+          Approved
         </span>
       );
     }
     if (status.includes('Resolved: ESCALATE') || status.includes('RESOLVED_ESCALATE')) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono bg-amber-900/30 text-amber-300 border border-amber-800">
-          <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
-          Escalated to CFO
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20">
+          <AlertTriangle className="h-3 w-3" />
+          Escalated
         </span>
       );
     }
-
     if (status === 'Challenge Phase') {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-indigo-950/60 text-indigo-300 border border-indigo-700/60">
-          <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
+        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#EBAE29]" />
           Challenge Phase
         </span>
       );
     }
-
     if (status === 'Evidence Ready') {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-cyan-950/60 text-cyan-300 border border-cyan-700/60">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#589C80]" />
           Evidence Ready
         </span>
       );
     }
-
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-slate-800/80 text-amber-300 border border-amber-600/40">
-        <Clock className="h-3.5 w-3.5 text-amber-400 animate-spin" />
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#172a31] text-[#8aa1aa] border border-[#233c46]">
+        <Clock className="h-3 w-3 text-[#8aa1aa]" />
         Awaiting Review
       </span>
     );
   };
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/90 shadow-xl overflow-hidden">
-      {/* Table Header Controls */}
-      <div className="p-4 border-b border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 bg-slate-950/40">
+    <div className="rounded-md border border-[#233c46] bg-[#172a31] overflow-hidden">
+      {/* Header & Filter Controls */}
+      <div className="p-4 border-b border-[#233c46] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-rose-500" />
-            <h2 className="text-base font-bold text-slate-100 font-[family-name:var(--font-display)] tracking-wide">
+            <h2 className="text-sm font-semibold text-[#F5EED2]">
               Critical Exceptions Table
             </h2>
-            <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-[#C50337]/20 border border-[#C50337]/40 text-rose-300 font-bold">
+            <span className="px-2 py-0.2 rounded-sm text-[11px] font-mono bg-[#132228] text-[#8aa1aa] border border-[#233c46]">
               {filteredExceptions.length} Anomaly Events
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Active cross-ledger variances intercepted by Autonomous Sentinel Agents prior to ERP clearing.
+          <p className="text-xs text-[#8aa1aa] mt-0.5">
+            Active variances intercepted prior to payment clearing
           </p>
         </div>
 
-        {/* Filter & Search Toolbar */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+        {/* Toolbar */}
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           {/* Risk Level Toggles */}
-          <div className="flex items-center rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs font-mono">
+          <div className="flex items-center rounded-sm bg-[#0e181c] p-0.5 border border-[#233c46] text-xs font-mono">
             <button
               onClick={() => setSelectedRisk('ALL')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`px-2 py-0.5 rounded-sm transition-colors ${
                 selectedRisk === 'ALL'
-                  ? 'bg-slate-800 text-white font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-[#172a31] text-[#F5EED2] font-medium'
+                  : 'text-[#8aa1aa] hover:text-[#F5EED2]'
               }`}
             >
               All
             </button>
             <button
               onClick={() => setSelectedRisk('HIGH')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`px-2 py-0.5 rounded-sm transition-colors ${
                 selectedRisk === 'HIGH'
-                  ? 'bg-rose-900/80 text-rose-200 font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-rose-300'
+                  ? 'bg-red-500/10 text-red-400 font-medium'
+                  : 'text-[#8aa1aa] hover:text-red-400'
               }`}
             >
-              High Risk (&gt;80%)
+              High Risk
             </button>
             <button
               onClick={() => setSelectedRisk('MED')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`px-2 py-0.5 rounded-sm transition-colors ${
                 selectedRisk === 'MED'
-                  ? 'bg-amber-900/80 text-amber-200 font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-amber-300'
+                  ? 'bg-[#EBAE29]/10 text-[#EBAE29] font-medium'
+                  : 'text-[#8aa1aa] hover:text-[#EBAE29]'
               }`}
             >
               Med Risk
             </button>
           </div>
 
-          {/* Quick Search */}
+          {/* Search Input */}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#8aa1aa]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter vendor / invoice..."
-              className="h-8 pl-8 pr-3 rounded-md bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-[#C50337] w-44 lg:w-56"
+              placeholder="Filter table..."
+              className="h-7 pl-8 pr-3 rounded-sm bg-[#0e181c] border border-[#233c46] text-xs text-[#F5EED2] placeholder:text-[#6c858f] focus:outline-none focus:border-[#EBAE29] w-36 sm:w-48"
             />
           </div>
         </div>
       </div>
 
-      {/* Main Table Container */}
+      {/* Table with comfortable spacing and flat styling */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-slate-800 bg-slate-950/70 text-slate-400 uppercase tracking-wider font-mono text-[11px]">
-              <th className="py-3 px-4 font-semibold">Risk Level</th>
-              <th className="py-3 px-4 font-semibold">Exception Type</th>
-              <th className="py-3 px-4 font-semibold">Affected Vendor</th>
-              <th className="py-3 px-4 font-semibold">Amount at Risk</th>
-              <th className="py-3 px-4 font-semibold">Agent Pipeline Status</th>
-              <th className="py-3 px-4 font-semibold text-right">Action</th>
+            <tr className="border-b border-[#233c46] bg-[#0e181c] text-[#8aa1aa] font-mono text-[11px] uppercase tracking-wider">
+              <th className="py-3 px-4 font-medium">Risk Level</th>
+              <th className="py-3 px-4 font-medium">Exception Type</th>
+              <th className="py-3 px-4 font-medium">Affected Vendor</th>
+              <th className="py-3 px-4 font-medium">Amount at Risk</th>
+              <th className="py-3 px-4 font-medium">Agent Pipeline Status</th>
+              <th className="py-3 px-4 font-medium text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 font-[family-name:var(--font-sans)]">
+          <tbody className="divide-y divide-[#233c46]">
             {filteredExceptions.map((exc) => {
-              const isResolved = exc.status.startsWith('RESOLVED_');
-
               return (
                 <tr
                   key={exc.id}
-                  className={`group transition-colors ${
-                    isResolved
-                      ? 'bg-slate-950/30 text-slate-400 hover:bg-slate-900/40'
-                      : 'hover:bg-slate-800/40'
-                  }`}
+                  className="hover:bg-[#1b3038] transition-colors group"
                 >
                   {/* Risk Level */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      {getRiskBadge(exc.risk_score, exc.risk_level)}
-                      <div className="text-[10px] font-mono text-slate-400 pl-3.5">
-                        ID: {exc.id}
+                    <div>
+                      {renderRiskBadge(exc.risk_score, exc.risk_level)}
+                      <div className="text-[10px] font-mono text-[#8aa1aa] mt-1">
+                        {exc.id}
                       </div>
                     </div>
                   </td>
 
                   {/* Exception Type */}
                   <td className="py-3.5 px-4">
-                    <div className="space-y-0.5">
-                      <div className="font-semibold text-slate-100 font-[family-name:var(--font-display)] flex items-center gap-1.5 text-sm">
+                    <div>
+                      <div className="font-medium text-[#F5EED2] text-xs">
                         {exc.exception_type}
                       </div>
-                      <p className="text-[11px] text-slate-400 line-clamp-1 max-w-sm">
+                      <p className="text-[11px] text-[#8aa1aa] line-clamp-1 max-w-sm mt-0.5">
                         {exc.summary}
                       </p>
                     </div>
@@ -247,15 +216,15 @@ export function ExceptionsTable({ exceptions, onRefresh }: ExceptionsTableProps)
                   {/* Affected Vendor */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="h-7 w-7 rounded bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-300">
-                        <Building2 className="h-3.5 w-3.5" />
+                      <div className="h-6 w-6 rounded-sm bg-[#0e181c] border border-[#233c46] flex items-center justify-center text-[#8aa1aa]">
+                        <Building2 className="h-3 w-3" />
                       </div>
                       <div>
-                        <div className="font-medium text-slate-200 text-xs">
+                        <div className="font-medium text-[#F5EED2]">
                           {exc.vendor}
                         </div>
-                        <div className="text-[10px] font-mono text-slate-400">
-                          {exc.vendor_code} · Inv: {exc.invoice_no}
+                        <div className="text-[10px] font-mono text-[#8aa1aa]">
+                          {exc.vendor_code} · {exc.invoice_no}
                         </div>
                       </div>
                     </div>
@@ -263,27 +232,27 @@ export function ExceptionsTable({ exceptions, onRefresh }: ExceptionsTableProps)
 
                   {/* Amount at Risk */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
-                    <div className="font-mono text-sm font-bold text-rose-300 tracking-tight">
+                    <div className="font-mono text-xs font-semibold text-[#F5EED2]">
                       {exc.formatted_amount}
                     </div>
-                    <div className="text-[10px] text-slate-400 font-mono">
+                    <div className="text-[10px] font-mono text-[#8aa1aa]">
                       INR {exc.amount_at_risk.toLocaleString('en-IN')}
                     </div>
                   </td>
 
                   {/* Agent Pipeline Status */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
-                    {getStatusBadge(exc.agent_pipeline_status)}
+                    {renderStatusBadge(exc.agent_pipeline_status)}
                   </td>
 
-                  {/* Action */}
+                  {/* Action Button */}
                   <td className="py-3.5 px-4 whitespace-nowrap text-right">
                     <Link
                       href={`/investigation/${exc.id}`}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white transition-all shadow-md bg-gradient-to-r from-[#021C4F] to-[#C50337] hover:from-[#032970] hover:to-[#df043f] border border-[#C50337]/50 group-hover:shadow-[#C50337]/25"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium text-[#132228] bg-[#EBAE29] hover:bg-[#dfa21e] active:scale-[0.98] transition-all"
                     >
                       <span>Investigate</span>
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                      <ArrowRight className="h-3 w-3" />
                     </Link>
                   </td>
                 </tr>
@@ -294,18 +263,17 @@ export function ExceptionsTable({ exceptions, onRefresh }: ExceptionsTableProps)
       </div>
 
       {/* Table Footer */}
-      <div className="px-4 py-3 bg-slate-950/60 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+      <div className="px-4 py-2.5 bg-[#0e181c] border-t border-[#233c46] flex items-center justify-between text-xs text-[#8aa1aa] font-mono">
         <div>
-          Showing <span className="text-slate-200 font-bold">{filteredExceptions.length}</span> of{' '}
-          <span className="text-slate-200">{exceptions.length}</span> intercepted exceptions
+          Showing {filteredExceptions.length} of {exceptions.length} exceptions
         </div>
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1 text-emerald-400">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Autonomous Interceptor SLA: &lt;200ms
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1.5 text-[#589C80]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#589C80]" />
+            Interceptor active
           </span>
-          <span className="hidden sm:inline text-slate-400">|</span>
-          <span className="text-slate-400">Ledger Hash Sync: Ingested</span>
+          <span>•</span>
+          <span>Hash verification ready</span>
         </div>
       </div>
     </div>

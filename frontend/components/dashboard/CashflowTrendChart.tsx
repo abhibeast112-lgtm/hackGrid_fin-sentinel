@@ -12,7 +12,6 @@ import {
   ReferenceLine
 } from 'recharts';
 import { CASHFLOW_TREND_DATA } from '@/lib/mock-data';
-import { TrendingUp, AlertTriangle } from 'lucide-react';
 
 export function CashflowTrendChart() {
   const [mounted, setMounted] = useState(false);
@@ -23,98 +22,92 @@ export function CashflowTrendChart() {
 
   if (!mounted) {
     return (
-      <div className="h-64 flex items-center justify-center bg-slate-900/60 rounded-xl border border-slate-800">
-        <span className="text-xs font-mono text-slate-500 animate-pulse">Initializing Telemetry Stream...</span>
+      <div className="h-64 flex items-center justify-center bg-[#172a31] rounded-md border border-[#233c46]">
+        <span className="text-xs font-mono text-[#8aa1aa]">Loading telemetry...</span>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-4 shadow-xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+    <div className="rounded-md border border-[#233c46] bg-[#172a31] p-5">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-[#233c46]">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold text-slate-100 font-[family-name:var(--font-display)] tracking-wide">
-              Cashflow Outflow & Anomaly Detection Envelope
+            <h3 className="text-sm font-semibold text-[#F5EED2]">
+              Cash Outflow & Anomaly Envelope
             </h3>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping" />
-              +18.4% Outlier Alert
+            <span className="px-2 py-0.5 rounded-sm text-[11px] font-mono bg-red-500/10 text-red-400 border border-red-500/20">
+              +18.4% Variance
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            FY 2026-27 YTD Remittance Volume vs. Predictive Baseline with 3-Sigma Anomaly Bounds
+          <p className="text-xs text-[#8aa1aa] mt-1">
+            FY 2026-27 YTD Remittance volume compared to predictive baseline
           </p>
         </div>
 
         {/* Legend */}
         <div className="flex items-center gap-4 text-xs font-mono">
           <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-            <span className="text-slate-300">Revenue (Cr)</span>
+            <span className="h-2 w-2 rounded-sm bg-[#589C80]" />
+            <span className="text-[#8aa1aa]">Revenue (Cr)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-[#C50337]" />
-            <span className="text-slate-300">Expenses (Cr)</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-amber-400" />
-            <span className="text-amber-300">Flagged Risk (₹ L)</span>
+            <span className="h-2 w-2 rounded-sm bg-[#EBAE29]" />
+            <span className="text-[#8aa1aa]">Expenses (Cr)</span>
           </div>
         </div>
       </div>
 
-      <div className="h-64 w-full">
+      <div className="h-60 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={CASHFLOW_TREND_DATA} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+          <AreaChart data={CASHFLOW_TREND_DATA} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
             <defs>
-              {/* Gradient from #021C4F to #C50337 for expenses */}
-              <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#C50337" stopOpacity={0.6} />
-                <stop offset="95%" stopColor="#021C4F" stopOpacity={0.05} />
+              <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#EBAE29" stopOpacity={0.25} />
+                <stop offset="95%" stopColor="#EBAE29" stopOpacity={0.0} />
               </linearGradient>
-              <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0.02} />
+              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#589C80" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#589C80" stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+            <CartesianGrid strokeDasharray="2 2" stroke="#233c46" vertical={false} />
             <XAxis
               dataKey="month"
-              stroke="#64748b"
+              stroke="#6c858f"
               fontSize={11}
               tickLine={false}
-              axisLine={{ stroke: '#334155' }}
+              axisLine={{ stroke: '#233c46' }}
             />
             <YAxis
-              stroke="#64748b"
+              stroke="#6c858f"
               fontSize={11}
               tickLine={false}
-              axisLine={{ stroke: '#334155' }}
+              axisLine={{ stroke: '#233c46' }}
               tickFormatter={(v) => `₹${v}Cr`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#0b1222',
-                borderColor: '#334155',
-                borderRadius: '8px',
-                fontSize: '12px',
-                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
-                color: '#f8fafc',
+                backgroundColor: '#0e181c',
+                borderColor: '#233c46',
+                borderRadius: '4px',
+                fontSize: '11px',
+                color: '#F5EED2',
                 fontFamily: 'monospace',
               }}
               formatter={(value: any, name: any) => [
                 name === 'anomalies' ? `₹${value} L` : `₹${value} Cr`,
-                name === 'revenue' ? 'Monthly Revenue' : name === 'expenses' ? 'Monthly Expenses' : 'Anomalies Flagged'
+                name === 'revenue' ? 'Revenue' : 'Expenses'
               ]}
             />
             <ReferenceLine
               x="Sep (MTD)"
-              stroke="#C50337"
-              strokeDasharray="4 4"
+              stroke="#EBAE29"
+              strokeDasharray="3 3"
               label={{
-                value: 'SPIKE DETECTED',
-                fill: '#f43f5e',
+                value: 'OUTLIER DETECTED',
+                fill: '#EBAE29',
                 fontSize: 10,
                 position: 'top',
                 fontFamily: 'monospace'
@@ -123,29 +116,26 @@ export function CashflowTrendChart() {
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#10b981"
-              strokeWidth={2}
+              stroke="#589C80"
+              strokeWidth={1.5}
               fillOpacity={1}
-              fill="url(#revenueGradient)"
+              fill="url(#colorRevenue)"
             />
             <Area
               type="monotone"
               dataKey="expenses"
-              stroke="#C50337"
-              strokeWidth={2.5}
+              stroke="#EBAE29"
+              strokeWidth={1.5}
               fillOpacity={1}
-              fill="url(#expenseGradient)"
+              fill="url(#colorExpense)"
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-400">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
-          <span>Noticeable September inflection: AP disbursements increased 18.4% with 3 pending multi-agent hold exceptions.</span>
-        </div>
-        <span className="text-slate-300 font-semibold">Continuous Ingestion Rate: 142 tx/min</span>
+      <div className="mt-3 pt-3 border-t border-[#233c46] flex flex-wrap items-center justify-between text-xs font-mono text-[#8aa1aa]">
+        <span>Outflow increased ₹20.4L over target due to duplicate invoice batching</span>
+        <span className="text-[#F5EED2]">Continuous Feed: 142 tx/min</span>
       </div>
     </div>
   );

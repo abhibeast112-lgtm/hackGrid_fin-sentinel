@@ -2,133 +2,68 @@
 
 @layer base {
   :root {
-    --background: #020617; /* slate-950 */
-    --foreground: #f8fafc; /* slate-50 */
-    --card: #0b1222;       /* deep slate-900 / dark blue */
-    --card-foreground: #f1f5f9;
-    --popover: #0f172a;
-    --popover-foreground: #f8fafc;
-    --primary: #C50337;
-    --primary-navy: #021C4F;
-    --primary-foreground: #ffffff;
-    --secondary: #1e293b;   /* slate-800 */
-    --secondary-foreground: #f8fafc;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --accent: #021C4F;
-    --accent-foreground: #f8fafc;
-    --destructive: #ef4444;
-    --destructive-foreground: #ffffff;
-    --border: #1e293b;
-    --input: #1e293b;
-    --ring: #C50337;
-    --radius: 0.5rem;
+    --background: #132228;
+    --foreground: #F5EED2;
+    --card: #172a31;
+    --card-foreground: #F5EED2;
+    --popover: #172a31;
+    --popover-foreground: #F5EED2;
+    --border: #233c46;
+    --input: #233c46;
+    --accent-gold: #EBAE29;
+    --accent-sage: #589C80;
+    --accent-dark: #132228;
+    --text-ivory: #F5EED2;
+    --muted: #1d333c;
+    --muted-foreground: #8aa1aa;
+    --radius: 0.375rem;
   }
 }
 
 body {
-  background-color: #020617;
-  color: #f1f5f9;
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  overflow-x: hidden;
+  background-color: #132228;
+  color: #F5EED2;
+  font-family: 'Ronta', 'Helvetica Neue', Helvetica, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
-/* Custom Fin-Sentinel Gradient Utilities */
-.bg-sentinel-gradient {
-  background: linear-gradient(135deg, #021C4F 0%, #311138 50%, #C50337 100%);
+/* Linear/Stripe style subtle 1px borders */
+.border-subtle {
+  border-color: #233c46;
 }
 
-.bg-sentinel-gradient-subtle {
-  background: linear-gradient(135deg, rgba(2, 28, 79, 0.4) 0%, rgba(197, 3, 55, 0.15) 100%);
+.bg-panel {
+  background-color: #172a31;
 }
 
-.bg-sentinel-gradient-horizontal {
-  background: linear-gradient(90deg, #021C4F 0%, #C50337 100%);
+.bg-surface-dark {
+  background-color: #0e181c;
 }
 
-.text-sentinel-gradient {
-  background: linear-gradient(135deg, #60a5fa 0%, #f43f5e 50%, #ff809b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.bg-surface-elevated {
+  background-color: #1b3038;
 }
 
-.text-sentinel-crimson {
-  color: #C50337;
-}
-
-.border-sentinel-glow {
-  border-color: rgba(197, 3, 55, 0.4);
-  box-shadow: 0 0 20px -5px rgba(197, 3, 55, 0.25), 0 0 10px -5px rgba(2, 28, 79, 0.5);
-}
-
-.border-sentinel-navy-glow {
-  border-color: rgba(2, 28, 79, 0.6);
-  box-shadow: 0 0 20px -5px rgba(2, 28, 79, 0.5);
-}
-
-.shadow-sentinel-glow {
-  box-shadow: 0 0 25px -5px rgba(197, 3, 55, 0.35);
-}
-
-/* Datadog / Bloomberg high-density terminal grid pattern */
-.bg-terminal-grid {
-  background-size: 24px 24px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-}
-
-/* Monospace font utility for numbers and audit hashes */
+/* Monospace numerals */
 .font-mono-numeric {
-  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-feature-settings: "tnum" on, "zero" on;
 }
 
-/* Custom Sleek Scrollbar */
+/* Subtle flat scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: #132228;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #233c46;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-/* Pulse animation for active risks */
-@keyframes sentinel-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
-
-.animate-sentinel-pulse {
-  animation: sentinel-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 8px rgba(244, 63, 94, 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0);
-  }
-}
-
-.animate-pulse-ring {
-  animation: pulse-ring 2s infinite;
+  background: #2e4d59;
 }
