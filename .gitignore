@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+backend/.venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Next.js build
+frontend/.next/
+frontend/out/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
