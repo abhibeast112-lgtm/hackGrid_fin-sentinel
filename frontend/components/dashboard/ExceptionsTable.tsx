@@ -10,8 +10,11 @@ import {
   XCircle, 
   Clock, 
   Building2,
-  AlertTriangle
+  AlertTriangle,
+  ShieldAlert,
+  Layers
 } from 'lucide-react';
+import { useTheme } from '@/lib/theme-context';
 
 interface ExceptionsTableProps {
   exceptions: FinancialException[];
@@ -21,6 +24,8 @@ interface ExceptionsTableProps {
 export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRisk, setSelectedRisk] = useState<string>('ALL');
+  const { theme } = useTheme();
+  const isMorning = theme === 'morning';
 
   const filteredExceptions = exceptions.filter((exc) => {
     const matchesSearch =
@@ -40,117 +45,204 @@ export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
   const renderRiskBadge = (score: number, level: string) => {
     if (score >= 80) {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono font-medium bg-red-500/10 text-red-400 border border-red-500/20">
-          <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+        <span
+          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+            isMorning
+              ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+              : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
+          }`}
+        >
+          <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-rose-500'}`} />
           {level} ({score}%)
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono font-medium bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#EBAE29]" />
+      <span
+        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+          isMorning
+            ? 'bg-amber-100 text-amber-800 border border-amber-200'
+            : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
+        }`}
+      >
+        <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-amber-600' : 'bg-amber-400'}`} />
         {level} ({score}%)
       </span>
     );
   };
 
-  const renderStatusBadge = (status: string) => {
+  const renderStatusBadge = (status: string, requiresApproval: boolean, currentStep: number) => {
     if (status.includes('Resolved: REJECT') || status.includes('RESOLVED_REJECT')) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-mono bg-red-500/10 text-red-400 border border-red-500/20">
-          <XCircle className="h-3 w-3" />
-          Blocked
+        <span
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold ${
+            isMorning
+              ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+              : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+          }`}
+        >
+          <XCircle className="h-3.5 w-3.5" />
+          Blocked & Quarantined
         </span>
       );
     }
     if (status.includes('Resolved: APPROVE') || status.includes('RESOLVED_APPROVE')) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20">
-          <CheckCircle2 className="h-3 w-3" />
-          Approved
+        <span
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold ${
+            isMorning
+              ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+              : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+          }`}
+        >
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          Approved by Controller
         </span>
       );
     }
     if (status.includes('Resolved: ESCALATE') || status.includes('RESOLVED_ESCALATE')) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20">
-          <AlertTriangle className="h-3 w-3" />
-          Escalated
+        <span
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold ${
+            isMorning
+              ? 'bg-amber-100 text-amber-800 border border-amber-200'
+              : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+          }`}
+        >
+          <AlertTriangle className="h-3.5 w-3.5" />
+          Escalated to CFO
         </span>
       );
     }
-    if (status === 'Challenge Phase') {
+
+    if (requiresApproval) {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#EBAE29]" />
-          Challenge Phase
-        </span>
+        <div className="flex flex-col gap-1">
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+              isMorning
+                ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
+            }`}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-amber-600' : 'bg-amber-400'}`} />
+            Gate {currentStep}/4 Paused
+          </span>
+          <span className={`text-[11px] font-mono pl-1 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+            Tiered Checkpoint Required
+          </span>
+        </div>
       );
     }
-    if (status === 'Evidence Ready') {
-      return (
-        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#589C80]" />
-          Evidence Ready
-        </span>
-      );
-    }
+
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs font-mono bg-[#172a31] text-[#8aa1aa] border border-[#233c46]">
-        <Clock className="h-3 w-3 text-[#8aa1aa]" />
-        Awaiting Review
-      </span>
+      <div className="flex flex-col gap-1">
+        <span
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold ${
+            isMorning
+              ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+              : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+          }`}
+        >
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          All 4 Gates Auto-Verified
+        </span>
+        <span className={`text-[11px] font-mono pl-1 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+          Awaiting Final Sign-off
+        </span>
+      </div>
     );
   };
 
   return (
-    <div className="rounded-md border border-[#233c46] bg-[#172a31] overflow-hidden">
-      {/* Header & Filter Controls */}
-      <div className="p-4 border-b border-[#233c46] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+    <div
+      className={`rounded-2xl border backdrop-blur-md overflow-hidden transition-all ${
+        isMorning
+          ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
+          : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+      }`}
+    >
+      {/* Table Header & Controls */}
+      <div className={`p-6 border-b flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold text-[#F5EED2]">
-              Critical Exceptions Table
-            </h2>
-            <span className="px-2 py-0.2 rounded-sm text-[11px] font-mono bg-[#132228] text-[#8aa1aa] border border-[#233c46]">
-              {filteredExceptions.length} Anomaly Events
+          <div className="flex items-center gap-3">
+            <div
+              className={`flex h-9 w-9 items-center justify-center rounded-xl ${
+                isMorning
+                  ? 'bg-rose-50 border border-rose-200 text-[#c51636]'
+                  : 'bg-rose-500/10 border border-rose-500/20 text-rose-400'
+              }`}
+            >
+              <ShieldAlert className="h-4 w-4" />
+            </div>
+            <div>
+              <h2 className={`text-lg font-bold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                Critical Financial Exceptions
+              </h2>
+              <p className={`text-xs mt-0.5 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                Active cross-ledger variances intercepted prior to payment clearing
+              </p>
+            </div>
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border ${
+                isMorning
+                  ? 'bg-[#fcfaf6] border-[#eadbce] text-[#78716c]'
+                  : 'bg-white/[0.06] border-white/10 text-slate-300'
+              }`}
+            >
+              {filteredExceptions.length} Events Flagged
             </span>
           </div>
-          <p className="text-xs text-[#8aa1aa] mt-0.5">
-            Active variances intercepted prior to payment clearing
-          </p>
         </div>
 
         {/* Toolbar */}
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           {/* Risk Level Toggles */}
-          <div className="flex items-center rounded-sm bg-[#0e181c] p-0.5 border border-[#233c46] text-xs font-mono">
+          <div
+            className={`flex items-center rounded-xl p-1 border text-xs font-mono ${
+              isMorning
+                ? 'bg-[#fcfaf6] border-[#eadbce]'
+                : 'bg-white/[0.04] border-white/10'
+            }`}
+          >
             <button
               onClick={() => setSelectedRisk('ALL')}
-              className={`px-2 py-0.5 rounded-sm transition-colors ${
+              className={`px-3 py-1.5 rounded-lg transition-all ${
                 selectedRisk === 'ALL'
-                  ? 'bg-[#172a31] text-[#F5EED2] font-medium'
-                  : 'text-[#8aa1aa] hover:text-[#F5EED2]'
+                  ? isMorning
+                    ? 'bg-white text-[#1c1917] font-bold shadow-xs border border-[#eadbce]'
+                    : 'bg-white/10 text-white font-bold shadow-sm'
+                  : isMorning
+                  ? 'text-[#78716c] hover:text-[#1c1917]'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              All
+              All Anomalies
             </button>
             <button
               onClick={() => setSelectedRisk('HIGH')}
-              className={`px-2 py-0.5 rounded-sm transition-colors ${
+              className={`px-3 py-1.5 rounded-lg transition-all ${
                 selectedRisk === 'HIGH'
-                  ? 'bg-red-500/10 text-red-400 font-medium'
-                  : 'text-[#8aa1aa] hover:text-red-400'
+                  ? isMorning
+                    ? 'bg-rose-100 text-[#c51636] font-bold border border-rose-200'
+                    : 'bg-rose-500/20 text-rose-300 font-bold shadow-sm'
+                  : isMorning
+                  ? 'text-[#78716c] hover:text-[#c51636]'
+                  : 'text-slate-400 hover:text-rose-300'
               }`}
             >
-              High Risk
+              High Risk (&gt;80%)
             </button>
             <button
               onClick={() => setSelectedRisk('MED')}
-              className={`px-2 py-0.5 rounded-sm transition-colors ${
+              className={`px-3 py-1.5 rounded-lg transition-all ${
                 selectedRisk === 'MED'
-                  ? 'bg-[#EBAE29]/10 text-[#EBAE29] font-medium'
-                  : 'text-[#8aa1aa] hover:text-[#EBAE29]'
+                  ? isMorning
+                    ? 'bg-amber-100 text-amber-800 font-bold border border-amber-200'
+                    : 'bg-amber-500/20 text-amber-300 font-bold shadow-sm'
+                  : isMorning
+                  ? 'text-[#78716c] hover:text-amber-800'
+                  : 'text-slate-400 hover:text-amber-300'
               }`}
             >
               Med Risk
@@ -159,71 +251,85 @@ export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
 
           {/* Search Input */}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#8aa1aa]" />
+            <Search className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 ${isMorning ? 'text-[#a8a29e]' : 'text-slate-400'}`} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter table..."
-              className="h-7 pl-8 pr-3 rounded-sm bg-[#0e181c] border border-[#233c46] text-xs text-[#F5EED2] placeholder:text-[#6c858f] focus:outline-none focus:border-[#EBAE29] w-36 sm:w-48"
+              placeholder="Search vendor or invoice..."
+              className={`h-9 pl-10 pr-3 rounded-xl text-xs focus:outline-none transition-all ${
+                isMorning
+                  ? 'bg-[#fcfaf6] border border-[#eadbce] text-[#1c1917] placeholder:text-[#a8a29e] focus:border-[#c51636] focus:bg-white'
+                  : 'bg-white/[0.04] border border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50'
+              } w-44 lg:w-56`}
             />
           </div>
         </div>
       </div>
 
-      {/* Table with comfortable spacing and flat styling */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs border-collapse">
+      {/* Spaced-Out Table Rows */}
+      <div className="overflow-x-auto p-3">
+        <table className="w-full text-left text-sm border-separate border-spacing-y-2">
           <thead>
-            <tr className="border-b border-[#233c46] bg-[#0e181c] text-[#8aa1aa] font-mono text-[11px] uppercase tracking-wider">
-              <th className="py-3 px-4 font-medium">Risk Level</th>
-              <th className="py-3 px-4 font-medium">Exception Type</th>
-              <th className="py-3 px-4 font-medium">Affected Vendor</th>
-              <th className="py-3 px-4 font-medium">Amount at Risk</th>
-              <th className="py-3 px-4 font-medium">Agent Pipeline Status</th>
-              <th className="py-3 px-4 font-medium text-right">Action</th>
+            <tr className={`font-mono text-xs uppercase tracking-wider ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+              <th className="py-3 px-4 font-semibold">Risk Level</th>
+              <th className="py-3 px-4 font-semibold">Exception Type</th>
+              <th className="py-3 px-4 font-semibold">Affected Vendor</th>
+              <th className="py-3 px-4 font-semibold">Amount at Risk</th>
+              <th className="py-3 px-4 font-semibold">Pipeline & Approval Gate</th>
+              <th className="py-3 px-4 font-semibold text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#233c46]">
+          <tbody>
             {filteredExceptions.map((exc) => {
               return (
                 <tr
                   key={exc.id}
-                  className="hover:bg-[#1b3038] transition-colors group"
+                  className={`border rounded-xl transition-all group ${
+                    isMorning
+                      ? 'bg-white hover:bg-rose-50/30 border-[#eadbce] shadow-xs'
+                      : 'bg-white/[0.02] hover:bg-white/[0.05] border-white/5'
+                  }`}
                 >
                   {/* Risk Level */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <div>
+                  <td className="py-4 px-4 whitespace-nowrap rounded-l-xl">
+                    <div className="space-y-1">
                       {renderRiskBadge(exc.risk_score, exc.risk_level)}
-                      <div className="text-[10px] font-mono text-[#8aa1aa] mt-1">
-                        {exc.id}
+                      <div className={`text-xs font-mono pl-1 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                        ID: {exc.id}
                       </div>
                     </div>
                   </td>
 
                   {/* Exception Type */}
-                  <td className="py-3.5 px-4">
-                    <div>
-                      <div className="font-medium text-[#F5EED2] text-xs">
+                  <td className="py-4 px-4">
+                    <div className="space-y-0.5">
+                      <div className={`font-bold text-sm ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
                         {exc.exception_type}
                       </div>
-                      <p className="text-[11px] text-[#8aa1aa] line-clamp-1 max-w-sm mt-0.5">
+                      <p className={`text-xs line-clamp-1 max-w-sm ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                         {exc.summary}
                       </p>
                     </div>
                   </td>
 
                   {/* Affected Vendor */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-sm bg-[#0e181c] border border-[#233c46] flex items-center justify-center text-[#8aa1aa]">
-                        <Building2 className="h-3 w-3" />
+                  <td className="py-4 px-4 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`h-9 w-9 rounded-xl flex items-center justify-center ${
+                          isMorning
+                            ? 'bg-[#fcfaf6] border border-[#eadbce] text-[#78716c]'
+                            : 'bg-white/[0.05] border border-white/10 text-slate-300'
+                        }`}
+                      >
+                        <Building2 className="h-4 w-4" />
                       </div>
                       <div>
-                        <div className="font-medium text-[#F5EED2]">
+                        <div className={`font-semibold text-sm ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
                           {exc.vendor}
                         </div>
-                        <div className="text-[10px] font-mono text-[#8aa1aa]">
+                        <div className={`text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                           {exc.vendor_code} · {exc.invoice_no}
                         </div>
                       </div>
@@ -231,28 +337,32 @@ export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
                   </td>
 
                   {/* Amount at Risk */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <div className="font-mono text-xs font-semibold text-[#F5EED2]">
+                  <td className="py-4 px-4 whitespace-nowrap">
+                    <div className={`font-mono text-base font-bold tracking-tight ${isMorning ? 'text-[#c51636]' : 'text-white'}`}>
                       {exc.formatted_amount}
                     </div>
-                    <div className="text-[10px] font-mono text-[#8aa1aa]">
+                    <div className={`text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                       INR {exc.amount_at_risk.toLocaleString('en-IN')}
                     </div>
                   </td>
 
-                  {/* Agent Pipeline Status */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    {renderStatusBadge(exc.agent_pipeline_status)}
+                  {/* Pipeline Status & Tiered Gate */}
+                  <td className="py-4 px-4 whitespace-nowrap">
+                    {renderStatusBadge(exc.agent_pipeline_status, exc.requires_approval, exc.current_step)}
                   </td>
 
-                  {/* Action Button */}
-                  <td className="py-3.5 px-4 whitespace-nowrap text-right">
+                  {/* Action */}
+                  <td className="py-4 px-4 whitespace-nowrap text-right rounded-r-xl">
                     <Link
                       href={`/investigation/${exc.id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium text-[#132228] bg-[#EBAE29] hover:bg-[#dfa21e] active:scale-[0.98] transition-all"
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] ${
+                        isMorning
+                          ? 'bg-[#c51636] hover:bg-[#a8132e] shadow-sm'
+                          : 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                      }`}
                     >
                       <span>Investigate</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                     </Link>
                   </td>
                 </tr>
@@ -263,17 +373,15 @@ export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
       </div>
 
       {/* Table Footer */}
-      <div className="px-4 py-2.5 bg-[#0e181c] border-t border-[#233c46] flex items-center justify-between text-xs text-[#8aa1aa] font-mono">
+      <div className={`px-6 py-4 border-t flex items-center justify-between text-xs font-mono ${isMorning ? 'border-[#eadbce] bg-[#fcfaf6] text-[#78716c]' : 'border-white/10 bg-white/[0.02] text-slate-400'}`}>
         <div>
-          Showing {filteredExceptions.length} of {exceptions.length} exceptions
+          Displaying <span className={`font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{filteredExceptions.length}</span> exceptions monitored by Autonomous Sentinel
         </div>
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 text-[#589C80]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#589C80]" />
-            Interceptor active
+        <div className="flex items-center gap-4">
+          <span className={`font-medium flex items-center gap-1.5 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>
+            <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`} />
+            Tiered Checkpoint Enforcement Active
           </span>
-          <span>•</span>
-          <span>Hash verification ready</span>
         </div>
       </div>
     </div>

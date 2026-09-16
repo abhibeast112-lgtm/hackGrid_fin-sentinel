@@ -12,9 +12,13 @@ import {
   ReferenceLine
 } from 'recharts';
 import { CASHFLOW_TREND_DATA } from '@/lib/mock-data';
+import { AlertTriangle } from 'lucide-react';
+import { useTheme } from '@/lib/theme-context';
 
 export function CashflowTrendChart() {
   const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+  const isMorning = theme === 'morning';
 
   useEffect(() => {
     setMounted(true);
@@ -22,120 +26,142 @@ export function CashflowTrendChart() {
 
   if (!mounted) {
     return (
-      <div className="h-64 flex items-center justify-center bg-[#172a31] rounded-md border border-[#233c46]">
-        <span className="text-xs font-mono text-[#8aa1aa]">Loading telemetry...</span>
+      <div className={`h-72 flex items-center justify-center rounded-2xl border ${isMorning ? 'border-[#eadbce] bg-white/80' : 'border-white/10 bg-slate-900/60'}`}>
+        <span className={`text-sm font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>Loading telemetry stream...</span>
       </div>
     );
   }
 
   return (
-    <div className="rounded-md border border-[#233c46] bg-[#172a31] p-5">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-[#233c46]">
+    <div
+      className={`rounded-2xl border backdrop-blur-md p-6 transition-all ${
+        isMorning
+          ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
+          : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+      }`}
+    >
+      {/* Chart Header */}
+      <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-5 border-b ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-[#F5EED2]">
+          <div className="flex items-center gap-3">
+            <h3 className={`text-base font-bold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
               Cash Outflow & Anomaly Envelope
             </h3>
-            <span className="px-2 py-0.5 rounded-sm text-[11px] font-mono bg-red-500/10 text-red-400 border border-red-500/20">
-              +18.4% Variance
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-mono font-semibold flex items-center gap-1.5 ${
+                isMorning
+                  ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+              }`}
+            >
+              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-rose-400'}`} />
+              +18.4% Variance Detected
             </span>
           </div>
-          <p className="text-xs text-[#8aa1aa] mt-1">
-            FY 2026-27 YTD Remittance volume compared to predictive baseline
+          <p className={`text-sm mt-1 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+            FY 2026-27 YTD Remittance volume vs. predictive bounds across AP pipelines
           </p>
         </div>
 
         {/* Legend */}
-        <div className="flex items-center gap-4 text-xs font-mono">
-          <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-sm bg-[#589C80]" />
-            <span className="text-[#8aa1aa]">Revenue (Cr)</span>
+        <div className="flex items-center gap-5 text-xs font-mono">
+          <div className="flex items-center gap-2">
+            <span className={`h-3 w-3 rounded-md ${isMorning ? 'bg-emerald-600' : 'bg-emerald-400'}`} />
+            <span className={isMorning ? 'text-[#57534e]' : 'text-slate-300'}>Revenue (Cr)</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-sm bg-[#EBAE29]" />
-            <span className="text-[#8aa1aa]">Expenses (Cr)</span>
+          <div className="flex items-center gap-2">
+            <span className={`h-3 w-3 rounded-md ${isMorning ? 'bg-[#c51636]' : 'bg-indigo-400'}`} />
+            <span className={isMorning ? 'text-[#57534e]' : 'text-slate-300'}>Expenses (Cr)</span>
           </div>
         </div>
       </div>
 
-      <div className="h-60 w-full">
+      {/* Chart Canvas */}
+      <div className="h-72 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={CASHFLOW_TREND_DATA} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+          <AreaChart data={CASHFLOW_TREND_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>
-              <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#EBAE29" stopOpacity={0.25} />
-                <stop offset="95%" stopColor="#EBAE29" stopOpacity={0.0} />
+              <linearGradient id="chartRevenue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={isMorning ? '#059669' : '#10b981'} stopOpacity={isMorning ? 0.25 : 0.35} />
+                <stop offset="95%" stopColor={isMorning ? '#059669' : '#10b981'} stopOpacity={0.0} />
               </linearGradient>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#589C80" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#589C80" stopOpacity={0.0} />
+              <linearGradient id="chartExpense" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={isMorning ? '#c51636' : '#6366f1'} stopOpacity={isMorning ? 0.3 : 0.35} />
+                <stop offset="95%" stopColor={isMorning ? '#c51636' : '#6366f1'} stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="2 2" stroke="#233c46" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isMorning ? '#eadbce' : 'rgba(255, 255, 255, 0.06)'} vertical={false} />
             <XAxis
               dataKey="month"
-              stroke="#6c858f"
-              fontSize={11}
+              stroke={isMorning ? '#78716c' : '#64748b'}
+              fontSize={12}
               tickLine={false}
-              axisLine={{ stroke: '#233c46' }}
+              axisLine={{ stroke: isMorning ? '#eadbce' : 'rgba(255, 255, 255, 0.1)' }}
             />
             <YAxis
-              stroke="#6c858f"
-              fontSize={11}
+              stroke={isMorning ? '#78716c' : '#64748b'}
+              fontSize={12}
               tickLine={false}
-              axisLine={{ stroke: '#233c46' }}
+              axisLine={{ stroke: isMorning ? '#eadbce' : 'rgba(255, 255, 255, 0.1)' }}
               tickFormatter={(v) => `₹${v}Cr`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#0e181c',
-                borderColor: '#233c46',
-                borderRadius: '4px',
-                fontSize: '11px',
-                color: '#F5EED2',
+                backgroundColor: isMorning ? '#ffffff' : 'rgba(15, 23, 42, 0.95)',
+                borderColor: isMorning ? '#eadbce' : 'rgba(255, 255, 255, 0.15)',
+                borderRadius: '12px',
+                fontSize: '13px',
+                color: isMorning ? '#1c1917' : '#ffffff',
                 fontFamily: 'monospace',
+                boxShadow: isMorning ? '0 8px 24px rgba(197,22,54,0.08)' : '0 10px 30px rgba(0,0,0,0.5)',
               }}
               formatter={(value: any, name: any) => [
                 name === 'anomalies' ? `₹${value} L` : `₹${value} Cr`,
-                name === 'revenue' ? 'Revenue' : 'Expenses'
+                name === 'revenue' ? 'Monthly Revenue' : 'Monthly Outflow'
               ]}
             />
             <ReferenceLine
               x="Sep (MTD)"
-              stroke="#EBAE29"
-              strokeDasharray="3 3"
+              stroke={isMorning ? '#c51636' : '#f43f5e'}
+              strokeDasharray="4 4"
               label={{
-                value: 'OUTLIER DETECTED',
-                fill: '#EBAE29',
-                fontSize: 10,
+                value: 'OUTLIER INTERCEPTED',
+                fill: isMorning ? '#c51636' : '#f43f5e',
+                fontSize: 11,
                 position: 'top',
-                fontFamily: 'monospace'
+                fontFamily: 'monospace',
+                fontWeight: 700
               }}
             />
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#589C80"
-              strokeWidth={1.5}
+              stroke={isMorning ? '#059669' : '#10b981'}
+              strokeWidth={2.5}
               fillOpacity={1}
-              fill="url(#colorRevenue)"
+              fill="url(#chartRevenue)"
             />
             <Area
               type="monotone"
               dataKey="expenses"
-              stroke="#EBAE29"
-              strokeWidth={1.5}
+              stroke={isMorning ? '#c51636' : '#6366f1'}
+              strokeWidth={2.5}
               fillOpacity={1}
-              fill="url(#colorExpense)"
+              fill="url(#chartExpense)"
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-[#233c46] flex flex-wrap items-center justify-between text-xs font-mono text-[#8aa1aa]">
-        <span>Outflow increased ₹20.4L over target due to duplicate invoice batching</span>
-        <span className="text-[#F5EED2]">Continuous Feed: 142 tx/min</span>
+      <div className={`mt-4 pt-4 border-t flex flex-wrap items-center justify-between gap-3 text-xs font-mono ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
+        <div className={`flex items-center gap-2 ${isMorning ? 'text-[#1c1917]' : 'text-slate-300'}`}>
+          <AlertTriangle className={`h-4 w-4 shrink-0 ${isMorning ? 'text-[#c51636]' : 'text-amber-400'}`} />
+          <span>Outflow increased ₹20.4L above baseline due to duplicate ERP batch generation</span>
+        </div>
+        <span className={`font-semibold flex items-center gap-1.5 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
+          <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-emerald-600' : 'bg-emerald-400'}`} />
+          Surveillance Stream Active: 142 tx/min
+        </span>
       </div>
     </div>
   );

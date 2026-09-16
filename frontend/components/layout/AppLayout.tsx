@@ -6,12 +6,12 @@ import { Sidebar } from './Sidebar';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#132228] text-[#F5EED2]">
+    <div className="min-h-screen flex flex-col text-white relative">
       <Navbar />
-      <div className="flex-1 flex">
+      <div className="flex-1 flex overflow-hidden">
         <Sidebar />
-        <main className="flex-1 min-w-0 overflow-y-auto px-6 py-8 md:px-10 md:py-10">
-          <div className="mx-auto max-w-6xl space-y-8">
+        <main className="flex-1 min-w-0 overflow-y-auto px-4 sm:px-6 md:px-8 py-4">
+          <div className="mx-auto max-w-7xl space-y-6 pb-12">
             {children}
           </div>
         </main>

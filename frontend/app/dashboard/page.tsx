@@ -9,15 +9,16 @@ import { FinancialException } from '@/lib/types';
 import { INITIAL_EXCEPTIONS } from '@/lib/mock-data';
 import { 
   ArrowUpRight, 
-  ArrowDownRight,
   AlertTriangle, 
-  RefreshCw,
-  Clock
+  RefreshCw
 } from 'lucide-react';
+import { useTheme } from '@/lib/theme-context';
 
 export default function DashboardPage() {
   const [exceptions, setExceptions] = useState<FinancialException[]>(INITIAL_EXCEPTIONS);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const { theme } = useTheme();
+  const isMorning = theme === 'morning';
 
   const loadData = async () => {
     try {
@@ -53,111 +54,176 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      {/* Top Header & View Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#233c46]">
+      {/* Top Header & Surveillance Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg font-semibold text-[#F5EED2]">
-              Financial Control Tower
+          <div className="flex items-center gap-3">
+            <h1 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+              Executive Control Tower
             </h1>
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-[11px] font-mono bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#589C80]" />
-              Surveillance Active
+            <span
+              className={`hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold ${
+                isMorning
+                  ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+              }`}
+            >
+              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`} />
+              Surveillance Mesh Active
             </span>
           </div>
-          <p className="text-xs text-[#8aa1aa] mt-1">
-            Real-time exception interception and ledger reconciliation for Acme Manufacturing Pvt. Ltd.
+          <p className={`text-sm mt-1 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+            Real-time multi-agent reconciliation monitoring Acme Manufacturing Pvt. Ltd. treasury and AP pipelines.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             onClick={handleManualRefresh}
             disabled={refreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-[#172a31] hover:bg-[#1f3741] border border-[#233c46] text-xs font-mono text-[#F5EED2] transition-colors disabled:opacity-50"
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all active:scale-95 disabled:opacity-50 ${
+              isMorning
+                ? 'bg-white hover:bg-[#f6efe6] border border-[#eadbce] text-[#1c1917] shadow-xs'
+                : 'bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white'
+            }`}
           >
-            <RefreshCw className={`h-3 w-3 text-[#8aa1aa] ${refreshing ? 'animate-spin' : ''}`} />
-            <span>{refreshing ? 'Syncing...' : 'Refresh'}</span>
+            <RefreshCw className={`h-3.5 w-3.5 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'} ${refreshing ? 'animate-spin' : ''}`} />
+            <span>{refreshing ? 'Syncing...' : 'Refresh Telemetry'}</span>
           </button>
         </div>
       </div>
 
-      {/* Screen 1: Top Metric Cards (4 Grid Layout) - Flat, Clean, Stripe/Linear style */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Screen 1: Metric Cards (4 Grid Layout) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
         {/* Card 1: Total Cash Position */}
-        <div className="rounded-md border border-[#233c46] bg-[#172a31] p-4 space-y-2">
-          <div className="flex items-center justify-between text-[#8aa1aa] text-xs font-mono">
+        <div
+          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+            isMorning
+              ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] hover:border-[#dfcebe]'
+              : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-white/20'
+          }`}
+        >
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>TOTAL CASH POSITION</span>
-            <span className="inline-flex items-center text-[#589C80] text-xs font-medium">
+            <span
+              className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${
+                isMorning
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+              }`}
+            >
               <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
               +4.2%
             </span>
           </div>
-          <div className="text-2xl font-semibold font-mono tracking-tight text-[#F5EED2]">
+          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
             ₹42.8 L
           </div>
-          <div className="text-[11px] text-[#8aa1aa] pt-1 border-t border-[#233c46] flex justify-between">
+          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
             <span>Liquid Reserves</span>
-            <span className="font-mono text-[#F5EED2]">HDFC + ICICI</span>
+            <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>HDFC + ICICI Pools</span>
           </div>
         </div>
 
         {/* Card 2: Monthly Revenue */}
-        <div className="rounded-md border border-[#233c46] bg-[#172a31] p-4 space-y-2">
-          <div className="flex items-center justify-between text-[#8aa1aa] text-xs font-mono">
+        <div
+          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+            isMorning
+              ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] hover:border-[#dfcebe]'
+              : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-white/20'
+          }`}
+        >
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>MONTHLY REVENUE</span>
-            <span className="inline-flex items-center text-[#589C80] text-xs font-medium">
+            <span
+              className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full ${
+                isMorning
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+              }`}
+            >
               <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
               +12.4%
             </span>
           </div>
-          <div className="text-2xl font-semibold font-mono tracking-tight text-[#F5EED2]">
+          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
             ₹1.82 Cr
           </div>
-          <div className="text-[11px] text-[#8aa1aa] pt-1 border-t border-[#233c46] flex justify-between">
+          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
             <span>Target: ₹1.62 Cr</span>
-            <span className="font-mono text-[#589C80]">On Target</span>
+            <span className={`font-mono font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>112% Target</span>
           </div>
         </div>
 
         {/* Card 3: Monthly Expenses (Amber warning badge) */}
-        <div className="rounded-md border border-[#233c46] bg-[#172a31] p-4 space-y-2">
-          <div className="flex items-center justify-between text-[#8aa1aa] text-xs font-mono">
+        <div
+          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+            isMorning
+              ? 'bg-white/85 border-amber-200/80 shadow-[0_4px_20px_rgba(217,119,6,0.05)] hover:border-amber-300'
+              : 'bg-slate-900/60 border-amber-500/25 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-amber-500/40'
+          }`}
+        >
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>MONTHLY EXPENSES</span>
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20 text-[11px] font-medium">
+            <span
+              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                isMorning
+                  ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                  : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
+              }`}
+            >
               <AlertTriangle className="h-3 w-3" />
               +18.4%
             </span>
           </div>
-          <div className="text-2xl font-semibold font-mono tracking-tight text-[#F5EED2]">
+          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#c51636]' : 'text-amber-200'}`}>
             ₹1.31 Cr
           </div>
-          <div className="text-[11px] text-[#8aa1aa] pt-1 border-t border-[#233c46] flex justify-between">
-            <span className="text-[#EBAE29]">Budget Alert</span>
-            <span className="font-mono text-[#F5EED2]">+₹20.4 L</span>
+          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
+            <span className={isMorning ? 'text-[#c51636] font-medium' : 'text-amber-400 font-medium'}>Budget Inflection</span>
+            <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>+₹20.4 L delta</span>
           </div>
         </div>
 
-        {/* Card 4: Active Exceptions Flagged (Red pulse / flat badge) */}
-        <div className="rounded-md border border-[#233c46] bg-[#172a31] p-4 space-y-2">
-          <div className="flex items-center justify-between text-[#8aa1aa] text-xs font-mono">
+        {/* Card 4: Active Exceptions Flagged (Red badge) */}
+        <div
+          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+            isMorning
+              ? 'bg-white/85 border-rose-200 shadow-[0_4px_20px_rgba(197,22,54,0.08)] hover:border-rose-300'
+              : 'bg-slate-900/60 border-rose-500/30 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-rose-500/50'
+          }`}
+        >
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
             <span>ACTIVE EXCEPTIONS</span>
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-red-500/10 text-red-400 border border-red-500/20 text-[11px] font-medium">
-              <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+            <span
+              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                isMorning
+                  ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
+              }`}
+            >
+              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-rose-500'}`} />
               3 Critical
             </span>
           </div>
-          <div className="text-2xl font-semibold font-mono tracking-tight text-red-400">
-            {activeExceptionsCount} Pending
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className={`text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>
+              {activeExceptionsCount} Pending
+            </span>
+            <span className={`text-xs font-mono font-bold ${isMorning ? 'text-[#1c1917]' : 'text-slate-300'}`}>
+              ₹{(totalAtRisk / 1000).toFixed(1)}k At Risk
+            </span>
           </div>
-          <div className="text-[11px] text-[#8aa1aa] pt-1 border-t border-[#233c46] flex justify-between">
-            <span>Exposure</span>
-            <span className="font-mono text-[#F5EED2]">₹{(totalAtRisk / 1000).toFixed(1)}k at risk</span>
+          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
+            <span className={isMorning ? 'text-[#c51636] font-medium' : 'text-rose-400 font-medium'}>Tiered Gates Armed</span>
+            <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>SOX Escalation</span>
           </div>
         </div>
+
       </div>
 
-      {/* Cashflow Trend Chart */}
+      {/* Cashflow Trend Telemetry Chart */}
       <CashflowTrendChart />
 
       {/* Critical Exceptions Table */}

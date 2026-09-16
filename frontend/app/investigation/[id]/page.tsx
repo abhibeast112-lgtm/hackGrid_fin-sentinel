@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { DocumentModal } from '@/components/investigation/DocumentModal';
 import { fetchInvestigation, submitDecision } from '@/lib/api-client';
-import { InvestigationDetail, SourceDocument, DecisionType, DecisionRecord } from '@/lib/types';
+import { InvestigationDetail, SourceDocument, DecisionType, DecisionRecord, AgentTimelineStep } from '@/lib/types';
 import { INVESTIGATION_DATABASE } from '@/lib/mock-data';
 import {
   Shield,
+  ShieldCheck,
   FileText,
-  CheckCircle,
+  CheckCircle2,
   XCircle,
   Clock,
   ArrowLeft,
@@ -19,14 +20,21 @@ import {
   Check,
   Building2,
   Lock,
+  Unlock,
   AlertTriangle,
-  ExternalLink
+  ArrowRight,
+  UserCheck,
+  Loader2,
+  CheckCheck
 } from 'lucide-react';
+import { useTheme } from '@/lib/theme-context';
 
 export default function InvestigationRoomPage() {
   const params = useParams();
   const rawId = (params?.id as string) || 'EXC-101';
   const id = rawId.toUpperCase();
+  const { theme } = useTheme();
+  const isMorning = theme === 'morning';
 
   const [data, setData] = useState<InvestigationDetail>(
     INVESTIGATION_DATABASE[id] || INVESTIGATION_DATABASE['EXC-101']
@@ -38,12 +46,20 @@ export default function InvestigationRoomPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [copiedHash, setCopiedHash] = useState(false);
 
+  // Tiered Human Checkpoint States
+  const [timelineSteps, setTimelineSteps] = useState<AgentTimelineStep[]>([]);
+  const [activeStepIndex, setActiveStepIndex] = useState<number>(2);
+  const [isAdvancingStep, setIsAdvancingStep] = useState<boolean>(false);
+  const [stepAdvancingMsg, setStepAdvancingMsg] = useState<string>('');
+
   useEffect(() => {
     let isMounted = true;
     fetchInvestigation(id)
       .then((detail) => {
         if (isMounted && detail) {
           setData(detail);
+          setTimelineSteps(detail.timeline);
+          setActiveStepIndex(detail.current_step || 2);
         }
       })
       .catch((err) => {
@@ -55,8 +71,48 @@ export default function InvestigationRoomPage() {
     };
   }, [id]);
 
+  const requiresApproval = data.requires_approval;
+  const agentSteps = timelineSteps.filter((s) => s.step <= 4);
+  const allGatesCompleted = !requiresApproval || agentSteps.every((s) => s.status === 'completed');
+
+  const handleConfirmStep = (stepNumber: number) => {
+    setIsAdvancingStep(true);
+    setStepAdvancingMsg(`Confirming Gate ${stepNumber}...`);
+
+    setTimeout(() => {
+      setTimelineSteps((prev) => {
+        return prev.map((item) => {
+          if (item.step === stepNumber) {
+            return {
+              ...item,
+              status: 'completed' as const,
+              confirmedByHuman: true,
+            };
+          }
+          if (item.step === stepNumber + 1 && item.step <= 4) {
+            return {
+              ...item,
+              status: 'awaiting_input' as const,
+            };
+          }
+          if (stepNumber === 4 && item.step === 5) {
+            return {
+              ...item,
+              status: 'awaiting_input' as const,
+            };
+          }
+          return item;
+        });
+      });
+
+      setActiveStepIndex(stepNumber + 1);
+      setIsAdvancingStep(false);
+      setStepAdvancingMsg('');
+    }, 600);
+  };
+
   const handleDecision = async (decision: DecisionType) => {
-    if (isSubmitting) return;
+    if (isSubmitting || !allGatesCompleted) return;
 
     setIsSubmitting(true);
     const finalNotes = reviewerNotes.trim() || getDefaultNotes(decision);
@@ -71,7 +127,7 @@ export default function InvestigationRoomPage() {
       if (response.success) {
         setDecisionRecord(response.record);
         setToastMessage(
-          `Decision [${decision}] recorded to audit trail with cryptographic hash ${response.record.audit_hash}.`
+          `Decision [${decision}] permanently sealed to audit trail with cryptographic hash ${response.record.audit_hash}.`
         );
       }
     } catch (err) {
@@ -100,186 +156,372 @@ export default function InvestigationRoomPage() {
 
   return (
     <AppLayout>
-      {/* Navigation & Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#233c46]">
+      {/* Top Header & Quick Switcher */}
+      <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#172a31] hover:bg-[#1f3741] border border-[#233c46] text-[#8aa1aa] hover:text-[#F5EED2] transition-colors"
+            className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors border ${
+              isMorning
+                ? 'bg-white hover:bg-[#f6efe6] border-[#eadbce] text-[#1c1917]'
+                : 'bg-white/[0.04] hover:bg-white/[0.08] border-white/10 text-slate-300'
+            }`}
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
+            <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#8aa1aa]">
+            <div className={`flex items-center gap-2 text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+              <span>CONTROL TOWER</span>
+              <span>/</span>
               <span>INVESTIGATION</span>
               <span>/</span>
-              <span className="text-[#EBAE29] font-medium">{data.id}</span>
+              <span className={`font-bold ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>{data.id}</span>
             </div>
-            <h1 className="text-base font-semibold text-[#F5EED2] mt-0.5">
+            <h1 className={`text-xl sm:text-2xl font-extrabold tracking-tight mt-0.5 flex items-center gap-3 ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
               {data.vendor} · {data.title}
             </h1>
           </div>
         </div>
 
-        {/* Case Switcher */}
-        <div className="flex items-center gap-1 p-0.5 rounded-sm bg-[#0e181c] border border-[#233c46] text-xs font-mono">
-          <span className="text-[#8aa1aa] px-2 text-[10px] uppercase">Case:</span>
-          {['EXC-101', 'EXC-102', 'EXC-103'].map((caseId) => (
-            <Link
-              key={caseId}
-              href={`/investigation/${caseId}`}
-              className={`px-2 py-0.5 rounded-sm transition-colors ${
-                id === caseId
-                  ? 'bg-[#172a31] text-[#F5EED2] font-medium'
-                  : 'text-[#8aa1aa] hover:text-[#F5EED2]'
+        {/* Case Switcher & Mode Pill */}
+        <div className="flex items-center gap-3">
+          {requiresApproval ? (
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+                isMorning
+                  ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                  : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
               }`}
             >
-              {caseId}
-            </Link>
-          ))}
+              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-amber-600' : 'bg-amber-400'}`} />
+              Tiered Human Checkpoints Enforced
+            </span>
+          ) : (
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+                isMorning
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+              }`}
+            >
+              <CheckCheck className={`h-3.5 w-3.5 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`} />
+              Auto-Verified Pipeline
+            </span>
+          )}
+
+          <div
+            className={`flex items-center gap-1.5 p-1 rounded-xl text-xs font-mono border ${
+              isMorning
+                ? 'bg-white border-[#eadbce]'
+                : 'bg-white/[0.04] border-white/10'
+            }`}
+          >
+            <span className={`px-2 text-[11px] uppercase font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>Cases:</span>
+            {['EXC-101', 'EXC-102', 'EXC-103'].map((caseId) => (
+              <Link
+                key={caseId}
+                href={`/investigation/${caseId}`}
+                className={`px-3 py-1 rounded-lg transition-all font-semibold ${
+                  id === caseId
+                    ? isMorning
+                      ? 'bg-[#c51636] text-white'
+                      : 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white'
+                    : isMorning
+                    ? 'text-[#78716c] hover:text-[#1c1917] hover:bg-[#f6efe6]'
+                    : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                }`}
+              >
+                {caseId}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Flat Decision Confirmation Banner */}
+      {/* Decision Banner */}
       {toastMessage && (
-        <div className="rounded-md border border-[#589C80]/40 bg-[#589C80]/10 p-3.5 text-xs text-[#F5EED2]">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-2.5">
-              <CheckCircle className="h-4 w-4 text-[#589C80] shrink-0 mt-0.5" />
+        <div
+          className={`relative overflow-hidden rounded-2xl border p-5 backdrop-blur-xl animate-in slide-in-from-top-2 duration-300 ${
+            isMorning
+              ? 'bg-emerald-50 border-emerald-200 text-[#1c1917]'
+              : 'border-emerald-500/40 bg-emerald-950/40 text-white'
+          }`}
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div
+                className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl font-bold ${
+                  isMorning ? 'bg-emerald-600 text-white' : 'bg-emerald-500 text-slate-950'
+                }`}
+              >
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
               <div className="space-y-1">
-                <div className="font-semibold text-[#F5EED2]">Audit Record Committed</div>
-                <p className="text-[#8aa1aa]">{toastMessage}</p>
+                <h4 className="text-sm font-bold flex items-center gap-2">
+                  Action Executed & Sealed
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-emerald-900/60 border border-emerald-600 text-emerald-300'}`}>
+                    STATUS: COMMITTED
+                  </span>
+                </h4>
+                <p className={`text-xs ${isMorning ? 'text-[#57534e]' : 'text-slate-300'}`}>{toastMessage}</p>
                 {decisionRecord && (
-                  <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-[#8aa1aa] pt-1">
-                    <span>Audit ID: <span className="text-[#F5EED2]">{decisionRecord.id}</span></span>
-                    <span>Decision: <span className="text-[#F5EED2]">{decisionRecord.decision}</span></span>
-                    <span className="flex items-center gap-1">
-                      Hash: <span className="text-[#F5EED2] bg-[#0e181c] px-1 py-0.2 rounded-sm border border-[#233c46]">{decisionRecord.audit_hash}</span>
-                      <button onClick={() => copyHash(decisionRecord.audit_hash)} className="text-[#8aa1aa] hover:text-[#F5EED2]">
-                        {copiedHash ? <Check className="h-3 w-3 text-[#589C80]" /> : <Copy className="h-3 w-3" />}
+                  <div className={`mt-2 flex flex-wrap items-center gap-4 text-xs font-mono ${isMorning ? 'text-[#57534e]' : 'text-emerald-300'}`}>
+                    <span>Audit ID: <strong className={isMorning ? 'text-[#1c1917]' : 'text-white'}>{decisionRecord.id}</strong></span>
+                    <span>Decision: <strong className={isMorning ? 'text-[#1c1917]' : 'text-white'}>{decisionRecord.decision}</strong></span>
+                    <span className="flex items-center gap-1.5">
+                      Hash: <span className={`px-2 py-0.5 rounded-md border font-bold ${isMorning ? 'bg-white border-[#eadbce] text-[#c51636]' : 'bg-slate-900/80 border-emerald-500/30 text-white'}`}>{decisionRecord.audit_hash}</span>
+                      <button onClick={() => copyHash(decisionRecord.audit_hash)} className="hover:opacity-75 transition-opacity">
+                        {copiedHash ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
                       </button>
                     </span>
+                    <span>Signer: <strong className={isMorning ? 'text-[#1c1917]' : 'text-white'}>{decisionRecord.reviewer}</strong></span>
                   </div>
                 )}
               </div>
             </div>
-            <button
-              onClick={() => setToastMessage(null)}
-              className="text-[#8aa1aa] hover:text-[#F5EED2] text-sm"
-            >
-              &times;
-            </button>
+
+            <div className="flex items-center gap-2">
+              <Link
+                href="/reports"
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all ${
+                  isMorning ? 'bg-[#c51636] text-white hover:bg-[#a8132e]' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
+                }`}
+              >
+                View Audit Report &rarr;
+              </Link>
+              <button onClick={() => setToastMessage(null)} className="text-slate-400 hover:opacity-75 p-1 text-sm">
+                &times;
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* 3-Column Split View Layout with Comfortable Spacing */}
+      {/* 3-Column Split View Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* COLUMN 1 (Left - 25% width / lg:col-span-3): Live Multi-Agent Investigation Trace */}
-        <div className="lg:col-span-3 space-y-4">
-          <div className="rounded-md border border-[#233c46] bg-[#172a31] p-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#233c46]">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-[#8aa1aa] font-mono">
-                Agent Pipeline Trace
-              </h3>
-              <span className="text-[10px] font-mono text-[#589C80]">4.56s Total</span>
+        {/* COLUMN 1 (Left - 30% width / lg:col-span-4): Tiered Multi-Agent Stepper Gates */}
+        <div className="lg:col-span-4 space-y-4">
+          <div
+            className={`rounded-2xl border backdrop-blur-xl p-5 transition-all ${
+              isMorning
+                ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
+                : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+            }`}
+          >
+            
+            {/* Stepper Header */}
+            <div className={`flex items-center justify-between pb-4 border-b ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
+              <div className="flex items-center gap-2.5">
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-lg border ${
+                    isMorning
+                      ? 'bg-rose-50 border-rose-200 text-[#c51636]'
+                      : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                  }`}
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className={`text-sm font-bold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                    Multi-Agent Approval Gates
+                  </h3>
+                  <span className={`text-[11px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                    {requiresApproval ? 'Step-by-Step Human Verification' : 'Autonomous Trace Completed'}
+                  </span>
+                </div>
+              </div>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce] text-[#78716c]' : 'bg-white/[0.06] text-slate-300 border border-white/10'}`}>
+                4 Gates
+              </span>
             </div>
 
-            {/* Vertical Timeline / Stepper */}
-            <div className="mt-4 space-y-4 text-xs">
-              {data.timeline.map((step, idx) => {
+            {/* Stepper Steps */}
+            <div className={`relative mt-5 space-y-5 before:absolute before:left-4 before:top-3 before:bottom-3 before:w-[2px] ${isMorning ? 'before:bg-[#eadbce]' : 'before:bg-white/10'}`}>
+              {timelineSteps.map((step) => {
                 const isCompleted = step.status === 'completed';
                 const isAwaiting = step.status === 'awaiting_input';
 
                 return (
-                  <div key={idx} className="relative flex items-start gap-3">
-                    {/* Step Icon */}
+                  <div key={step.step} className="relative flex items-start gap-3.5">
+                    {/* Stepper Node Icon */}
                     <div
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-[10px] font-mono mt-0.5 ${
+                      className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold transition-all ${
                         isCompleted
-                          ? 'bg-[#589C80]/15 text-[#589C80] border border-[#589C80]/30'
+                          ? isMorning
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-emerald-500 text-slate-950'
                           : isAwaiting
-                          ? 'bg-[#EBAE29]/15 text-[#EBAE29] border border-[#EBAE29]/30'
-                          : 'bg-[#0e181c] text-[#8aa1aa] border border-[#233c46]'
+                          ? isMorning
+                            ? 'bg-[#c51636] text-white animate-amber-ring'
+                            : 'bg-amber-400 text-slate-950 animate-amber-ring'
+                          : isMorning
+                          ? 'bg-[#fcfaf6] text-[#a8a29e] border border-[#eadbce]'
+                          : 'bg-slate-800/80 text-slate-500 border border-white/10'
                       }`}
                     >
                       {isCompleted ? (
-                        <Check className="h-3 w-3" />
+                        <Check className="h-4 w-4 stroke-[3]" />
                       ) : isAwaiting ? (
-                        <Clock className="h-3 w-3" />
+                        <Clock className="h-4 w-4 stroke-[2.5]" />
                       ) : (
-                        <span>{step.step}</span>
+                        <Lock className="h-3.5 w-3.5" />
                       )}
                     </div>
 
-                    {/* Step Details */}
-                    <div className="flex-1 space-y-1">
+                    {/* Step Card */}
+                    <div
+                      className={`flex-1 rounded-xl p-3.5 transition-all border ${
+                        isAwaiting
+                          ? isMorning
+                            ? 'bg-rose-50/50 border-rose-300 shadow-xs'
+                            : 'bg-amber-500/[0.04] border-amber-500/40'
+                          : isCompleted
+                          ? isMorning
+                            ? 'bg-[#fcfaf6] border-[#eadbce]'
+                            : 'bg-white/[0.02] border-white/10'
+                          : isMorning
+                          ? 'bg-[#fcfaf6]/50 border-[#eadbce]/50 opacity-60'
+                          : 'bg-white/[0.01] border-white/5 opacity-60'
+                      }`}
+                    >
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-[#F5EED2]">
-                          {step.agent}
+                        <span className={`text-xs font-bold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                          Gate {step.step}: {step.agent}
                         </span>
-                        <span className="text-[10px] font-mono text-[#8aa1aa]">
+                        <span className={`text-[10px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                           {step.duration}
                         </span>
                       </div>
-                      <p className="text-[11px] text-[#8aa1aa] leading-relaxed">
+
+                      <div className={`text-[11px] font-mono mt-0.5 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                        {step.role} · {step.timestamp}
+                      </div>
+
+                      <p className={`text-xs leading-relaxed mt-1.5 ${isMorning ? 'text-[#57534e]' : 'text-slate-300'}`}>
                         {step.description}
                       </p>
-                      <div>
+
+                      {/* Badge */}
+                      <div className="mt-2 flex items-center justify-between">
                         <span
-                          className={`inline-block text-[10px] font-mono px-1.5 py-0.2 rounded-sm ${
+                          className={`inline-flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full ${
                             isCompleted
-                              ? 'bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20'
-                              : 'bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20'
+                              ? isMorning
+                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                                : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              : isAwaiting
+                              ? isMorning
+                                ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                                : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                              : isMorning
+                              ? 'bg-stone-100 text-stone-500 border border-stone-200'
+                              : 'bg-white/[0.04] text-slate-500 border border-white/5'
                           }`}
                         >
+                          {isCompleted ? (
+                            <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                          ) : (
+                            <Clock className={`h-3 w-3 ${isMorning ? 'text-[#c51636]' : 'text-amber-400'}`} />
+                          )}
                           {step.badge}
                         </span>
+
+                        {isCompleted && step.confirmedByHuman && (
+                          <span className={`text-[10px] font-mono font-semibold flex items-center gap-1 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
+                            <Check className="h-2.5 w-2.5" /> Human Verified
+                          </span>
+                        )}
                       </div>
+
+                      {/* Action Button under active step */}
+                      {requiresApproval && isAwaiting && step.step <= 4 && (
+                        <div className={`mt-3 pt-3 border-t ${isMorning ? 'border-rose-200' : 'border-amber-500/20'}`}>
+                          <button
+                            onClick={() => handleConfirmStep(step.step)}
+                            disabled={isAdvancingStep}
+                            className={`w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                              isMorning
+                                ? 'bg-[#c51636] hover:bg-[#a8132e] text-white shadow-sm'
+                                : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                            }`}
+                          >
+                            {isAdvancingStep ? (
+                              <>
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                <span>{stepAdvancingMsg}</span>
+                              </>
+                            ) : (
+                              <>
+                                <ShieldCheck className="h-3.5 w-3.5" />
+                                <span>{step.confirmLabel || `Confirm Gate ${step.step} Finding`}</span>
+                                <ArrowRight className="h-3 w-3 ml-1" />
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Pipeline Telemetry Footer */}
-            <div className="mt-5 pt-3 border-t border-[#233c46] text-[11px] font-mono text-[#8aa1aa] space-y-1">
+            {/* Telemetry Footer */}
+            <div className={`mt-6 pt-4 border-t text-xs font-mono space-y-1.5 ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
               <div className="flex justify-between">
-                <span>Model Engine:</span>
-                <span className="text-[#F5EED2]">Sentinel-v4</span>
+                <span>Ensemble Architecture:</span>
+                <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>4 Cognitive Nodes</span>
               </div>
               <div className="flex justify-between">
-                <span>Confidence:</span>
-                <span className="text-red-400 font-medium">{data.risk_score}% Anomaly</span>
+                <span>Pipeline Integrity:</span>
+                <span className={`font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>SHA-256 HMAC Sealed</span>
               </div>
             </div>
+
           </div>
         </div>
 
         {/* COLUMN 2 (Middle - 45% width / lg:col-span-5): Discrepancy & Evidence Viewer */}
-        <div className="lg:col-span-5 space-y-4">
+        <div className="lg:col-span-5 space-y-5">
           
-          {/* High-level Anomaly Header */}
-          <div className="rounded-md border border-[#233c46] bg-[#172a31] p-4">
-            <div className="flex items-start justify-between gap-3">
+          {/* Anomaly Header Card */}
+          <div
+            className={`rounded-2xl border backdrop-blur-xl p-5 transition-all ${
+              isMorning
+                ? 'bg-white/85 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
+                : 'bg-slate-900/60 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="inline-block px-2 py-0.5 rounded-sm text-[11px] font-mono bg-red-500/10 text-red-400 border border-red-500/20">
-                  {data.risk_level} · Score: {data.risk_score}/100
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+                    isMorning
+                      ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                      : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
+                  }`}
+                >
+                  {data.risk_level} · Risk Score: {data.risk_score}/100
                 </span>
-                <h2 className="text-sm font-semibold text-[#F5EED2] mt-2">
+                <h2 className={`text-lg font-bold mt-2.5 tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
                   {data.title}
                 </h2>
-                <div className="flex items-center gap-2 text-xs text-[#8aa1aa] mt-1">
-                  <span>Vendor: {data.vendor}</span>
+                <div className={`flex flex-wrap items-center gap-3 mt-1.5 text-xs ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  <span className={`flex items-center gap-1.5 font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>
+                    <Building2 className={`h-3.5 w-3.5 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`} />
+                    Vendor: {data.vendor}
+                  </span>
                   <span>•</span>
                   <span>Category: {data.vendor_category}</span>
                 </div>
               </div>
 
               <div className="text-right shrink-0">
-                <div className="text-[10px] font-mono text-[#8aa1aa] uppercase">Exposure</div>
-                <div className="text-lg font-semibold font-mono text-red-400">
+                <div className={`text-[11px] font-mono uppercase font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  Amount at Risk
+                </div>
+                <div className={`text-2xl font-extrabold font-mono tracking-tight mt-0.5 ${isMorning ? 'text-[#c51636]' : 'text-white'}`}>
                   {data.formatted_amount}
                 </div>
               </div>
@@ -287,78 +529,97 @@ export default function InvestigationRoomPage() {
           </div>
 
           {/* Side-by-Side Comparison Cards (Box A vs Box B) */}
-          <div className="space-y-2">
-            <div className="text-xs font-mono uppercase tracking-wider text-[#8aa1aa]">
-              Transaction Differential
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <span className={`text-xs font-mono uppercase tracking-wider font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                Side-by-Side Transaction Differential
+              </span>
+              <span className={`text-xs font-mono px-2.5 py-0.5 rounded-full ${isMorning ? 'bg-rose-100 text-[#c51636] border border-rose-200' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
+                17-Minute Interval
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Box A (Recorded Payment 1) */}
-              <div className="rounded-md border border-[#233c46] bg-[#172a31] p-3.5 space-y-2.5">
+              <div
+                className={`rounded-2xl border p-4 space-y-3 relative overflow-hidden transition-all ${
+                  isMorning
+                    ? 'bg-white border-emerald-200 shadow-xs'
+                    : 'bg-slate-900/60 border-emerald-500/30'
+                }`}
+              >
+                <div className={`absolute top-0 left-0 right-0 h-1 ${isMorning ? 'bg-emerald-600' : 'bg-emerald-400'}`} />
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-[#589C80]">
+                  <span className={`text-xs font-bold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
                     {data.comparison.box_a.title}
                   </span>
-                  <span className="px-1.5 py-0.2 rounded-sm text-[10px] font-mono bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20">
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/25'}`}>
                     {data.comparison.box_a.status}
                   </span>
                 </div>
 
-                <div className="space-y-1.5 font-mono text-xs">
-                  <div className="flex justify-between text-[#8aa1aa]">
-                    <span>Txn ID:</span>
-                    <span className="text-[#F5EED2]">{data.comparison.box_a.txn_id}</span>
+                <div className="space-y-2 font-mono text-xs">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                    <span>Txn Ref:</span>
+                    <span className={`font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{data.comparison.box_a.txn_id}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                     <span>Date:</span>
-                    <span className="text-[#F5EED2]">{data.comparison.box_a.date}</span>
+                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_a.date}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                     <span>Amount:</span>
-                    <span className="text-[#589C80] font-medium">{data.comparison.box_a.amount}</span>
+                    <span className={`font-bold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>{data.comparison.box_a.amount}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                     <span>Invoice:</span>
-                    <span className="text-[#F5EED2]">{data.comparison.box_a.invoice_ref}</span>
+                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_a.invoice_ref}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
-                    <span>Account:</span>
-                    <span className="text-[#F5EED2]">{data.comparison.box_a.beneficiary_account}</span>
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                    <span>Beneficiary:</span>
+                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_a.beneficiary_account}</span>
                   </div>
                 </div>
               </div>
 
               {/* Box B (Flagged Payment 2) */}
-              <div className="rounded-md border border-red-500/30 bg-[#172a31] p-3.5 space-y-2.5">
+              <div
+                className={`rounded-2xl border p-4 space-y-3 relative overflow-hidden transition-all ${
+                  isMorning
+                    ? 'bg-white border-rose-200 shadow-xs'
+                    : 'bg-slate-900/60 border-rose-500/30'
+                }`}
+              >
+                <div className={`absolute top-0 left-0 right-0 h-1 ${isMorning ? 'bg-[#c51636]' : 'bg-rose-500'}`} />
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-red-400">
+                  <span className={`text-xs font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>
                     {data.comparison.box_b.title}
                   </span>
-                  <span className="px-1.5 py-0.2 rounded-sm text-[10px] font-mono bg-red-500/10 text-red-400 border border-red-500/20">
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-rose-100 text-[#c51636] border border-rose-200' : 'bg-rose-500/10 text-rose-300 border border-rose-500/25'}`}>
                     {data.comparison.box_b.status}
                   </span>
                 </div>
 
-                <div className="space-y-1.5 font-mono text-xs">
-                  <div className="flex justify-between text-[#8aa1aa]">
-                    <span>Txn ID:</span>
-                    <span className="text-[#F5EED2]">{data.comparison.box_b.txn_id}</span>
+                <div className="space-y-2 font-mono text-xs">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                    <span>Txn Ref:</span>
+                    <span className={`font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{data.comparison.box_b.txn_id}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                     <span>Date:</span>
-                    <span className="text-red-400">{data.comparison.box_b.date}</span>
+                    <span className={`font-semibold ${isMorning ? 'text-[#c51636]' : 'text-rose-300'}`}>{data.comparison.box_b.date}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                     <span>Amount:</span>
-                    <span className="text-red-400 font-medium">{data.comparison.box_b.amount}</span>
+                    <span className={`font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>{data.comparison.box_b.amount}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                     <span>Invoice:</span>
-                    <span className="text-red-400">{data.comparison.box_b.invoice_ref}</span>
+                    <span className={`font-semibold ${isMorning ? 'text-[#c51636]' : 'text-rose-300'}`}>{data.comparison.box_b.invoice_ref}</span>
                   </div>
-                  <div className="flex justify-between text-[#8aa1aa]">
-                    <span>Account:</span>
-                    <span className="text-[#F5EED2]">{data.comparison.box_b.beneficiary_account}</span>
+                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                    <span>Beneficiary:</span>
+                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_b.beneficiary_account}</span>
                   </div>
                 </div>
               </div>
@@ -366,28 +627,46 @@ export default function InvestigationRoomPage() {
           </div>
 
           {/* Adversarial Challenge Verdict Box */}
-          <div className="rounded-md border border-[#233c46] bg-[#172a31] p-4 space-y-3">
+          <div
+            className={`rounded-2xl border p-5 space-y-3 transition-all ${
+              isMorning
+                ? 'bg-rose-50/40 border-rose-200 text-[#1c1917]'
+                : 'bg-slate-900/60 border-indigo-500/30 text-white'
+            }`}
+          >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-[#EBAE29]" />
-                <h4 className="text-xs font-semibold text-[#F5EED2]">
+              <div className="flex items-center gap-2.5">
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-lg border ${
+                    isMorning
+                      ? 'bg-rose-100 border-rose-200 text-[#c51636]'
+                      : 'bg-indigo-500/20 border-indigo-500/30 text-indigo-400'
+                  }`}
+                >
+                  <Shield className="h-4 w-4" />
+                </div>
+                <h4 className={`text-sm font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
                   {data.adversarial_verdict.title}
                 </h4>
               </div>
-              <span className="px-1.5 py-0.2 rounded-sm text-[10px] font-mono bg-[#EBAE29]/10 text-[#EBAE29] border border-[#EBAE29]/20">
+              <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold border ${isMorning ? 'bg-rose-100 text-[#c51636] border-rose-200' : 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/25'}`}>
                 Confidence: {data.adversarial_verdict.confidence}
               </span>
             </div>
 
-            <p className="text-xs text-[#F5EED2] leading-relaxed bg-[#0e181c] p-3 rounded-sm border border-[#233c46]">
+            <p className={`text-xs leading-relaxed p-3.5 rounded-xl border ${isMorning ? 'bg-white border-[#eadbce] text-[#1c1917]' : 'bg-black/30 border-white/10 text-slate-200'}`}>
               &ldquo;{data.adversarial_verdict.verdict}&rdquo;
             </p>
 
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2 pt-1">
               {data.adversarial_verdict.flags.map((flag, i) => (
                 <span
                   key={i}
-                  className="text-[10px] font-mono px-2 py-0.5 rounded-sm bg-[#0e181c] border border-[#233c46] text-[#8aa1aa]"
+                  className={`text-[11px] font-mono px-2.5 py-1 rounded-full border ${
+                    isMorning
+                      ? 'bg-white border-[#eadbce] text-[#57534e]'
+                      : 'bg-white/[0.04] border-white/10 text-slate-300'
+                  }`}
                 >
                   • {flag}
                 </span>
@@ -396,85 +675,151 @@ export default function InvestigationRoomPage() {
           </div>
 
           {/* Source Document Link Cards */}
-          <div className="space-y-2">
-            <div className="text-xs font-mono uppercase tracking-wider text-[#8aa1aa]">
-              Source Documents (Click to View)
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <span className={`text-xs font-mono uppercase tracking-wider font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                Cross-Source Evidence Dossier (Click to Inspect)
+              </span>
+              <span className={`text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                3 Artifacts Verified
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {data.source_documents.map((doc) => (
                 <button
                   key={doc.id}
                   onClick={() => setSelectedDoc(doc)}
-                  className="flex flex-col text-left p-3 rounded-sm border border-[#233c46] bg-[#172a31] hover:bg-[#1b3038] hover:border-[#305361] transition-colors"
+                  className={`flex flex-col text-left p-3.5 rounded-2xl border transition-all group ${
+                    isMorning
+                      ? 'bg-white border-[#eadbce] hover:border-rose-300 shadow-xs'
+                      : 'bg-slate-900/60 border-white/10 hover:bg-white/[0.06] hover:border-white/20'
+                  }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <FileText className="h-4 w-4 text-[#EBAE29]" />
-                    <span className="text-[9px] font-mono text-[#8aa1aa]">
+                    <div
+                      className={`flex h-8 w-8 items-center justify-center rounded-xl border ${
+                        isMorning
+                          ? 'bg-rose-50 border-rose-200 text-[#c51636]'
+                          : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                      }`}
+                    >
+                      <FileText className="h-4 w-4" />
+                    </div>
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce] text-[#78716c]' : 'bg-white/[0.06] text-slate-300 border border-white/10'}`}>
                       {doc.type}
                     </span>
                   </div>
 
-                  <span className="mt-2 text-xs font-medium text-[#F5EED2] truncate w-full font-mono">
+                  <span className={`mt-2.5 text-xs font-bold transition-colors truncate w-full font-mono ${isMorning ? 'text-[#1c1917] group-hover:text-[#c51636]' : 'text-white group-hover:text-emerald-400'}`}>
                     {doc.filename}
                   </span>
 
-                  <div className="mt-1 flex items-center justify-between w-full text-[10px] font-mono text-[#8aa1aa]">
+                  <div className={`mt-1 flex items-center justify-between w-full text-[11px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                     <span>{doc.size}</span>
-                    <span className="text-[#589C80]">Verified</span>
+                    <span className={`font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>SHA-256</span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
+
         </div>
 
-        {/* COLUMN 3 (Right - 30% width / lg:col-span-4): Human Checkpoint & Action Panel */}
-        <div className="lg:col-span-4 space-y-4">
-          <div className="rounded-md border border-[#233c46] bg-[#172a31] p-5 space-y-4 sticky top-20">
+        {/* COLUMN 3 (Right - 25% width / lg:col-span-3): Human Checkpoint & Action Panel */}
+        <div className="lg:col-span-3 space-y-4">
+          <div
+            className={`sticky top-20 rounded-2xl border backdrop-blur-xl p-5 space-y-5 transition-all ${
+              isMorning
+                ? 'bg-white/90 border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.06)] text-[#1c1917]'
+                : 'bg-slate-900/70 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] text-white'
+            }`}
+          >
+            
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-[#233c46] pb-3">
-              <div>
-                <h3 className="text-sm font-semibold text-[#F5EED2]">
-                  Human Decision Required
-                </h3>
-                <span className="text-[11px] font-mono text-[#8aa1aa]">
-                  SLA: 02h 14m Remaining
-                </span>
+            <div className={`flex items-center justify-between border-b pb-4 ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
+              <div className="flex items-center gap-2.5">
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-xl border ${
+                    isMorning
+                      ? 'bg-rose-50 border-rose-200 text-[#c51636]'
+                      : 'bg-gradient-to-br from-emerald-500/20 to-indigo-500/20 border-white/15 text-white'
+                  }`}
+                >
+                  <UserCheck className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className={`text-sm font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                    Final Sign-off Authority
+                  </h3>
+                  <span className={`text-[11px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                    SLA: 02h 14m Remaining
+                  </span>
+                </div>
               </div>
-              <span className="h-2 w-2 rounded-full bg-[#EBAE29]" />
+              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`} />
             </div>
+
+            {/* Status Banner */}
+            {!allGatesCompleted ? (
+              <div className={`rounded-xl p-3.5 space-y-1.5 border ${isMorning ? 'bg-amber-50 border-amber-200 text-amber-950' : 'bg-amber-500/10 border-amber-500/30 text-amber-200'}`}>
+                <div className="flex items-center gap-2 text-xs font-bold font-mono">
+                  <Lock className={`h-3.5 w-3.5 ${isMorning ? 'text-amber-800' : 'text-amber-400'}`} />
+                  <span>Decision Panel Locked</span>
+                </div>
+                <p className="text-[11px] leading-relaxed">
+                  Complete step-by-step verification first. Confirm active Gate {activeStepIndex}/4 in the trace timeline to unlock final decision.
+                </p>
+              </div>
+            ) : (
+              <div className={`rounded-xl p-3.5 space-y-1 border ${isMorning ? 'bg-emerald-50 border-emerald-200 text-emerald-950' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'}`}>
+                <div className="flex items-center gap-2 text-xs font-bold font-mono">
+                  <Unlock className={`h-3.5 w-3.5 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`} />
+                  <span>All Gates Verified — Armed</span>
+                </div>
+                <p className="text-[11px]">
+                  All 4 multi-agent checkpoints confirmed. You may now commit the final decision.
+                </p>
+              </div>
+            )}
 
             {/* Reviewer Profile */}
-            <div className="rounded-sm bg-[#0e181c] p-2.5 border border-[#233c46] text-xs font-mono space-y-1">
-              <div className="flex justify-between text-[#8aa1aa]">
-                <span>Reviewer:</span>
-                <span className="text-[#F5EED2]">Abhinav K.</span>
+            <div className={`rounded-xl p-3 border text-xs font-mono space-y-1.5 ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce]' : 'bg-white/[0.03] border-white/10'}`}>
+              <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                <span>Active Reviewer:</span>
+                <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>Abhinav K.</span>
               </div>
-              <div className="flex justify-between text-[#8aa1aa]">
-                <span>Role:</span>
-                <span className="text-[#EBAE29]">Financial Controller</span>
+              <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                <span>Role Authority:</span>
+                <span className={`font-semibold ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>Financial Controller</span>
+              </div>
+              <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                <span>Certificate:</span>
+                <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-300'}>FC-8812-SOX</span>
               </div>
             </div>
 
-            {/* Reviewer Notes Textarea */}
+            {/* Notes */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-[#F5EED2] block">
+              <label className={`text-xs font-bold block ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
                 Reviewer Notes / Escalation Reason
               </label>
 
-              {/* Preset suggestion pills */}
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  'Confirmed Duplicate - Block Immediately',
-                  'Violates Rate Cap in Signed MSA',
+                  'Confirmed Duplicate - Block',
+                  'MSA Rate Non-Compliant',
                   'Escalate to CFO'
                 ].map((preset, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setReviewerNotes(preset)}
-                    className="text-[10px] font-mono px-2 py-0.5 rounded-sm bg-[#0e181c] hover:bg-[#132228] text-[#8aa1aa] hover:text-[#F5EED2] border border-[#233c46] transition-colors"
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full border transition-colors ${
+                      isMorning
+                        ? 'bg-[#fcfaf6] hover:bg-white text-[#57534e] hover:text-[#1c1917] border-[#eadbce]'
+                        : 'bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white border-white/10'
+                    }`}
                   >
                     + {preset}
                   </button>
@@ -485,19 +830,31 @@ export default function InvestigationRoomPage() {
                 value={reviewerNotes}
                 onChange={(e) => setReviewerNotes(e.target.value)}
                 placeholder="Enter justification notes..."
-                rows={4}
-                className="w-full rounded-sm bg-[#0e181c] border border-[#233c46] p-2.5 text-xs text-[#F5EED2] placeholder:text-[#6c858f] focus:outline-none focus:border-[#EBAE29] font-mono transition-colors"
+                rows={3}
+                className={`w-full rounded-xl p-3 text-xs font-mono transition-colors focus:outline-none ${
+                  isMorning
+                    ? 'bg-[#fcfaf6] border border-[#eadbce] text-[#1c1917] placeholder:text-[#a8a29e] focus:border-[#c51636] focus:bg-white'
+                    : 'bg-black/40 border border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50'
+                }`}
               />
             </div>
 
-            {/* Action Buttons (Large, high contrast, clean flat SaaS style) */}
-            <div className="space-y-2 pt-2">
+            {/* Final Action Buttons */}
+            <div className="space-y-2.5 pt-1">
               {/* Red Button: [ Reject & Block Transaction ] */}
               <button
                 type="button"
                 onClick={() => handleDecision('REJECT')}
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-sm font-medium text-xs text-white bg-red-600 hover:bg-red-700 active:scale-[0.99] transition-all disabled:opacity-50"
+                disabled={isSubmitting || !allGatesCompleted}
+                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs transition-all ${
+                  allGatesCompleted
+                    ? isMorning
+                      ? 'text-white bg-[#c51636] hover:bg-[#a8132e] shadow-sm active:scale-[0.98]'
+                      : 'text-white bg-rose-600 hover:bg-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.35)] active:scale-[0.98]'
+                    : isMorning
+                    ? 'text-[#a8a29e] bg-stone-100 border border-stone-200 cursor-not-allowed'
+                    : 'text-slate-500 bg-white/[0.04] border border-white/5 cursor-not-allowed'
+                }`}
               >
                 <XCircle className="h-4 w-4" />
                 <span>Reject & Block Transaction</span>
@@ -507,8 +864,16 @@ export default function InvestigationRoomPage() {
               <button
                 type="button"
                 onClick={() => handleDecision('ESCALATE')}
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-sm font-medium text-xs text-[#132228] bg-[#EBAE29] hover:bg-[#dfa21e] active:scale-[0.99] transition-all disabled:opacity-50"
+                disabled={isSubmitting || !allGatesCompleted}
+                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs transition-all ${
+                  allGatesCompleted
+                    ? isMorning
+                      ? 'text-white bg-amber-600 hover:bg-amber-700 shadow-sm active:scale-[0.98]'
+                      : 'text-slate-950 bg-amber-400 hover:bg-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.35)] active:scale-[0.98]'
+                    : isMorning
+                    ? 'text-[#a8a29e] bg-stone-100 border border-stone-200 cursor-not-allowed'
+                    : 'text-slate-500 bg-white/[0.04] border border-white/5 cursor-not-allowed'
+                }`}
               >
                 <AlertTriangle className="h-4 w-4" />
                 <span>Escalate to CFO</span>
@@ -518,21 +883,31 @@ export default function InvestigationRoomPage() {
               <button
                 type="button"
                 onClick={() => handleDecision('APPROVE')}
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-sm font-medium text-xs text-white bg-[#589C80] hover:bg-[#4d8a71] active:scale-[0.99] transition-all disabled:opacity-50"
+                disabled={isSubmitting || !allGatesCompleted}
+                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs transition-all ${
+                  allGatesCompleted
+                    ? isMorning
+                      ? 'text-white bg-emerald-700 hover:bg-emerald-800 shadow-sm active:scale-[0.98]'
+                      : 'text-white bg-emerald-500 hover:bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.35)] active:scale-[0.98]'
+                    : isMorning
+                    ? 'text-[#a8a29e] bg-stone-100 border border-stone-200 cursor-not-allowed'
+                    : 'text-slate-500 bg-white/[0.04] border border-white/5 cursor-not-allowed'
+                }`}
               >
-                <CheckCircle className="h-4 w-4" />
+                <CheckCircle2 className="h-4 w-4" />
                 <span>Approve Payment</span>
               </button>
             </div>
 
             {/* Audit Notice */}
-            <div className="pt-2 border-t border-[#233c46] text-[10px] font-mono text-[#8aa1aa] flex items-center gap-1.5">
-              <Lock className="h-3 w-3 text-[#589C80]" />
-              <span>Decisions logged to SOX-compliant audit trail</span>
+            <div className={`pt-2 border-t text-[10px] font-mono flex items-center gap-1.5 ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
+              <Lock className={`h-3 w-3 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`} />
+              <span>Decisions signed with cryptographic hash</span>
             </div>
+
           </div>
         </div>
+
       </div>
 
       {/* Source Document Modal */}

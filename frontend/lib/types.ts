@@ -23,19 +23,23 @@ export interface FinancialException {
   created_at: string;
   summary: string;
   status: 'AWAITING_DECISION' | 'RESOLVED_APPROVE' | 'RESOLVED_REJECT' | 'RESOLVED_ESCALATE' | string;
+  requires_approval: boolean;
+  current_step: number;
 }
 
 export interface AgentTimelineStep {
   step: number;
   agent: string;
   role: string;
-  status: 'completed' | 'awaiting_input' | 'processing' | 'failed';
+  status: 'completed' | 'awaiting_input' | 'processing' | 'failed' | 'locked';
   timestamp: string;
   duration: string;
   description: string;
   badge: string;
   reasoningDetails?: string[];
   model?: string;
+  confirmLabel?: string;
+  confirmedByHuman?: boolean;
 }
 
 export interface ComparisonBox {
@@ -84,6 +88,8 @@ export interface InvestigationDetail {
   currency: string;
   formatted_amount: string;
   status: string;
+  requires_approval: boolean;
+  current_step: number;
   timeline: AgentTimelineStep[];
   comparison: {
     box_a: ComparisonBox;

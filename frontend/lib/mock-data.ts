@@ -16,6 +16,8 @@ export const INITIAL_EXCEPTIONS: FinancialException[] = [
     created_at: '2026-09-12T10:31:00Z',
     summary: 'Duplicate invoice reference detected across two independent ERP payment batches within 17 minutes.',
     status: 'AWAITING_DECISION',
+    requires_approval: true,
+    current_step: 2,
   },
   {
     id: 'EXC-102',
@@ -32,6 +34,8 @@ export const INITIAL_EXCEPTIONS: FinancialException[] = [
     created_at: '2026-09-13T14:15:00Z',
     summary: 'Line item hourly rate (₹2,800/hr) exceeds Master Services Agreement cap (₹2,200/hr) by 27.2%.',
     status: 'AWAITING_DECISION',
+    requires_approval: true,
+    current_step: 3,
   },
   {
     id: 'EXC-103',
@@ -48,6 +52,8 @@ export const INITIAL_EXCEPTIONS: FinancialException[] = [
     created_at: '2026-09-14T09:05:00Z',
     summary: '340% month-over-month billing increase without corresponding increase in logistics delivery waybills.',
     status: 'AWAITING_DECISION',
+    requires_approval: false,
+    current_step: 5,
   },
 ];
 
@@ -63,6 +69,8 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
     currency: 'INR',
     formatted_amount: '₹84,500',
     status: 'AWAITING_HUMAN_CHECKPOINT',
+    requires_approval: true,
+    current_step: 2,
     timeline: [
       {
         step: 1,
@@ -72,40 +80,46 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         timestamp: '10:31:02 AM',
         duration: '120ms',
         description: 'Triggered on ingestion batch #4819. Dispatched risk evaluation and isolated payment records.',
-        badge: 'Orchestrated',
-        model: 'Sentinel-Orchestrator-v3',
+        badge: 'Ingestion Verified',
+        model: 'Sentinel-Orchestrator-v4',
+        confirmLabel: 'Confirm Dispatch Protocol',
+        confirmedByHuman: true,
         reasoningDetails: [
           'Scanned incoming payment stream #4819 containing 142 remittances.',
-          'Detected fuzzy string match between INV-1042 and pending transaction TXN-8417.',
-          'Initiated parallel worker dispatch to Risk and Retrieval clusters.'
+          'Detected token match between INV-1042 and pending transaction TXN-8417.',
+          'Dispatched parallel worker isolation.'
         ]
       },
       {
         step: 2,
         agent: 'Risk Investigator Agent',
         role: 'Pattern Recognition',
-        status: 'completed',
+        status: 'awaiting_input',
         timestamp: '10:31:04 AM',
         duration: '840ms',
         description: 'Flagged Duplicate: 94% confidence. Found near-identical token signature with TXN-8392.',
         badge: 'Flagged Duplicate: 94% confidence',
         model: 'Risk-Vector-DeepAudit-v2',
+        confirmLabel: 'Confirm Risk Finding (94%)',
+        confirmedByHuman: false,
         reasoningDetails: [
           'Calculated token cosine similarity: 0.982 against settled record TXN-8392.',
           'Identical payee IFSC (HDFC0000240) and beneficiary account HDFC-****-9921.',
-          'Dispatched alert priority level 1 (Critical Financial Anomaly).'
+          'Requires human confirmation before evidence harvesting commitment.'
         ]
       },
       {
         step: 3,
         agent: 'Evidence Agent',
         role: 'Cross-System Retrieval',
-        status: 'completed',
+        status: 'locked',
         timestamp: '10:31:07 AM',
         duration: '1.2s',
         description: 'Gathered 3 cross-source records: SAP ERP Ledger, HDFC Corporate Bank Feed, and PO-902 scanned artifact.',
-        badge: 'Gathered 3 cross-source records',
+        badge: '3 Cross-Source Records',
         model: 'DocRetrieval-RAG-Pro',
+        confirmLabel: 'Accept Evidence Chain',
+        confirmedByHuman: false,
         reasoningDetails: [
           'Retrieved SAP FI record for PO-902 with authorized allocation of ₹84,500.',
           'Queried HDFC Open Banking webhook for TXN-8392 cleared UTR timestamp (10:14:02 AM).',
@@ -116,32 +130,31 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         step: 4,
         agent: 'Adversarial Challenge Agent',
         role: 'Counterfactual Validator',
-        status: 'completed',
+        status: 'locked',
         timestamp: '10:31:11 AM',
         duration: '2.4s',
         description: 'Attempted to disprove finding; confirmed partial settlement mismatch. Hypothesis of split tranche rejected.',
-        badge: 'Disproved hypothesis; confirmed duplicate',
+        badge: 'Hypothesis Rejected',
         model: 'Adversarial-Refutation-Agent-4.1',
+        confirmLabel: 'Accept Challenge Result',
+        confirmedByHuman: false,
         reasoningDetails: [
           'Simulated hypothesis H1: TXN-8417 is a partial milestone tranche for multi-stage delivery.',
           'Evaluated PO terms: Milestone is explicitly marked "Single 100% Upfront Settlement".',
-          'Checked ERP historical supplier terms: Vendor does not participate in milestone split billing.',
-          'Conclusion: Hypothesis H1 rejected. Confidence of false positive: <1.6%.'
+          'Conclusion: Hypothesis H1 rejected. Confidence of duplicate: 98.4%.'
         ]
       },
       {
         step: 5,
         agent: 'Human Checkpoint',
-        role: 'Financial Controller',
-        status: 'awaiting_input',
+        role: 'Final Decision Authority',
+        status: 'locked',
         timestamp: '10:31:12 AM',
-        duration: 'Active',
-        description: 'Awaiting Financial Controller sign-off or CFO escalation before transaction commit to payment gateway.',
-        badge: 'Awaiting Input',
-        reasoningDetails: [
-          'Transaction TXN-8417 placed in temporary escrow lock (TTL: 4 hours).',
-          'Audit trail pending human cryptographic authorization signature.'
-        ]
+        duration: 'Pending Gates',
+        description: 'Final sign-off gate to commit decision (Approve / Reject / Escalate) to the immutable audit trail.',
+        badge: 'Final Sign-off',
+        confirmLabel: 'Complete Final Decision',
+        confirmedByHuman: false,
       }
     ],
     comparison: {
@@ -231,6 +244,8 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
     currency: 'INR',
     formatted_amount: '₹15,000',
     status: 'AWAITING_HUMAN_CHECKPOINT',
+    requires_approval: true,
+    current_step: 3,
     timeline: [
       {
         step: 1,
@@ -241,7 +256,9 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         duration: '95ms',
         description: 'Triggered on AP ingestion batch #4823. Matched against Vendor Contract Repository.',
         badge: 'Orchestrated',
-        model: 'Sentinel-Orchestrator-v3'
+        model: 'Sentinel-Orchestrator-v4',
+        confirmLabel: 'Confirm Dispatch',
+        confirmedByHuman: true
       },
       {
         step: 2,
@@ -251,40 +268,48 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         timestamp: '02:15:04 PM',
         duration: '620ms',
         description: 'Flagged Rate Variance: 82% confidence. Billed rate exceeds MSA clause by 27.2%.',
-        badge: 'Flagged Rate Variance (82%)',
-        model: 'Risk-Vector-DeepAudit-v2'
+        badge: 'Rate Variance (82%)',
+        model: 'Risk-Vector-DeepAudit-v2',
+        confirmLabel: 'Confirm Rate Variance',
+        confirmedByHuman: true
       },
       {
         step: 3,
         agent: 'Evidence Agent',
         role: 'Cross-System Retrieval',
-        status: 'completed',
+        status: 'awaiting_input',
         timestamp: '02:15:07 PM',
         duration: '1.1s',
         description: 'Retrieved 3 cross-source records: Signed MSA Schedule B, Work Order WO-4412, and Jira Timesheet.',
-        badge: 'Gathered 3 cross-source records',
-        model: 'DocRetrieval-RAG-Pro'
+        badge: '3 Sources Verified',
+        model: 'DocRetrieval-RAG-Pro',
+        confirmLabel: 'Accept Evidence Chain',
+        confirmedByHuman: false
       },
       {
         step: 4,
         agent: 'Adversarial Challenge Agent',
         role: 'Counterfactual Validator',
-        status: 'completed',
+        status: 'locked',
         timestamp: '02:15:10 PM',
         duration: '1.8s',
         description: 'Tested whether emergency SLA surcharge applied. Disproved: No emergency sprint logged.',
-        badge: 'Emergency Surcharge Disproved',
-        model: 'Adversarial-Refutation-Agent-4.1'
+        badge: 'Surcharge Disproved',
+        model: 'Adversarial-Refutation-Agent-4.1',
+        confirmLabel: 'Accept Refutation Result',
+        confirmedByHuman: false
       },
       {
         step: 5,
         agent: 'Human Checkpoint',
-        role: 'Financial Controller',
-        status: 'awaiting_input',
+        role: 'Final Decision Authority',
+        status: 'locked',
         timestamp: '02:15:11 PM',
-        duration: 'Active',
-        description: 'Awaiting Controller sign-off to reject invoice and request re-issuance at contracted cap.',
-        badge: 'Awaiting Input'
+        duration: 'Pending Gates',
+        description: 'Final controller sign-off to reject invoice and request re-issuance at contracted cap.',
+        badge: 'Awaiting Sign-off',
+        confirmLabel: 'Complete Final Decision',
+        confirmedByHuman: false
       }
     ],
     comparison: {
@@ -362,6 +387,8 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
     currency: 'INR',
     formatted_amount: '₹1,80,000',
     status: 'AWAITING_HUMAN_CHECKPOINT',
+    requires_approval: false,
+    current_step: 5,
     timeline: [
       {
         step: 1,
@@ -372,7 +399,9 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         duration: '110ms',
         description: 'Periodic logistics ledger audit job triggered by scheduled cron.',
         badge: 'Orchestrated',
-        model: 'Sentinel-Orchestrator-v3'
+        model: 'Sentinel-Orchestrator-v4',
+        confirmLabel: 'Auto-Verified',
+        confirmedByHuman: true
       },
       {
         step: 2,
@@ -382,8 +411,10 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         timestamp: '09:05:04 AM',
         duration: '980ms',
         description: 'Z-score outlier detection triggered: +3.4σ above 90-day moving average.',
-        badge: 'Sudden Volume Spike: 76% confidence',
-        model: 'Risk-Vector-DeepAudit-v2'
+        badge: 'Volume Spike: 76% confidence',
+        model: 'Risk-Vector-DeepAudit-v2',
+        confirmLabel: 'Auto-Verified',
+        confirmedByHuman: true
       },
       {
         step: 3,
@@ -393,8 +424,10 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         timestamp: '09:05:07 AM',
         duration: '1.4s',
         description: 'Retrieved 3 cross-source records: Warehouse dock gate logs, TMS manifests, and vendor billing.',
-        badge: 'Gathered 3 cross-source records',
-        model: 'DocRetrieval-RAG-Pro'
+        badge: '3 Sources Verified',
+        model: 'DocRetrieval-RAG-Pro',
+        confirmLabel: 'Auto-Verified',
+        confirmedByHuman: true
       },
       {
         step: 4,
@@ -405,17 +438,21 @@ export const INVESTIGATION_DATABASE: Record<string, InvestigationDetail> = {
         duration: '2.1s',
         description: 'Tested whether festive pre-stocking explained volume surge. 26 waybills have no dock verification.',
         badge: '26 Gate Receipts Missing',
-        model: 'Adversarial-Refutation-Agent-4.1'
+        model: 'Adversarial-Refutation-Agent-4.1',
+        confirmLabel: 'Auto-Verified',
+        confirmedByHuman: true
       },
       {
         step: 5,
         agent: 'Human Checkpoint',
-        role: 'Financial Controller',
+        role: 'Final Decision Authority',
         status: 'awaiting_input',
         timestamp: '09:05:12 AM',
         duration: 'Active',
-        description: 'Requires logistics director verification or holding invoice payment pending delivery validation.',
-        badge: 'Awaiting Input'
+        description: 'Ready for immediate final sign-off (requires supply chain manager verification).',
+        badge: 'Awaiting Decision',
+        confirmLabel: 'Ready for Final Decision',
+        confirmedByHuman: false
       }
     ],
     comparison: {
@@ -517,7 +554,7 @@ export const CASHFLOW_TREND_DATA = [
 ];
 
 export const CATEGORY_RISK_DATA = [
-  { category: 'Hardware & Infra', atRisk: 84500, count: 1, color: '#C50337' },
-  { category: 'Consulting Services', atRisk: 15000, count: 1, color: '#f59e0b' },
-  { category: 'Freight & Logistics', atRisk: 180000, count: 1, color: '#ef4444' },
+  { category: 'Hardware & Infrastructure', atRisk: 84500, count: 1, color: '#f43f5e' },
+  { category: 'IT & Software Consulting', atRisk: 15000, count: 1, color: '#fbbf24' },
+  { category: 'Freight & Logistics', atRisk: 180000, count: 1, color: '#6366f1' },
 ];

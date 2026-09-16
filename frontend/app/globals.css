@@ -2,68 +2,119 @@
 
 @layer base {
   :root {
-    --background: #132228;
-    --foreground: #F5EED2;
-    --card: #172a31;
-    --card-foreground: #F5EED2;
-    --popover: #172a31;
-    --popover-foreground: #F5EED2;
-    --border: #233c46;
-    --input: #233c46;
-    --accent-gold: #EBAE29;
-    --accent-sage: #589C80;
-    --accent-dark: #132228;
-    --text-ivory: #F5EED2;
-    --muted: #1d333c;
-    --muted-foreground: #8aa1aa;
-    --radius: 0.375rem;
+    /* Morning Mode Default (Red & Cream) */
+    --background: #fbf8f2;
+    --foreground: #1c1917;
+    --card: #ffffff;
+    --card-foreground: #1c1917;
+    --border: #eadbce;
+    --accent-red: #c51636;
+    --accent-cream: #fbf8f2;
+    --muted-foreground: #57534e;
+    --ring: #c51636;
+    --radius: 1rem;
+  }
+
+  /* Dark Theme Overrides */
+  .dark {
+    --background: #0b0d13;
+    --foreground: #ffffff;
+    --card: rgba(15, 23, 42, 0.6);
+    --card-foreground: #ffffff;
+    --border: rgba(255, 255, 255, 0.08);
+    --accent-red: #f43f5e;
+    --accent-cream: #182230;
+    --muted-foreground: #94a3b8;
+    --ring: #10b981;
   }
 }
 
+/* Base Body */
 body {
-  background-color: #132228;
-  color: #F5EED2;
-  font-family: 'Ronta', 'Helvetica Neue', Helvetica, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Linear/Stripe style subtle 1px borders */
-.border-subtle {
-  border-color: #233c46;
+/* STRICT RULE: Zero neon text effects. All typography is crisp, solid, and flat. */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, td, th {
+  text-shadow: none !important;
 }
 
-.bg-panel {
-  background-color: #172a31;
+/* Morning Mode Specific Styles */
+html.morning body {
+  background-color: #fbf8f2;
+  color: #1c1917;
 }
 
-.bg-surface-dark {
-  background-color: #0e181c;
+html.morning .glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #eadbce;
+  box-shadow: 0 4px 20px -2px rgba(197, 22, 54, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
 }
 
-.bg-surface-elevated {
-  background-color: #1b3038;
+html.morning .glass-panel-hover:hover {
+  background: #ffffff;
+  border-color: #dfcebe;
+  box-shadow: 0 8px 25px -4px rgba(197, 22, 54, 0.08);
+}
+
+/* Dark Mode Specific Styles */
+html.dark body {
+  background-color: #0b0d13;
+  color: #ffffff;
+}
+
+html.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 /* Monospace numerals */
 .font-mono-numeric {
-  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
   font-feature-settings: "tnum" on, "zero" on;
 }
 
-/* Subtle flat scrollbar */
+/* Clean Amber Pulse Ring (Box Ring without text glow) */
+@keyframes ring-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(217, 119, 6, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
+  }
+}
+
+.animate-amber-ring {
+  animation: ring-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Subtle modern scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #132228;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #233c46;
-  border-radius: 3px;
+  background: rgba(150, 150, 150, 0.2);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2e4d59;
+  background: rgba(150, 150, 150, 0.4);
 }

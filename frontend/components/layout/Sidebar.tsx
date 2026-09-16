@@ -8,13 +8,16 @@ import {
   Search, 
   FileText, 
   Cpu, 
-  CheckCircle2, 
   Lock,
-  ArrowRight
+  Building2,
+  ChevronRight
 } from 'lucide-react';
+import { useTheme } from '@/lib/theme-context';
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const isMorning = theme === 'morning';
 
   const isDashboard = pathname === '/dashboard';
   const isInvestigation = pathname.startsWith('/investigation');
@@ -33,8 +36,10 @@ export function Sidebar() {
       href: '/investigation/EXC-101',
       icon: Search,
       active: isInvestigation,
-      badge: '3 Open',
-      badgeClass: 'bg-red-500/10 text-red-400 border border-red-500/20',
+      badge: '3 Critical',
+      badgeClass: isMorning
+        ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+        : 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
     },
     {
       label: 'CFO Executive Report',
@@ -42,38 +47,62 @@ export function Sidebar() {
       icon: FileText,
       active: isReports,
       badge: 'SOX Ready',
-      badgeClass: 'bg-[#589C80]/10 text-[#589C80] border border-[#589C80]/20',
+      badgeClass: isMorning
+        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+        : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
     },
   ];
 
   return (
-    <aside className="w-60 shrink-0 border-r border-[#233c46] bg-[#132228] flex flex-col justify-between p-3 select-none">
+    <aside
+      className={`w-64 shrink-0 mx-4 md:ml-6 md:mr-0 my-2 rounded-2xl backdrop-blur-xl flex flex-col justify-between p-4 select-none transition-all ${
+        isMorning
+          ? 'bg-white/85 border border-[#eadbce] shadow-[0_4px_20px_rgba(197,22,54,0.05)] text-[#1c1917]'
+          : 'bg-slate-900/60 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)] text-white'
+      }`}
+    >
       <div className="space-y-6">
         {/* Navigation Section */}
         <div>
-          <div className="px-2 py-1 text-[11px] font-mono uppercase tracking-wider text-[#8aa1aa]">
-            Views
+          <div className={`px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+            Navigation
           </div>
-          <nav className="mt-1.5 space-y-1">
+          <nav className="mt-2 space-y-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`group flex items-center justify-between px-2.5 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                  className={`group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                     item.active
-                      ? 'bg-[#172a31] text-[#F5EED2] border border-[#233c46]'
-                      : 'text-[#8aa1aa] hover:text-[#F5EED2] hover:bg-[#172a31]/60 border border-transparent'
+                      ? isMorning
+                        ? 'bg-rose-50 text-[#c51636] border border-rose-200 shadow-sm'
+                        : 'bg-gradient-to-r from-emerald-500/15 via-indigo-500/15 to-transparent text-white border border-white/15'
+                      : isMorning
+                      ? 'text-[#57534e] hover:text-[#1c1917] hover:bg-[#f6efe6] border border-transparent'
+                      : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <Icon className={`h-3.5 w-3.5 ${item.active ? 'text-[#EBAE29]' : 'text-[#8aa1aa] group-hover:text-[#F5EED2]'}`} />
-                    <span>{item.label}</span>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
+                        item.active
+                          ? isMorning
+                            ? 'bg-[#c51636] text-white'
+                            : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                          : isMorning
+                          ? 'bg-[#fcfaf6] text-[#78716c] border border-[#eadbce]'
+                          : 'bg-white/[0.04] text-slate-400 group-hover:text-white border border-white/5'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <span className="tracking-tight text-[13px]">{item.label}</span>
                   </div>
 
                   {item.badge && (
-                    <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-sm ${item.badgeClass}`}>
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${item.badgeClass}`}>
                       {item.badge}
                     </span>
                   )}
@@ -83,94 +112,125 @@ export function Sidebar() {
           </nav>
         </div>
 
-        {/* Pipeline Telemetry - Clean Minimalist Box */}
-        <div className="rounded-sm border border-[#233c46] bg-[#172a31]/50 p-2.5 space-y-2">
+        {/* Real-time Agent Mesh Card */}
+        <div
+          className={`rounded-xl p-3.5 space-y-2.5 border ${
+            isMorning
+              ? 'bg-[#fcfaf6] border-[#eadbce]'
+              : 'bg-white/[0.03] border-white/10'
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-xs font-medium text-[#F5EED2]">
-              <Cpu className="h-3 w-3 text-[#589C80]" />
-              <span>Pipeline Status</span>
+            <div className={`flex items-center gap-2 text-xs font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+              <Cpu className={`h-4 w-4 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`} />
+              <span>Agent Core Mesh</span>
             </div>
-            <span className="text-[10px] font-mono text-[#589C80]">4 Active</span>
+            <span
+              className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`}
+            />
           </div>
 
-          <div className="space-y-1 text-[11px] font-mono text-[#8aa1aa] pt-1 border-t border-[#233c46]">
-            <div className="flex justify-between">
+          <div className={`space-y-1.5 text-xs font-mono pt-1 border-t ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/5 text-slate-400'}`}>
+            <div className="flex justify-between items-center">
               <span>Orchestrator:</span>
-              <span className="text-[#F5EED2]">Online</span>
+              <span className={`font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>Online (120ms)</span>
             </div>
-            <div className="flex justify-between">
-              <span>Investigator:</span>
-              <span className="text-[#589C80]">Ready</span>
+            <div className="flex justify-between items-center">
+              <span>Risk Investigator:</span>
+              <span className={`font-semibold ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>94% Confidence</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span>Evidence Agent:</span>
-              <span className="text-[#F5EED2]">3 Feeds</span>
+              <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-indigo-400'}`}>3 Sources</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span>Challenge Agent:</span>
-              <span className="text-[#EBAE29]">Refuting H1</span>
+              <span className={`font-semibold ${isMorning ? 'text-amber-700' : 'text-amber-400'}`}>Gated</span>
             </div>
           </div>
         </div>
 
-        {/* Pending Exceptions Quick List */}
+        {/* Active Exceptions Shortcut List */}
         <div>
-          <div className="px-2 py-1 text-[11px] font-mono uppercase tracking-wider text-[#8aa1aa]">
-            Pending Review
+          <div className={`px-3 py-1 text-[11px] font-semibold uppercase tracking-wider font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+            Pending Gates
           </div>
-          <div className="mt-1 space-y-1">
+          <div className="mt-2 space-y-1.5">
             <Link
               href="/investigation/EXC-101"
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-sm bg-[#172a31]/30 hover:bg-[#172a31] border border-[#233c46] text-xs transition-colors"
+              className={`flex items-center justify-between p-2.5 rounded-xl text-xs transition-all border ${
+                isMorning
+                  ? 'bg-[#fcfaf6] hover:bg-rose-50/60 border-[#eadbce]'
+                  : 'bg-white/[0.02] hover:bg-white/[0.05] border border-white/10'
+              }`}
             >
               <div>
-                <div className="font-mono text-xs text-[#F5EED2]">EXC-101</div>
-                <div className="text-[10px] text-[#8aa1aa] truncate max-w-[120px]">Acme Systems</div>
+                <div className={`font-mono text-xs font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                  EXC-101 · ₹84,500
+                </div>
+                <div className={`text-[11px] truncate max-w-[130px] ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  Acme Systems (Duplicate)
+                </div>
               </div>
-              <div className="text-right">
-                <div className="font-mono text-xs text-red-400">₹84.5k</div>
-                <div className="text-[10px] font-mono text-[#8aa1aa]">94%</div>
-              </div>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-rose-100 text-[#c51636] border border-rose-200' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
+                Gate 2
+              </span>
             </Link>
 
             <Link
               href="/investigation/EXC-102"
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-sm bg-[#172a31]/30 hover:bg-[#172a31] border border-[#233c46] text-xs transition-colors"
+              className={`flex items-center justify-between p-2.5 rounded-xl text-xs transition-all border ${
+                isMorning
+                  ? 'bg-[#fcfaf6] hover:bg-amber-50/60 border-[#eadbce]'
+                  : 'bg-white/[0.02] hover:bg-white/[0.05] border border-white/10'
+              }`}
             >
               <div>
-                <div className="font-mono text-xs text-[#F5EED2]">EXC-102</div>
-                <div className="text-[10px] text-[#8aa1aa] truncate max-w-[120px]">TechCorp</div>
+                <div className={`font-mono text-xs font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                  EXC-102 · ₹15,000
+                </div>
+                <div className={`text-[11px] truncate max-w-[130px] ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  TechCorp (Rate Variance)
+                </div>
               </div>
-              <div className="text-right">
-                <div className="font-mono text-xs text-red-400">₹15k</div>
-                <div className="text-[10px] font-mono text-[#8aa1aa]">82%</div>
-              </div>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}`}>
+                Gate 3
+              </span>
             </Link>
 
             <Link
               href="/investigation/EXC-103"
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-sm bg-[#172a31]/30 hover:bg-[#172a31] border border-[#233c46] text-xs transition-colors"
+              className={`flex items-center justify-between p-2.5 rounded-xl text-xs transition-all border ${
+                isMorning
+                  ? 'bg-[#fcfaf6] hover:bg-emerald-50/60 border-[#eadbce]'
+                  : 'bg-white/[0.02] hover:bg-white/[0.05] border border-white/10'
+              }`}
             >
               <div>
-                <div className="font-mono text-xs text-[#F5EED2]">EXC-103</div>
-                <div className="text-[10px] text-[#8aa1aa] truncate max-w-[120px]">Global Logistics</div>
+                <div className={`font-mono text-xs font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                  EXC-103 · ₹1,80,000
+                </div>
+                <div className={`text-[11px] truncate max-w-[130px] ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  Global Logistics (Spike)
+                </div>
               </div>
-              <div className="text-right">
-                <div className="font-mono text-xs text-[#EBAE29]">₹1.8L</div>
-                <div className="text-[10px] font-mono text-[#8aa1aa]">76%</div>
-              </div>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
+                Direct
+              </span>
             </Link>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="border-t border-[#233c46] pt-3 text-[11px] font-mono text-[#8aa1aa] flex items-center justify-between px-1">
-        <div className="flex items-center gap-1.5">
-          <Lock className="h-3 w-3 text-[#589C80]" />
-          <span>SOX / SOC-2</span>
+      <div className={`border-t pt-3.5 text-xs font-mono ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-1.5">
+            <Lock className={`h-3.5 w-3.5 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`} />
+            <span>SOX / SOC-2 Type II</span>
+          </div>
+          <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>v4.2</span>
         </div>
-        <span>v4.2</span>
       </div>
     </aside>
   );
