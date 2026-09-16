@@ -27,7 +27,14 @@ class EvidenceAgent(BaseAgent):
         raw_ledger = anomaly.associated_records or []
         ledger_by_id: Dict[str, Dict[str, Any]] = {}
         for rec in raw_ledger:
-            rec_id = str(rec.get("record_id") or rec.get("id") or rec.get("txn_id") or rec.get("invoice_id") or "")
+            rec_id = str(
+            rec.get("record_id")
+            or rec.get("id")
+            or rec.get("txn_id")
+            or rec.get("transaction_id")
+            or rec.get("invoice_id")
+            or ""
+            )
             if rec_id:
                 ledger_by_id[rec_id.upper()] = rec
 

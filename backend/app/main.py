@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 
-from app.routes.investigations import router as investigations_router
+from app.routes.investigations import (
+    router as investigations_router,
+)
+from app.routes.detection import (
+    router as detection_router,
+)
 
 
 app = FastAPI(
@@ -11,6 +16,7 @@ app = FastAPI(
 
 
 app.include_router(investigations_router)
+app.include_router(detection_router)
 
 
 @app.get("/")

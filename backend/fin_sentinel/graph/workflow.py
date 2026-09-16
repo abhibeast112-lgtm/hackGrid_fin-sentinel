@@ -3,7 +3,7 @@
 import uuid
 from typing import Any, Dict, Optional, Union
 from langgraph.types import Command
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
 
 from fin_sentinel.graph.builder import build_investigation_graph
 from fin_sentinel.graph.state import InvestigationState
@@ -13,8 +13,18 @@ from fin_sentinel.models.result import InvestigationResult
 
 
 # Global in-memory checkpointer and compiled application
-_global_memory = MemorySaver()
-_app = build_investigation_graph(checkpointer=_global_memory)
+# Global SQLite-backed checkpointer
+_checkpoint_context = SqliteSaver.from_conn_string(
+    "fin_sentinel_checkpoints.db"
+)
+
+_global_memory = _checkpoint_context.__enter__()
+
+_global_memory.setup()
+
+_app = build_investigation_graph(
+    checkpointer=_global_memory
+)
 
 
 def start_investigation(
@@ -61,19 +71,37 @@ def resume_investigation(
     investigation_id: str,
     response: Union[HumanResponse, Dict[str, Any], str],
 ) -> InvestigationStepResult:
-    """Resume an interrupted investigation after human confirmation or input."""
     config = {"configurable": {"thread_id": investigation_id}}
+
+    state = _app.get_state(config)
+
+    print("RESUME STATE:")
+    print(state.values)
+
+    if not state.values:
+        raise ValueError(
+            f"No checkpointed state found for investigation {investigation_id}"
+        )
 
     if isinstance(response, HumanResponse):
         payload = response.model_dump()
     elif isinstance(response, dict):
         payload = response
     else:
-        payload = {"action": str(response), "feedback": None}
+        payload = {
+            "action": str(response),
+            "feedback": None,
+        }
 
-    # Resume the interrupted execution using LangGraph Command
-    _app.invoke(Command(resume=payload), config=config)
-    return _build_step_result(investigation_id, config)
+    _app.invoke(
+        Command(resume=payload),
+        config=config,
+    )
+
+    return _build_step_result(
+        investigation_id,
+        config,
+    )
 
 
 def run_investigation(anomaly: Union[Anomaly, Dict[str, Any]]) -> InvestigationResult:
