@@ -303,10 +303,10 @@ export default function InvestigationRoomPage() {
         {/* COLUMN 1 (Left - 30% width / lg:col-span-4): Tiered Multi-Agent Stepper Gates */}
         <div className="lg:col-span-4 space-y-4">
           <div
-            className={`rounded-2xl border backdrop-blur-xl p-5 transition-all ${
+            className={`rounded-2xl p-5 transition-all duration-300 ${
               isMorning
-                ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
-                : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
+                ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs text-[#1c1917]'
+                : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-white/25 text-white'
             }`}
           >
             
@@ -350,11 +350,11 @@ export default function InvestigationRoomPage() {
                         isCompleted
                           ? isMorning
                             ? 'bg-emerald-600 text-white'
-                            : 'bg-emerald-500 text-slate-950'
+                            : 'bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
                           : isAwaiting
                           ? isMorning
                             ? 'bg-[#c51636] text-white animate-amber-ring'
-                            : 'bg-amber-400 text-slate-950 animate-amber-ring'
+                            : 'bg-amber-400 text-slate-950 animate-amber-ring shadow-[0_0_15px_rgba(245,158,11,0.3)]'
                           : isMorning
                           ? 'bg-[#fcfaf6] text-[#a8a29e] border border-[#eadbce]'
                           : 'bg-slate-800/80 text-slate-500 border border-white/10'
@@ -371,18 +371,18 @@ export default function InvestigationRoomPage() {
 
                     {/* Step Card */}
                     <div
-                      className={`flex-1 rounded-xl p-3.5 transition-all border ${
+                      className={`flex-1 rounded-xl p-3.5 transition-all duration-300 backdrop-blur-xl border ${
                         isAwaiting
                           ? isMorning
-                            ? 'bg-rose-50/50 border-rose-300 shadow-xs'
-                            : 'bg-amber-500/[0.04] border-amber-500/40'
+                            ? 'bg-rose-50/70 border-rose-300 shadow-xs'
+                            : 'bg-white/[0.04] border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.15)]'
                           : isCompleted
                           ? isMorning
-                            ? 'bg-[#fcfaf6] border-[#eadbce]'
-                            : 'bg-white/[0.02] border-white/10'
+                            ? 'bg-white/80 border-[#eadbce]'
+                            : 'bg-white/[0.04] border-emerald-500/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]'
                           : isMorning
-                          ? 'bg-[#fcfaf6]/50 border-[#eadbce]/50 opacity-60'
-                          : 'bg-white/[0.01] border-white/5 opacity-60'
+                          ? 'bg-white/40 border-[#eadbce]/50 opacity-60'
+                          : 'bg-white/[0.02] border-white/10 opacity-60'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -440,10 +440,10 @@ export default function InvestigationRoomPage() {
                           <button
                             onClick={() => handleConfirmStep(step.step)}
                             disabled={isAdvancingStep}
-                            className={`w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                            className={`w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 disabled:opacity-50 ${
                               isMorning
                                 ? 'bg-[#c51636] hover:bg-[#a8132e] text-white shadow-sm'
-                                : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                                : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 backdrop-blur-lg shadow-[0_4px_16px_rgba(16,185,129,0.15)]'
                             }`}
                           >
                             {isAdvancingStep ? (
@@ -487,10 +487,10 @@ export default function InvestigationRoomPage() {
           
           {/* Anomaly Header Card */}
           <div
-            className={`rounded-2xl border backdrop-blur-xl p-5 transition-all ${
+            className={`rounded-2xl p-5 transition-all duration-300 ${
               isMorning
-                ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
-                : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
+                ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs text-[#1c1917]'
+                : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25 text-white'
             }`}
           >
             <div className="flex items-start justify-between gap-4">
@@ -542,10 +542,10 @@ export default function InvestigationRoomPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Box A (Recorded Payment 1) */}
               <div
-                className={`rounded-2xl border p-4 space-y-3 relative overflow-hidden transition-all ${
+                className={`rounded-2xl p-4 space-y-3 relative overflow-hidden transition-all duration-300 ${
                   isMorning
-                    ? 'bg-white border-emerald-200 shadow-xs'
-                    : 'bg-slate-900/60 border-emerald-500/30'
+                    ? 'bg-white/80 border border-emerald-200 shadow-xs'
+                    : 'bg-white/[0.04] backdrop-blur-xl border border-emerald-500/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-emerald-500/45'
                 }`}
               >
                 <div className={`absolute top-0 left-0 right-0 h-1 ${isMorning ? 'bg-emerald-600' : 'bg-emerald-400'}`} />
@@ -584,10 +584,10 @@ export default function InvestigationRoomPage() {
 
               {/* Box B (Flagged Payment 2) */}
               <div
-                className={`rounded-2xl border p-4 space-y-3 relative overflow-hidden transition-all ${
+                className={`rounded-2xl p-4 space-y-3 relative overflow-hidden transition-all duration-300 ${
                   isMorning
-                    ? 'bg-white border-rose-200 shadow-xs'
-                    : 'bg-slate-900/60 border-rose-500/30'
+                    ? 'bg-white/80 border border-rose-200 shadow-xs'
+                    : 'bg-white/[0.04] backdrop-blur-xl border border-rose-500/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-rose-500/45'
                 }`}
               >
                 <div className={`absolute top-0 left-0 right-0 h-1 ${isMorning ? 'bg-[#c51636]' : 'bg-rose-500'}`} />
@@ -628,10 +628,10 @@ export default function InvestigationRoomPage() {
 
           {/* Adversarial Challenge Verdict Box */}
           <div
-            className={`rounded-2xl border p-5 space-y-3 transition-all ${
+            className={`rounded-2xl p-5 space-y-3 transition-all duration-300 ${
               isMorning
-                ? 'bg-rose-50/40 border-rose-200 text-[#1c1917]'
-                : 'bg-slate-900/60 border-indigo-500/30 text-white'
+                ? 'bg-rose-50/40 border border-rose-200 text-[#1c1917]'
+                : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25 text-white'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -654,7 +654,7 @@ export default function InvestigationRoomPage() {
               </span>
             </div>
 
-            <p className={`text-xs leading-relaxed p-3.5 rounded-xl border ${isMorning ? 'bg-white border-[#eadbce] text-[#1c1917]' : 'bg-black/30 border-white/10 text-slate-200'}`}>
+            <p className={`text-xs leading-relaxed p-3.5 rounded-xl border ${isMorning ? 'bg-white border-[#eadbce] text-[#1c1917]' : 'bg-slate-900/40 backdrop-blur-md border-white/10 text-slate-200'}`}>
               &ldquo;{data.adversarial_verdict.verdict}&rdquo;
             </p>
 
@@ -690,10 +690,10 @@ export default function InvestigationRoomPage() {
                 <button
                   key={doc.id}
                   onClick={() => setSelectedDoc(doc)}
-                  className={`flex flex-col text-left p-3.5 rounded-2xl border transition-all group ${
+                  className={`flex flex-col text-left p-3.5 rounded-2xl transition-all duration-300 group ${
                     isMorning
-                      ? 'bg-white border-[#eadbce] hover:border-rose-300 shadow-xs'
-                      : 'bg-slate-900/60 border-white/10 hover:bg-white/[0.06] hover:border-white/20'
+                      ? 'bg-white/80 border border-[#eadbce] hover:border-rose-300 shadow-xs'
+                      : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
@@ -729,10 +729,10 @@ export default function InvestigationRoomPage() {
         {/* COLUMN 3 (Right - 25% width / lg:col-span-3): Human Checkpoint & Action Panel */}
         <div className="lg:col-span-3 space-y-4">
           <div
-            className={`sticky top-20 rounded-2xl border backdrop-blur-xl p-5 space-y-5 transition-all ${
+            className={`sticky top-20 rounded-2xl p-5 space-y-5 transition-all duration-300 ${
               isMorning
-                ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
-                : 'bg-slate-900/70 border-white/10 shadow-sm text-white'
+                ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs text-[#1c1917]'
+                : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-white/25 text-white'
             }`}
           >
             
@@ -784,7 +784,7 @@ export default function InvestigationRoomPage() {
             )}
 
             {/* Reviewer Profile */}
-            <div className={`rounded-xl p-3 border text-xs font-mono space-y-1.5 ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce]' : 'bg-white/[0.03] border-white/10'}`}>
+            <div className={`rounded-xl p-3 border text-xs font-mono space-y-1.5 ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce]' : 'bg-slate-900/30 backdrop-blur-md border-white/10'}`}>
               <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
                 <span>Active Reviewer:</span>
                 <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>Abhinav K.</span>
@@ -834,7 +834,7 @@ export default function InvestigationRoomPage() {
                 className={`w-full rounded-xl p-3 text-xs font-mono transition-colors focus:outline-none ${
                   isMorning
                     ? 'bg-[#fcfaf6] border border-[#eadbce] text-[#1c1917] placeholder:text-[#a8a29e] focus:border-[#c51636] focus:bg-white'
-                    : 'bg-black/40 border border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500/50'
+                    : 'bg-slate-900/30 backdrop-blur-md border border-white/15 text-white placeholder:text-slate-500 focus:border-emerald-500/50'
                 }`}
               />
             </div>

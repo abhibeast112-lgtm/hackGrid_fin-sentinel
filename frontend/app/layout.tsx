@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable} morning h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${mono.variable} dark h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans relative transition-colors duration-200">
         <ThemeProvider>
           {/* Rich Institutional Business Background */}

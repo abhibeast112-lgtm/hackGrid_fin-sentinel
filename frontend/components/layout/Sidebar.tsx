@@ -58,7 +58,7 @@ export function Sidebar() {
       className={`w-64 shrink-0 mx-4 md:ml-6 md:mr-0 my-2 rounded-2xl backdrop-blur-xl flex flex-col justify-between p-4 select-none transition-all ${
         isMorning
           ? 'bg-white border border-[#eadbce] shadow-xs text-[#1c1917]'
-          : 'bg-slate-900/60 border border-white/10 shadow-sm text-white'
+          : 'bg-slate-900/1 border border-white/10 shadow-sm text-white'
       }`}
     >
       <div className="space-y-6">

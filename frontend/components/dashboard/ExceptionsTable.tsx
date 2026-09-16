@@ -156,10 +156,10 @@ export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
 
   return (
     <div
-      className={`rounded-2xl border backdrop-blur-md overflow-hidden transition-all ${
+      className={`rounded-2xl overflow-hidden transition-all duration-300 ${
         isMorning
-          ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
-          : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
+          ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs text-[#1c1917]'
+          : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-white/25 text-white'
       }`}
     >
       {/* Table Header & Controls */}
@@ -285,10 +285,10 @@ export function ExceptionsTable({ exceptions }: ExceptionsTableProps) {
               return (
                 <tr
                   key={exc.id}
-                  className={`border rounded-xl transition-all group ${
+                  className={`border rounded-xl transition-all duration-300 group ${
                     isMorning
-                      ? 'bg-white hover:bg-rose-50/30 border-[#eadbce] shadow-xs'
-                      : 'bg-white/[0.02] hover:bg-white/[0.05] border-white/5'
+                      ? 'bg-white/90 hover:bg-rose-50/40 border-[#eadbce] shadow-xs'
+                      : 'bg-slate-900/30 backdrop-blur-md hover:bg-white/[0.08] hover:border-white/25 border-white/10'
                   }`}
                 >
                   {/* Risk Level */}

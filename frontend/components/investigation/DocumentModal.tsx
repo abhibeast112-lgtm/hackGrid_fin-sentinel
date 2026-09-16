@@ -13,8 +13,8 @@ export function DocumentModal({ document, onClose }: DocumentModalProps) {
   if (!document) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl rounded-2xl border border-white/15 bg-slate-900/90 backdrop-blur-2xl p-6 shadow-[0_16px_50px_rgba(0,0,0,0.6)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl rounded-2xl border border-white/20 bg-slate-950/70 backdrop-blur-2xl p-6 shadow-[0_16px_50px_rgba(0,0,0,0.6)]">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
@@ -48,7 +48,7 @@ export function DocumentModal({ document, onClose }: DocumentModalProps) {
         </div>
 
         {/* SHA-256 Provenance Bar */}
-        <div className="mt-4 px-3.5 py-2 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between text-xs font-mono">
+        <div className="mt-4 px-3.5 py-2 rounded-xl bg-slate-900/40 backdrop-blur-md border border-white/10 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-2 text-slate-400">
             <Hash className="h-3.5 w-3.5 text-indigo-400" />
             <span>SHA-256 PROVENANCE:</span>
@@ -64,7 +64,7 @@ export function DocumentModal({ document, onClose }: DocumentModalProps) {
           <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono">
             Extracted Telemetry & Raw Document Fragment
           </div>
-          <div className="rounded-xl border border-white/10 bg-black/40 p-4 font-mono text-xs text-slate-200 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap">
+          <div className="rounded-xl border border-white/10 bg-slate-900/40 backdrop-blur-md p-4 font-mono text-xs text-slate-200 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap">
             {document.raw_content || document.preview_text}
           </div>
         </div>

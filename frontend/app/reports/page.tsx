@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { fetchExceptions, getStoredDecisions } from '@/lib/api-client';
 import { FinancialException, DecisionRecord } from '@/lib/types';
@@ -10,7 +11,8 @@ import {
   Printer,
   CheckCircle2,
   Lock,
-  Scale
+  Scale,
+  ExternalLink
 } from 'lucide-react';
 import { useTheme } from '@/lib/theme-context';
 
@@ -21,20 +23,55 @@ export default function ReportsPage() {
   const isMorning = theme === 'morning';
 
   useEffect(() => {
-    fetchExceptions().then((data) => {
-      if (data?.exceptions?.length) {
-        setExceptions(data.exceptions);
+    let isMounted = true;
+    const loadReportData = async () => {
+      try {
+        const data = await fetchExceptions();
+        if (isMounted && data?.exceptions?.length) {
+          setExceptions(data.exceptions);
+        }
+      } catch (err) {
+        console.error('Error fetching exceptions for report:', err);
       }
-    });
-    setDecisions(getStoredDecisions());
+      if (isMounted) {
+        setDecisions(getStoredDecisions());
+      }
+    };
+
+    loadReportData();
+
+    const handleStorageChange = () => {
+      loadReportData();
+    };
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('focus', handleStorageChange);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleStorageChange);
+    };
   }, []);
 
-  const totalAtRisk = 279500;
+  // Deduplicate decisions to avoid duplicate key warnings and data collision
+  const uniqueDecisions = useMemo(() => {
+    const seen = new Set<string>();
+    return decisions.filter((d) => {
+      const key = d.id || `${d.exception_id}-${d.timestamp}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [decisions]);
+
+  const totalCalculated = exceptions.reduce((acc, curr) => acc + (curr.amount_at_risk || 0), 0);
+  const totalAtRisk = totalCalculated > 0 ? totalCalculated : 279500;
+
   const pendingExceptions = exceptions.filter((e) => !e.status.startsWith('RESOLVED_'));
   const resolvedExceptions = exceptions.filter((e) => e.status.startsWith('RESOLVED_'));
 
-  const pendingAmount = pendingExceptions.reduce((acc, curr) => acc + curr.amount_at_risk, 0);
-  const resolvedAmount = resolvedExceptions.reduce((acc, curr) => acc + curr.amount_at_risk, 0);
+  const pendingAmount = pendingExceptions.reduce((acc, curr) => acc + (curr.amount_at_risk || 0), 0);
+  const resolvedAmount = resolvedExceptions.reduce((acc, curr) => acc + (curr.amount_at_risk || 0), 0);
 
   const handlePrint = () => {
     window.print();
@@ -50,7 +87,7 @@ export default function ReportsPage() {
       pending_exposure: pendingAmount,
       resolved_exposure: resolvedAmount,
       exceptions,
-      audit_decisions: decisions,
+      audit_decisions: uniqueDecisions,
     };
 
     const blob = new Blob([JSON.stringify(reportData, null, 2)], {
@@ -60,29 +97,36 @@ export default function ReportsPage() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `FinSentinel_Audit_Report_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
     <AppLayout>
       {/* Print styles */}
-      <style jsx global>{`
-        @media print {
-          body {
-            background: white !important;
-            color: black !important;
-          }
-          header, aside, button, .no-print {
-            display: none !important;
-          }
-          .print-container {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 0 !important;
-            color: black !important;
-          }
-        }
-      `}</style>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @media print {
+              body {
+                background: white !important;
+                color: black !important;
+              }
+              header, aside, button, .no-print {
+                display: none !important;
+              }
+              .print-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                color: black !important;
+              }
+            }
+          `,
+        }}
+      />
 
       {/* Header & Export Actions */}
       <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b no-print ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
@@ -139,10 +183,10 @@ export default function ReportsPage() {
         
         {/* Memo Header Card */}
         <div
-          className={`rounded-2xl border backdrop-blur-xl p-6 space-y-6 transition-all ${
+          className={`rounded-2xl p-6 space-y-6 transition-all duration-300 ${
             isMorning
-              ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
-              : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
+              ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs text-[#1c1917]'
+              : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-white/25 text-white'
           }`}
         >
           <div className={`flex flex-col md:flex-row md:items-center justify-between gap-5 border-b pb-5 ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
@@ -166,20 +210,20 @@ export default function ReportsPage() {
 
             {/* Total Financial Exposure Card */}
             <div
-              className={`rounded-2xl border p-5 shrink-0 text-right min-w-[220px] transition-all ${
+              className={`rounded-2xl p-5 shrink-0 text-right min-w-[220px] transition-all duration-300 ${
                 isMorning
-                  ? 'bg-rose-50 border-rose-200'
-                  : 'bg-gradient-to-br from-rose-500/10 via-slate-900/80 to-transparent border-rose-500/30'
+                  ? 'bg-rose-50 border border-rose-200'
+                  : 'bg-white/[0.04] backdrop-blur-xl border border-rose-500/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-rose-500/45'
               }`}
             >
               <span className={`text-xs font-mono uppercase tracking-wider font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>
                 Total Financial Exposure
               </span>
               <div className={`text-3xl font-extrabold font-mono tracking-tight mt-1 ${isMorning ? 'text-[#c51636]' : 'text-white'}`}>
-                ₹2,79,500
+                ₹{totalAtRisk.toLocaleString('en-IN')}
               </div>
               <div className={`text-xs font-mono mt-1 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
-                Across 3 Flagged Anomalies
+                Across {exceptions.length} Flagged Anomalies
               </div>
             </div>
           </div>
@@ -193,10 +237,10 @@ export default function ReportsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Box 1: Pending Human Action */}
               <div
-                className={`rounded-2xl border p-5 space-y-3 ${
+                className={`rounded-2xl p-5 space-y-3 transition-all duration-300 ${
                   isMorning
-                    ? 'bg-[#fffdfd] border-rose-200'
-                    : 'bg-white/[0.02] border-rose-500/25'
+                    ? 'bg-[#fffdfd] border border-rose-200'
+                    : 'bg-white/[0.04] backdrop-blur-xl border border-rose-500/25 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-rose-500/40'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -222,26 +266,40 @@ export default function ReportsPage() {
                     ₹{pendingAmount.toLocaleString('en-IN')}
                   </span>
                   <span className={`text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
-                    {((pendingAmount / totalAtRisk) * 100).toFixed(0)}% of total exposure
+                    {((pendingAmount / (totalAtRisk || 1)) * 100).toFixed(0)}% of total exposure
                   </span>
                 </div>
 
                 <div className={`space-y-2 pt-2 border-t text-xs font-mono ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
-                  {pendingExceptions.map((e) => (
-                    <div key={e.id} className="flex justify-between items-center">
-                      <span className={`truncate max-w-[220px] ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{e.vendor} ({e.id})</span>
-                      <span className={`font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>{e.formatted_amount}</span>
+                  {pendingExceptions.length > 0 ? (
+                    pendingExceptions.map((e) => (
+                      <div key={e.id} className="flex justify-between items-center">
+                        <Link
+                          href={`/investigation/${e.id}`}
+                          className={`truncate max-w-[220px] hover:underline flex items-center gap-1.5 transition-colors ${
+                            isMorning ? 'text-[#1c1917] hover:text-[#c51636]' : 'text-white hover:text-emerald-400'
+                          }`}
+                        >
+                          <span>{e.vendor} ({e.id})</span>
+                          <ExternalLink className="h-3 w-3 opacity-60 inline shrink-0" />
+                        </Link>
+                        <span className={`font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>{e.formatted_amount}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className={`text-center py-2 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
+                      All exception gates cleared & verified
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
 
               {/* Box 2: Resolved Exceptions */}
               <div
-                className={`rounded-2xl border p-5 space-y-3 ${
+                className={`rounded-2xl p-5 space-y-3 transition-all duration-300 ${
                   isMorning
-                    ? 'bg-[#fcfdfc] border-emerald-200'
-                    : 'bg-white/[0.02] border-emerald-500/25'
+                    ? 'bg-[#fcfdfc] border border-emerald-200'
+                    : 'bg-white/[0.04] backdrop-blur-xl border border-emerald-500/25 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-emerald-500/40'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -258,7 +316,7 @@ export default function ReportsPage() {
                         : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
                     }`}
                   >
-                    {resolvedExceptions.length + decisions.length} Interceptions
+                    {resolvedExceptions.length + uniqueDecisions.length} Interceptions
                   </span>
                 </div>
 
@@ -274,6 +332,22 @@ export default function ReportsPage() {
                 </div>
 
                 <div className={`space-y-2 pt-2 border-t text-xs font-mono ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-300'}`}>
+                  {resolvedExceptions.map((e) => (
+                    <div key={e.id} className="flex justify-between items-center">
+                      <Link
+                        href={`/investigation/${e.id}`}
+                        className={`truncate max-w-[220px] hover:underline flex items-center gap-1.5 transition-colors ${
+                          isMorning ? 'text-[#1c1917] hover:text-emerald-700' : 'text-white hover:text-emerald-400'
+                        }`}
+                      >
+                        <span>{e.vendor} ({e.id})</span>
+                        <ExternalLink className="h-3 w-3 opacity-60 inline shrink-0" />
+                      </Link>
+                      <span className={`font-bold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
+                        {e.status === 'RESOLVED_REJECT' ? 'BLOCKED' : 'APPROVED'} · {e.formatted_amount}
+                      </span>
+                    </div>
+                  ))}
                   <div className="flex justify-between items-center">
                     <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>Prior Audit Interceptions (Aug-Sep)</span>
                     <span className={`font-bold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>₹1,24,000</span>
@@ -289,10 +363,10 @@ export default function ReportsPage() {
 
           {/* Executive Summary in Formal CFO Prose */}
           <div
-            className={`space-y-3 rounded-2xl border p-6 ${
+            className={`space-y-3 rounded-2xl p-6 transition-all duration-300 ${
               isMorning
-                ? 'bg-[#fcfaf6] border-[#eadbce]'
-                : 'bg-white/[0.02] border-white/10'
+                ? 'bg-[#fcfaf6] border border-[#eadbce]'
+                : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-white/25'
             }`}
           >
             <div className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wider font-mono ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>
@@ -306,7 +380,7 @@ export default function ReportsPage() {
               </p>
               <p>
                 During the September 2026 remittance cycle, Fin-Sentinel intercepted and quarantined{' '}
-                <span className={`font-mono font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>₹2,79,500</span> in anomalous accounts payable requests across three critical suppliers prior to ledger clearance. These variances were evaluated by the multi-agent cognitive architecture utilizing counterfactual adversarial proofing and tiered checkpoint gates.
+                <span className={`font-mono font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>₹{totalAtRisk.toLocaleString('en-IN')}</span> in anomalous accounts payable requests across {exceptions.length} critical suppliers prior to ledger clearance. These variances were evaluated by the multi-agent cognitive architecture utilizing counterfactual adversarial proofing and tiered checkpoint gates.
               </p>
               <p>
                 Most significantly, exception <strong>EXC-101 (Acme Systems, ₹84,500)</strong> demonstrated an acute duplicate invoice payment attempt generated across parallel ERP queues within a 17-minute delta. The Adversarial Challenge Agent disproved vendor claims of contractual installment tranches, proving 100% upfront satisfaction under PO-902. Step-by-step human sign-off ensures complete segregation of duties before transaction release.
@@ -337,10 +411,10 @@ export default function ReportsPage() {
               {CATEGORY_RISK_DATA.map((cat, i) => (
                 <div
                   key={i}
-                  className={`rounded-xl border p-4 space-y-1.5 ${
+                  className={`rounded-xl p-4 space-y-1.5 transition-all duration-300 ${
                     isMorning
-                      ? 'bg-[#fcfaf6] border-[#eadbce]'
-                      : 'bg-white/[0.02] border-white/10'
+                      ? 'bg-[#fcfaf6] border border-[#eadbce]'
+                      : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
                   }`}
                 >
                   <div className={`text-xs font-medium ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>{cat.category}</div>
@@ -367,15 +441,15 @@ export default function ReportsPage() {
             </div>
 
             <div
-              className={`rounded-xl border overflow-x-auto ${
+              className={`rounded-xl overflow-x-auto transition-all duration-300 ${
                 isMorning
-                  ? 'bg-white border-[#eadbce]'
-                  : 'bg-white/[0.02] border-white/10'
+                  ? 'bg-white border border-[#eadbce]'
+                  : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]'
               }`}
             >
               <table className="w-full text-left text-xs font-mono">
                 <thead>
-                  <tr className={`border-b ${isMorning ? 'border-[#eadbce] bg-[#fcfaf6] text-[#78716c]' : 'border-white/10 bg-white/[0.02] text-slate-400'}`}>
+                  <tr className={`border-b ${isMorning ? 'border-[#eadbce] bg-[#fcfaf6] text-[#78716c]' : 'border-white/10 bg-slate-900/40 text-slate-300'}`}>
                     <th className="py-3 px-4">Audit ID</th>
                     <th className="py-3 px-4">Exception ID</th>
                     <th className="py-3 px-4">Decision</th>
@@ -385,36 +459,54 @@ export default function ReportsPage() {
                   </tr>
                 </thead>
                 <tbody className={`divide-y ${isMorning ? 'divide-[#eadbce] text-[#1c1917]' : 'divide-white/5 text-slate-300'}`}>
-                  {decisions.map((dec) => (
-                    <tr key={dec.id} className={isMorning ? 'hover:bg-[#fcfaf6] transition-colors' : 'hover:bg-white/[0.03] transition-colors'}>
-                      <td className={`py-3 px-4 font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{dec.id}</td>
-                      <td className={`py-3 px-4 font-semibold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>{dec.exception_id}</td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                            dec.decision === 'APPROVE'
-                              ? isMorning
-                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                                : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
-                              : dec.decision === 'REJECT'
-                              ? isMorning
-                                ? 'bg-rose-100 text-[#c51636] border border-rose-200'
-                                : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
-                              : isMorning
-                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
-                          }`}
-                        >
-                          {dec.decision}
-                        </span>
+                  {uniqueDecisions.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-8 text-center text-slate-400 font-mono">
+                        No audit decisions recorded yet. Decisions confirmed in the Investigation Room will be permanently sealed here.
                       </td>
-                      <td className={`py-3 px-4 max-w-xs truncate ${isMorning ? 'text-[#57534e]' : 'text-slate-400'}`} title={dec.reviewer_notes}>
-                        {dec.reviewer_notes}
-                      </td>
-                      <td className={`py-3 px-4 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>{dec.timestamp.slice(0, 16).replace('T', ' ')}</td>
-                      <td className={`py-3 px-4 text-right font-bold ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>{dec.audit_hash}</td>
                     </tr>
-                  ))}
+                  ) : (
+                    uniqueDecisions.map((dec, idx) => (
+                      <tr key={`${dec.id}-${idx}`} className={`transition-colors duration-200 ${isMorning ? 'hover:bg-[#fcfaf6]' : 'bg-slate-900/30 backdrop-blur-md hover:bg-white/[0.08]'}`}>
+                        <td className={`py-3 px-4 font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{dec.id}</td>
+                        <td className="py-3 px-4 font-semibold">
+                          <Link
+                            href={`/investigation/${dec.exception_id}`}
+                            className={`hover:underline flex items-center gap-1 transition-colors ${isMorning ? 'text-[#c51636] hover:text-[#a8132e]' : 'text-rose-400 hover:text-rose-300'}`}
+                          >
+                            <span>{dec.exception_id}</span>
+                            <ExternalLink className="h-3 w-3 opacity-60 inline shrink-0" />
+                          </Link>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                              dec.decision === 'APPROVE'
+                                ? isMorning
+                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                                : dec.decision === 'REJECT'
+                                ? isMorning
+                                  ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
+                                : isMorning
+                                ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
+                            }`}
+                          >
+                            {dec.decision}
+                          </span>
+                        </td>
+                        <td className={`py-3 px-4 max-w-xs truncate ${isMorning ? 'text-[#57534e]' : 'text-slate-400'}`} title={dec.reviewer_notes}>
+                          {dec.reviewer_notes || 'No notes provided'}
+                        </td>
+                        <td className={`py-3 px-4 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                          {(dec.timestamp || '').slice(0, 16).replace('T', ' ') || '—'}
+                        </td>
+                        <td className={`py-3 px-4 text-right font-bold ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>{dec.audit_hash}</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

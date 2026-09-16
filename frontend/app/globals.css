@@ -2,7 +2,21 @@
 
 @layer base {
   :root {
-    /* Morning Mode Default (Red & Cream) */
+    /* Night Mode Base (Night Trader Theme) */
+    --background: #06080d;
+    
+    --card: rgba(15, 23, 42, 0.6);
+    
+    --border: rgba(255, 255, 255, 0.08);
+    --accent-red: #f43f5e;
+    --accent-cream: #182230;
+    --muted-foreground: #94a3b8;
+    --ring: #10b981;
+    --radius: 1rem;
+  }
+
+  /* Morning Theme Overrides */
+  .morning {
     --background: #fbf8f2;
     --foreground: #1c1917;
     --card: #ffffff;
@@ -12,15 +26,14 @@
     --accent-cream: #fbf8f2;
     --muted-foreground: #57534e;
     --ring: #c51636;
-    --radius: 1rem;
   }
 
-  /* Dark Theme Overrides */
+  /* Dark Theme Explicit */
   .dark {
-    --background: #0b0d13;
-    --foreground: #ffffff;
+    --background: #06080d;
+    
     --card: rgba(15, 23, 42, 0.6);
-    --card-foreground: #ffffff;
+    
     --border: rgba(255, 255, 255, 0.08);
     --accent-red: #f43f5e;
     --accent-cream: #182230;
@@ -32,6 +45,11 @@
 /* Base Body */
 body {
   background-color: var(--background);
+  background-image: url('/ahem2.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--foreground);
   font-family: var(--font-sans), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -68,17 +86,123 @@ html.morning .glass-panel-hover:hover {
 
 /* Dark Mode Specific Styles */
 html.dark body {
-  background-color: #0b0d13;
+  background-color: #06080d;
   color: #ffffff;
 }
 
-html.dark .glass-panel {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+/* Liquid Glass System */
+.liquid-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  background-color: rgba(10, 14, 23, 0.5);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 0 12px 0 rgba(255, 255, 255, 0.03),
+    0 12px 36px -4px rgba(0, 0, 0, 0.45),
+    0 4px 12px 0 rgba(0, 0, 0, 0.2);
 }
+
+.liquid-glass-card {
+  background-color: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.liquid-glass-card:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.liquid-glass-pill {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  background-color: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 
+    inset 0 1px 0.5px 0 rgba(255, 255, 255, 0.25),
+    0 2px 8px -1px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.liquid-glass-pill:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 14px -2px rgba(0, 0, 0, 0.35);
+}
+
+/* Morning Mode Liquid Glass */
+html.morning .liquid-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  background-color: rgba(251, 248, 242, 0.72);
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.95),
+    0 8px 30px -4px rgba(0, 0, 0, 0.06),
+    0 2px 6px 0 rgba(0, 0, 0, 0.02);
+}
+
+html.morning .liquid-glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  background-color: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  border: 1px solid rgba(234, 219, 206, 0.9);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+
+html.morning .liquid-glass-pill {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.65) 100%
+  );
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  border: 1px solid rgba(234, 219, 206, 0.95);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 1),
+    0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+html.morning .liquid-glass-pill:hover {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(215, 196, 178, 1);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 1),
+    0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+
 
 /* Monospace numerals */
 .font-mono-numeric {

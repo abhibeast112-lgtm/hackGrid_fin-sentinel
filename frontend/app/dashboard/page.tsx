@@ -98,19 +98,19 @@ export default function DashboardPage() {
         
         {/* Card 1: Total Cash Position */}
         <div
-          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
             isMorning
-              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
+              ? 'bg-white/10 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-white/[0.01] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
           }`}
         >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
             <span>TOTAL CASH POSITION</span>
             <span
               className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
                 isMorning
                   ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                  : 'bg-slate-800/90 text-emerald-400 border border-emerald-500/20'
+                  : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
               }`}
             >
               <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
@@ -128,19 +128,19 @@ export default function DashboardPage() {
 
         {/* Card 2: Monthly Revenue */}
         <div
-          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
             isMorning
-              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
+              ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-white/[0.00] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
           }`}
         >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
             <span>MONTHLY REVENUE</span>
             <span
               className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
                 isMorning
                   ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                  : 'bg-slate-800/90 text-emerald-400 border border-emerald-500/20'
+                  : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
               }`}
             >
               <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
@@ -158,19 +158,19 @@ export default function DashboardPage() {
 
         {/* Card 3: Monthly Expenses */}
         <div
-          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
             isMorning
-              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
+              ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-white/[0.00] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
           }`}
         >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
             <span>MONTHLY EXPENSES</span>
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
                 isMorning
                   ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                  : 'bg-slate-800/90 text-amber-400 border border-amber-500/20'
+                  : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
               }`}
             >
               <AlertTriangle className="h-3 w-3" />
@@ -188,19 +188,19 @@ export default function DashboardPage() {
 
         {/* Card 4: Active Exceptions Flagged */}
         <div
-          className={`relative overflow-hidden rounded-2xl border p-6 transition-all group ${
+          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
             isMorning
-              ? 'bg-white border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-slate-900/60 border-white/10 shadow-sm hover:border-white/20'
+              ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
+              : 'bg-white/[0.00] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
           }`}
         >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
             <span>ACTIVE EXCEPTIONS</span>
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
                 isMorning
                   ? 'bg-rose-50 text-rose-800 border border-rose-200'
-                  : 'bg-slate-800/90 text-rose-400 border border-rose-500/20'
+                  : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
               }`}
             >
               <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-rose-600' : 'bg-rose-500'}`} />

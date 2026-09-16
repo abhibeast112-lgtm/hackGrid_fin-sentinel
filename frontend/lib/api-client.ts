@@ -163,12 +163,24 @@ function syncLocalDecision(payload: DecisionPayload, record: DecisionRecord) {
   setStoredItem(STORAGE_KEYS.EXCEPTIONS, updated);
 
   // 2. Add to decisions
-  const currentDecisions = getStoredItem<DecisionRecord[]>(STORAGE_KEYS.DECISIONS, INITIAL_DECISIONS);
-  setStoredItem(STORAGE_KEYS.DECISIONS, [record, ...currentDecisions]);
+  const currentDecisions = getStoredDecisions();
+  const filtered = currentDecisions.filter((d) => d.id !== record.id);
+  setStoredItem(STORAGE_KEYS.DECISIONS, [record, ...filtered]);
 }
 
 export function getStoredDecisions(): DecisionRecord[] {
-  return getStoredItem<DecisionRecord[]>(STORAGE_KEYS.DECISIONS, INITIAL_DECISIONS);
+  const items = getStoredItem<DecisionRecord[]>(STORAGE_KEYS.DECISIONS, INITIAL_DECISIONS);
+  const seen = new Set<string>();
+  const deduplicated = items.filter((item) => {
+    if (!item?.id) return false;
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+  if (typeof window !== 'undefined' && deduplicated.length !== items.length) {
+    setStoredItem(STORAGE_KEYS.DECISIONS, deduplicated);
+  }
+  return deduplicated;
 }
 
 export function resetMockData(): void {

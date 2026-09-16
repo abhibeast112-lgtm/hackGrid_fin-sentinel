@@ -26,7 +26,7 @@ export function CashflowTrendChart() {
 
   if (!mounted) {
     return (
-      <div className={`h-72 flex items-center justify-center rounded-2xl border ${isMorning ? 'border-[#eadbce] bg-white/80' : 'border-white/10 bg-slate-900/60'}`}>
+      <div className={`h-72 flex items-center justify-center rounded-2xl border ${isMorning ? 'border-[#eadbce] bg-white/80' : 'border-white/15 bg-white/[0.04] backdrop-blur-xl'}`}>
         <span className={`text-sm font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>Loading telemetry stream...</span>
       </div>
     );
@@ -34,10 +34,10 @@ export function CashflowTrendChart() {
 
   return (
     <div
-      className={`rounded-2xl border backdrop-blur-md p-6 transition-all ${
+      className={`rounded-2xl p-6 transition-all duration-300 ${
         isMorning
-          ? 'bg-white border-[#eadbce] shadow-xs text-[#1c1917]'
-          : 'bg-slate-900/60 border-white/10 shadow-sm text-white'
+          ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs text-[#1c1917]'
+          : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25 text-white'
       }`}
     >
       {/* Chart Header */}

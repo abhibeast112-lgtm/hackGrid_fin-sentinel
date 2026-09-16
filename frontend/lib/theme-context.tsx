@@ -13,22 +13,29 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('morning');
+  const [theme, setThemeState] = useState<Theme>('dark');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem('finsentinel_theme') as Theme | null;
-    if (saved === 'morning' || saved === 'dark') {
-      setThemeState(saved);
-      document.documentElement.classList.remove('dark', 'morning');
-      document.documentElement.classList.add(saved);
+    const bgPreset = localStorage.getItem('finsentinel_bg');
+    let activeTheme: Theme = 'dark';
+
+    if (bgPreset === 'ahem') {
+      const saved = localStorage.getItem('finsentinel_theme') as Theme | null;
+      if (saved === 'morning' || saved === 'dark') {
+        activeTheme = saved;
+      }
     } else {
-      // Default to morning mode as requested
-      setThemeState('morning');
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('morning');
+      // First load with night trader background: default to dark
+      localStorage.setItem('finsentinel_bg', 'night_trader');
+      localStorage.setItem('finsentinel_theme', 'dark');
+      activeTheme = 'dark';
     }
+
+    setThemeState(activeTheme);
+    document.documentElement.classList.remove('dark', 'morning');
+    document.documentElement.classList.add(activeTheme);
   }, []);
 
   const setTheme = (newTheme: Theme) => {
@@ -54,7 +61,7 @@ export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {
     return {
-      theme: 'morning' as Theme,
+      theme: 'dark' as Theme,
       setTheme: () => {},
       toggleTheme: () => {},
     };
