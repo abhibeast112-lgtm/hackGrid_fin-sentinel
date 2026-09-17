@@ -17,7 +17,6 @@ import {
 
 import { FinancialException } from '@/lib/types';
 
-import { INITIAL_EXCEPTIONS } from '@/lib/mock-data';
 
 import {
   RefreshCw,
@@ -33,9 +32,7 @@ export default function DashboardPage() {
   const [
     exceptions,
     setExceptions,
-  ] = useState<FinancialException[]>(
-    INITIAL_EXCEPTIONS
-  );
+  ] = useState<FinancialException[]>([]);
 
   const [
     refreshing,
@@ -118,8 +115,7 @@ export default function DashboardPage() {
     /*
      * Reset the file input.
      *
-     * This allows the user to select the
-     * same CSV file again later.
+     * This allows the user to select the same CSV file again later.
      */
     event.target.value = '';
 
@@ -159,27 +155,71 @@ export default function DashboardPage() {
         await importTransactionsCsv(file);
 
       /*
-       * Display backend import result.
+       * IMPORTANT:
+       * The uploaded CSV's detector output is
+       * the source of truth for this dashboard view.
+       *
+       * Do not reload INITIAL_EXCEPTIONS here,
+       * otherwise every CSV appears to have the
+       * same 15 mock exceptions.
        */
+      const detectedExceptions: FinancialException[] =
+        result.anomalies.map((anomaly) => {
+          const formattedAmount =
+            new Intl.NumberFormat('en-IN', {
+              style: 'currency',
+              currency: anomaly.currency,
+              maximumFractionDigits: 0,
+            }).format(anomaly.amount);
+
+          return {
+            id: `EXC-${anomaly.anomaly_id.replace(/^ANO-/, '')}`,
+            backend_transaction_ids:
+              anomaly.flagged_record_ids,
+            risk_level:
+              anomaly.risk_tier === 'HIGH'
+                ? 'High Risk'
+                : 'Med Risk',
+            risk_score: anomaly.risk_score,
+            exception_type: anomaly.title,
+            vendor: anomaly.vendor_name,
+            vendor_code: anomaly.vendor_id,
+            invoice_no:
+              anomaly.invoice_number || '',
+            amount_at_risk: anomaly.amount,
+            currency: anomaly.currency,
+            formatted_amount: formattedAmount,
+            agent_pipeline_status:
+              'Detection Complete',
+            created_at:
+              new Date().toISOString(),
+            summary: anomaly.description,
+            status: 'AWAITING_DECISION',
+            requires_approval:
+              anomaly.risk_tier === 'HIGH',
+            current_step: 1,
+          };
+        });
+
+      /*
+       * Replace the displayed exceptions with the
+       * anomalies detected from THIS uploaded CSV.
+       */
+      setExceptions(detectedExceptions);
+
       setCsvMessage(
         `${result.filename}: ` +
         `${result.rows_read.toLocaleString('en-IN')} rows processed · ` +
         `${result.inserted.toLocaleString('en-IN')} inserted · ` +
-        `${result.skipped.toLocaleString('en-IN')} already present`
+        `${result.skipped.toLocaleString('en-IN')} already present · ` +
+        `${detectedExceptions.length} anomalies detected`
       );
-
-      /*
-       * Refresh the existing dashboard data.
-       */
-      await loadData();
-
     } catch (error) {
       setCsvError(
         error instanceof Error
           ? error.message
           : 'CSV import failed.'
       );
-
     } finally {
       setCsvImporting(false);
     }

@@ -104,6 +104,62 @@ export async function fetchExceptions(): Promise<{
     total_at_risk: total,
   };
 }
+export interface DetectedAnomaly {
+  anomaly_id: string;
+  anomaly_type: string;
+  title: string;
+  description: string;
+  amount: number;
+  currency: string;
+  risk_score: number;
+  risk_tier: string;
+  vendor_id: string;
+  vendor_name: string;
+  invoice_number?: string | null;
+  flagged_record_ids: string[];
+  associated_records: Record<string, unknown>[];
+}
+
+
+
+function anomalyToException(
+  anomaly: DetectedAnomaly
+): FinancialException {
+  const formattedAmount =
+    new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: anomaly.currency,
+      maximumFractionDigits: 0,
+    }).format(anomaly.amount);
+
+  return {
+    id: `EXC-${anomaly.anomaly_id.replace(/^ANO-/, '')}`,
+    backend_transaction_ids:
+      anomaly.flagged_record_ids,
+    risk_level:
+      anomaly.risk_tier === 'HIGH'
+        ? 'High Risk'
+        : 'Med Risk',
+    risk_score: anomaly.risk_score,
+    exception_type: anomaly.title,
+    vendor: anomaly.vendor_name,
+    vendor_code: anomaly.vendor_id,
+    invoice_no:
+      anomaly.invoice_number || '',
+    amount_at_risk: anomaly.amount,
+    currency: anomaly.currency,
+    formatted_amount: formattedAmount,
+    agent_pipeline_status:
+      'Detection Complete',
+    created_at:
+      new Date().toISOString(),
+    summary: anomaly.description,
+    status: 'AWAITING_DECISION',
+    requires_approval:
+      anomaly.risk_tier === 'HIGH',
+    current_step: 1,
+  };
+}
 
 
 /* =========================================================
@@ -117,6 +173,7 @@ export interface CsvImportResponse {
   inserted: number;
   skipped: number;
   message: string;
+  anomalies: DetectedAnomaly[];
 }
 
 
@@ -166,7 +223,20 @@ export async function importTransactionsCsv(
   }
 
 
-  return response.json();
+  const result =
+    (await response.json()) as CsvImportResponse;
+
+  const detectedExceptions =
+    result.anomalies.map(anomalyToException);
+
+  if (typeof window !== 'undefined') {
+    setStoredItem(
+      STORAGE_KEYS.EXCEPTIONS,
+      detectedExceptions
+    );
+  }
+
+  return result;
 }
 
 
@@ -183,8 +253,14 @@ export async function fetchInvestigation(
     INVESTIGATION_DATABASE['EXC-101'];
 
 
+  const storedExceptions =
+    getStoredItem<FinancialException[]>(
+      STORAGE_KEYS.EXCEPTIONS,
+      INITIAL_EXCEPTIONS
+    );
+
   const exception =
-    INITIAL_EXCEPTIONS.find(
+    storedExceptions.find(
       (item) => item.id === id
     );
 

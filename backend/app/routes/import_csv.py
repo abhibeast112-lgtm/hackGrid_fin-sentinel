@@ -1,3 +1,5 @@
+import csv
+from io import StringIO
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -5,6 +7,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from app.database.csv_loader import load_transactions_from_csv
 from app.database.db import DB_PATH
+from app.engine.detector import detect_duplicate_payment_pairs
 
 
 router = APIRouter()
@@ -13,9 +16,21 @@ router = APIRouter()
 @router.post("/import-csv")
 async def import_csv(file: UploadFile = File(...)):
     """
-    Receive a CSV file from the frontend, temporarily save it,
-    import its transactions into the existing SQLite database,
-    and delete the temporary file afterward.
+    Receive a CSV from the frontend.
+
+    Flow:
+
+        uploaded CSV
+            ↓
+        temporary file
+            ↓
+        existing CSV loader
+            ↓
+        SQLite
+            ↓
+        existing duplicate detector
+            ↓
+        detected anomalies
     """
 
     if not file.filename:
@@ -39,24 +54,77 @@ async def import_csv(file: UploadFile = File(...)):
                 detail="The CSV file is empty.",
             )
 
-        # Save the uploaded CSV temporarily.
+        # ---------------------------------------------------------
+        # Read transaction IDs from THIS uploaded CSV.
+        # We use these IDs for the anomaly scan so the scan
+        # does not accidentally scan the entire historical DB.
+        # ---------------------------------------------------------
+
+        try:
+            decoded = contents.decode("utf-8-sig")
+            reader = csv.DictReader(
+                StringIO(decoded)
+            )
+
+            if reader.fieldnames is None:
+                raise ValueError(
+                    "CSV is missing a header row."
+                )
+
+            transaction_ids = []
+
+            for row in reader:
+                transaction_id = (
+                    row.get("transaction_id") or ""
+                ).strip()
+
+                if transaction_id:
+                    transaction_ids.append(
+                        transaction_id
+                    )
+
+        except UnicodeDecodeError as exc:
+            raise HTTPException(
+                status_code=400,
+                detail="CSV must be UTF-8 encoded.",
+            ) from exc
+
+        if not transaction_ids:
+            raise HTTPException(
+                status_code=400,
+                detail="CSV contains no transaction IDs.",
+            )
+
+        # ---------------------------------------------------------
+        # Existing loader
+        # ---------------------------------------------------------
+
         with NamedTemporaryFile(
             suffix=".csv",
             delete=False,
         ) as temp_file:
             temp_file.write(contents)
-            temp_path = Path(temp_file.name)
+            temp_path = Path(
+                temp_file.name
+            )
 
         try:
-            # Reuse the existing CSV loader.
             stats = load_transactions_from_csv(
                 csv_path=temp_path,
                 db_path=DB_PATH,
             )
-
         finally:
-            # Remove temporary uploaded file.
-            temp_path.unlink(missing_ok=True)
+            temp_path.unlink(
+                missing_ok=True
+            )
+
+        # ---------------------------------------------------------
+        # Existing detector — batch mode
+        # ---------------------------------------------------------
+
+        anomalies = detect_duplicate_payment_pairs(
+            transaction_ids
+        )
 
         return {
             "success": True,
@@ -64,7 +132,8 @@ async def import_csv(file: UploadFile = File(...)):
             "rows_read": stats["rows_read"],
             "inserted": stats["inserted"],
             "skipped": stats["skipped"],
-            "message": "CSV imported successfully.",
+            "message": "CSV imported and scanned successfully.",
+            "anomalies": anomalies,
         }
 
     except HTTPException:

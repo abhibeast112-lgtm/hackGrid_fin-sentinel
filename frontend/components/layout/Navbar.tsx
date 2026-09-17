@@ -158,7 +158,7 @@ export function Navbar() {
               FC
             </div>
             <div className="hidden xl:flex flex-col text-left">
-              <span className={`text-xs font-semibold leading-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>Abhinav K.</span>
+              <span className={`text-xs font-semibold leading-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>Obama bin ladden</span>
               <span className={`text-[10px] font-mono leading-tight ${isMorning ? 'text-[#78716c]' : 'text-slate-300/80'}`}>Chief Controller</span>
             </div>
           </div>
