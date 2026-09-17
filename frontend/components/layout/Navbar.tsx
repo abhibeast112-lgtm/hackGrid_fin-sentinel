@@ -13,7 +13,7 @@ export function Navbar() {
   useEffect(() => {
     const checkFastAPI = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/exceptions', {
+        const res = await fetch('http://localhost:8000/health', {
           method: 'GET',
           signal: AbortSignal.timeout(1200),
         });

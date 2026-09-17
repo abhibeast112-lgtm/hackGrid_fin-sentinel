@@ -3,6 +3,7 @@ import { FinancialException, InvestigationDetail, DecisionRecord } from './types
 export const INITIAL_EXCEPTIONS: FinancialException[] = [
   {
     id: 'EXC-101',
+    backend_transaction_ids: ['TXN-8392', 'TXN-8417'],
     risk_level: 'High Risk',
     risk_score: 94,
     exception_type: 'Potential Duplicate Payment',

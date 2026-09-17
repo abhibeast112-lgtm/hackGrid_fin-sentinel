@@ -5,7 +5,11 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { DocumentModal } from '@/components/investigation/DocumentModal';
-import { fetchInvestigation, submitDecision } from '@/lib/api-client';
+import {
+  fetchInvestigation,
+  submitDecision,
+  resumeInvestigation,
+} from '@/lib/api-client';
 import { InvestigationDetail, SourceDocument, DecisionType, DecisionRecord, AgentTimelineStep } from '@/lib/types';
 import { INVESTIGATION_DATABASE } from '@/lib/mock-data';
 import {
@@ -75,41 +79,71 @@ export default function InvestigationRoomPage() {
   const agentSteps = timelineSteps.filter((s) => s.step <= 4);
   const allGatesCompleted = !requiresApproval || agentSteps.every((s) => s.status === 'completed');
 
-  const handleConfirmStep = (stepNumber: number) => {
-    setIsAdvancingStep(true);
-    setStepAdvancingMsg(`Confirming Gate ${stepNumber}...`);
+const handleConfirmStep = async (stepNumber: number) => {
+  setIsAdvancingStep(true);
+  setStepAdvancingMsg(`Confirming Gate ${stepNumber}...`);
 
+  try {
+    /*
+     * The frontend step number is only a UI concept.
+     * LangGraph itself decides which checkpoint comes next.
+     *
+     * The backend investigation ID is required here.
+     */
+    const investigationId =
+      data.backend_investigation_id || data.id;
+
+    const response = await resumeInvestigation(
+      investigationId,
+      'APPROVE',
+      `Human approved checkpoint ${stepNumber}.`,
+      'frontend_reviewer'
+    );
+
+    console.log(
+      'LangGraph checkpoint response:',
+      response
+    );
+
+    /*
+     * Backend has actually resumed the graph.
+     * Update the UI using the backend response.
+     */
+    setActiveStepIndex((prev) => prev + 1);
+
+    if (response.status === 'COMPLETED') {
+      setStepAdvancingMsg(
+        'Investigation completed successfully.'
+      );
+    } else {
+      setStepAdvancingMsg(
+        response.checkpoint_prompt ||
+          `Gate ${stepNumber} confirmed.`
+      );
+    }
+
+    /*
+     * Give the UI a short moment to display the result.
+     */
     setTimeout(() => {
-      setTimelineSteps((prev) => {
-        return prev.map((item) => {
-          if (item.step === stepNumber) {
-            return {
-              ...item,
-              status: 'completed' as const,
-              confirmedByHuman: true,
-            };
-          }
-          if (item.step === stepNumber + 1 && item.step <= 4) {
-            return {
-              ...item,
-              status: 'awaiting_input' as const,
-            };
-          }
-          if (stepNumber === 4 && item.step === 5) {
-            return {
-              ...item,
-              status: 'awaiting_input' as const,
-            };
-          }
-          return item;
-        });
-      });
-
-      setActiveStepIndex(stepNumber + 1);
       setIsAdvancingStep(false);
       setStepAdvancingMsg('');
-    }, 600);
-  };
+    }, 500);
+  } catch (error) {
+    console.error(
+      'Failed to resume investigation:',
+      error
+    );
+
+    setStepAdvancingMsg(
+      error instanceof Error
+        ? error.message
+        : 'Failed to contact investigation backend.'
+    );
+
+    setIsAdvancingStep(false);
+  }
+};
 
   const handleDecision = async (decision: DecisionType) => {
     if (isSubmitting || !allGatesCompleted) return;

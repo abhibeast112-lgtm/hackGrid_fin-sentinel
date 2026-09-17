@@ -10,6 +10,7 @@ export type PipelineStatus =
 
 export interface FinancialException {
   id: string;
+  backend_transaction_ids?: string[];
   risk_level: RiskLevel;
   risk_score: number; // 0 - 100
   exception_type: string;
@@ -79,6 +80,8 @@ export interface SourceDocument {
 
 export interface InvestigationDetail {
   id: string;
+  backend_investigation_id?: string;
+
   title: string;
   vendor: string;
   vendor_category: string;
@@ -91,20 +94,35 @@ export interface InvestigationDetail {
   requires_approval: boolean;
   current_step: number;
   timeline: AgentTimelineStep[];
+
   comparison: {
     box_a: ComparisonBox;
     box_b: ComparisonBox;
   };
+
   adversarial_verdict: AdversarialVerdict;
   source_documents: SourceDocument[];
 }
-
-export type DecisionType = 'APPROVE' | 'REJECT' | 'ESCALATE';
+export type DecisionType =
+  'APPROVE' |
+  'REJECT' |
+  'ESCALATE';
 
 export interface DecisionPayload {
   exception_id: string;
   decision: DecisionType;
   reviewer_notes: string;
+}
+
+export interface DecisionRecord {
+  id: string;
+  exception_id: string;
+  decision: DecisionType;
+  reviewer_notes: string;
+  timestamp: string;
+  reviewer: string;
+  audit_hash: string;
+  status: string;
 }
 
 export interface DecisionRecord {
