@@ -1,0 +1,1001 @@
+transaction_id	vendor_id	vendor_name	amount	currency	transaction_date	invoice_number	description
+TXN-10001	VEND-109	Sapphire Security Systems	84500	INR	07-09-2026 07:46	INV-20001	Purchase order payment
+TXN-10002	VEND-104	BluePeak Consulting	18500	INR	26-09-2026 16:10	INV-20002	ERP remittance
+TXN-10003	VEND-102	Vertex Industrial Systems	56000	INR	18-09-2026 08:24	INV-20003	Purchase order payment
+TXN-10004	VEND-108	Metro Facilities Pvt Ltd	18500	INR	25-09-2026 01:10	INV-20004	Supplier invoice settlement
+TXN-10005	VEND-107	Prime Components India	8500	INR	19-09-2026 09:56	INV-20005	Purchase order payment
+TXN-10006	VEND-100	TechNova India Pvt Ltd	180000	INR	08-09-2026 05:48	INV-20006	Goods receipt settlement
+TXN-10007	VEND-101	Global Logistics Solutions	125000	INR	14-09-2026 14:59	INV-20007	ERP remittance
+TXN-10008	VEND-107	Prime Components India	42000	INR	01-09-2026 10:22	INV-20008	Goods receipt settlement
+TXN-10009	VEND-108	Metro Facilities Pvt Ltd	125000	INR	08-09-2026 18:23	INV-20009	Goods receipt settlement
+TXN-10010	VEND-105	Orion Manufacturing Co	18500	INR	12-09-2026 22:40	INV-20010	Supplier invoice settlement
+TXN-10011	VEND-106	Nimbus Cloud Services	180000	INR	22-09-2026 15:00	INV-20011	Supplier invoice settlement
+TXN-10012	VEND-100	TechNova India Pvt Ltd	56000	INR	18-09-2026 19:18	INV-20012	Supplier invoice settlement
+TXN-10013	VEND-103	Apex Office Supplies	56000	INR	15-09-2026 16:35	INV-20013	Purchase order payment
+TXN-10014	VEND-101	Global Logistics Solutions	42000	INR	27-09-2026 03:36	INV-20014	ERP remittance
+TXN-10015	VEND-101	Global Logistics Solutions	22000	INR	04-09-2026 03:35	INV-20015	ERP remittance
+TXN-10016	VEND-108	Metro Facilities Pvt Ltd	12000	INR	13-09-2026 18:19	INV-20016	Goods receipt settlement
+TXN-10017	VEND-103	Apex Office Supplies	42000	INR	21-09-2026 11:06	INV-20017	Supplier invoice settlement
+TXN-10018	VEND-104	BluePeak Consulting	22000	INR	01-09-2026 14:51	INV-20018	Service invoice payment
+TXN-10019	VEND-101	Global Logistics Solutions	15000	INR	04-09-2026 23:35	INV-20019	Service invoice payment
+TXN-10020	VEND-100	TechNova India Pvt Ltd	56000	INR	07-09-2026 01:12	INV-20020	ERP remittance
+TXN-10021	VEND-102	Vertex Industrial Systems	84500	INR	11-09-2026 03:12	INV-20021	ERP remittance
+TXN-10022	VEND-109	Sapphire Security Systems	56000	INR	18-09-2026 11:10	INV-20022	Service invoice payment
+TXN-10023	VEND-109	Sapphire Security Systems	8500	INR	24-09-2026 22:29	INV-20023	Goods receipt settlement
+TXN-10024	VEND-109	Sapphire Security Systems	42000	INR	03-09-2026 17:40	INV-20024	Service invoice payment
+TXN-10025	VEND-107	Prime Components India	34000	INR	07-09-2026 19:09	INV-20025	Purchase order payment
+TXN-10026	VEND-102	Vertex Industrial Systems	125000	INR	22-09-2026 16:45	INV-20026	Service invoice payment
+TXN-10027	VEND-102	Vertex Industrial Systems	180000	INR	30-09-2026 21:47	INV-20027	Service invoice payment
+TXN-10028	VEND-104	BluePeak Consulting	180000	INR	07-09-2026 22:03	INV-20028	Goods receipt settlement
+TXN-10029	VEND-105	Orion Manufacturing Co	8500	INR	16-09-2026 04:10	INV-20029	ERP remittance
+TXN-10030	VEND-104	BluePeak Consulting	18500	INR	27-09-2026 12:57	INV-20030	Purchase order payment
+TXN-10031	VEND-104	BluePeak Consulting	12000	INR	15-09-2026 08:08	INV-20031	ERP remittance
+TXN-10032	VEND-109	Sapphire Security Systems	8500	INR	20-09-2026 18:37	INV-20032	Purchase order payment
+TXN-10033	VEND-109	Sapphire Security Systems	180000	INR	24-09-2026 11:08	INV-20033	Goods receipt settlement
+TXN-10034	VEND-102	Vertex Industrial Systems	84500	INR	13-09-2026 12:41	INV-20034	Purchase order payment
+TXN-10035	VEND-108	Metro Facilities Pvt Ltd	22000	INR	21-09-2026 07:20	INV-20035	Supplier invoice settlement
+TXN-10036	VEND-106	Nimbus Cloud Services	92000	INR	23-09-2026 13:19	INV-20036	Goods receipt settlement
+TXN-10037	VEND-103	Apex Office Supplies	56000	INR	28-09-2026 13:57	INV-20037	ERP remittance
+TXN-10038	VEND-101	Global Logistics Solutions	34000	INR	10-09-2026 12:37	INV-20038	Service invoice payment
+TXN-10039	VEND-103	Apex Office Supplies	15000	INR	04-09-2026 11:17	INV-20039	Purchase order payment
+TXN-10040	VEND-104	BluePeak Consulting	12000	INR	12-09-2026 14:55	INV-20040	Service invoice payment
+TXN-10041	VEND-109	Sapphire Security Systems	42000	INR	11-09-2026 17:43	INV-20041	Goods receipt settlement
+TXN-10042	VEND-106	Nimbus Cloud Services	15000	INR	12-09-2026 23:51	INV-20042	ERP remittance
+TXN-10043	VEND-105	Orion Manufacturing Co	12000	INR	04-09-2026 01:58	INV-20043	Service invoice payment
+TXN-10044	VEND-108	Metro Facilities Pvt Ltd	8500	INR	23-09-2026 13:08	INV-20044	Supplier invoice settlement
+TXN-10045	VEND-100	TechNova India Pvt Ltd	34000	INR	08-09-2026 20:50	INV-20045	Purchase order payment
+TXN-10046	VEND-108	Metro Facilities Pvt Ltd	8500	INR	01-10-2026 02:53	INV-20046	ERP remittance
+TXN-10047	VEND-108	Metro Facilities Pvt Ltd	180000	INR	06-09-2026 06:21	INV-20047	ERP remittance
+TXN-10048	VEND-104	BluePeak Consulting	18500	INR	02-09-2026 06:14	INV-20048	Purchase order payment
+TXN-10049	VEND-107	Prime Components India	125000	INR	05-09-2026 23:21	INV-20049	Goods receipt settlement
+TXN-10050	VEND-107	Prime Components India	56000	INR	09-09-2026 22:05	INV-20050	Supplier invoice settlement
+TXN-10051	VEND-105	Orion Manufacturing Co	56000	INR	27-09-2026 08:04	INV-20051	Service invoice payment
+TXN-10052	VEND-104	BluePeak Consulting	84500	INR	21-09-2026 10:04	INV-20052	Goods receipt settlement
+TXN-10053	VEND-100	TechNova India Pvt Ltd	180000	INR	25-09-2026 11:09	INV-20053	ERP remittance
+TXN-10054	VEND-107	Prime Components India	34000	INR	05-09-2026 07:15	INV-20054	Goods receipt settlement
+TXN-10055	VEND-109	Sapphire Security Systems	8500	INR	22-09-2026 19:43	INV-20055	Service invoice payment
+TXN-10056	VEND-105	Orion Manufacturing Co	56000	INR	02-09-2026 15:02	INV-20056	Supplier invoice settlement
+TXN-10057	VEND-103	Apex Office Supplies	67500	INR	04-09-2026 13:56	INV-20057	Supplier invoice settlement
+TXN-10058	VEND-102	Vertex Industrial Systems	8500	INR	30-09-2026 11:36	INV-20058	ERP remittance
+TXN-10059	VEND-103	Apex Office Supplies	12000	INR	26-09-2026 11:07	INV-20059	Supplier invoice settlement
+TXN-10060	VEND-106	Nimbus Cloud Services	34000	INR	16-09-2026 08:09	INV-20060	ERP remittance
+TXN-10061	VEND-103	Apex Office Supplies	67500	INR	25-09-2026 04:22	INV-20061	Purchase order payment
+TXN-10062	VEND-107	Prime Components India	67500	INR	19-09-2026 09:07	INV-20062	Purchase order payment
+TXN-10063	VEND-106	Nimbus Cloud Services	56000	INR	25-09-2026 01:57	INV-20063	Supplier invoice settlement
+TXN-10064	VEND-106	Nimbus Cloud Services	15000	INR	26-09-2026 00:47	INV-20064	Service invoice payment
+TXN-10065	VEND-109	Sapphire Security Systems	27500	INR	24-09-2026 02:40	INV-20065	ERP remittance
+TXN-10066	VEND-101	Global Logistics Solutions	34000	INR	05-09-2026 16:22	INV-20066	Purchase order payment
+TXN-10067	VEND-104	BluePeak Consulting	42000	INR	19-09-2026 03:08	INV-20067	ERP remittance
+TXN-10068	VEND-107	Prime Components India	27500	INR	15-09-2026 18:35	INV-20068	Supplier invoice settlement
+TXN-10069	VEND-104	BluePeak Consulting	27500	INR	10-09-2026 00:00	INV-20069	Supplier invoice settlement
+TXN-10070	VEND-106	Nimbus Cloud Services	92000	INR	07-09-2026 04:32	INV-20070	Goods receipt settlement
+TXN-10071	VEND-100	TechNova India Pvt Ltd	18500	INR	26-09-2026 18:49	INV-20071	Supplier invoice settlement
+TXN-10072	VEND-101	Global Logistics Solutions	8500	INR	26-09-2026 18:39	INV-20072	ERP remittance
+TXN-10073	VEND-103	Apex Office Supplies	22000	INR	08-09-2026 18:57	INV-20073	Service invoice payment
+TXN-10074	VEND-108	Metro Facilities Pvt Ltd	12000	INR	05-09-2026 10:17	INV-20074	ERP remittance
+TXN-10075	VEND-102	Vertex Industrial Systems	180000	INR	25-09-2026 19:38	INV-20075	Goods receipt settlement
+TXN-10076	VEND-106	Nimbus Cloud Services	15000	INR	26-09-2026 03:03	INV-20076	Service invoice payment
+TXN-10077	VEND-104	BluePeak Consulting	180000	INR	25-09-2026 10:40	INV-20077	Service invoice payment
+TXN-10078	VEND-101	Global Logistics Solutions	42000	INR	30-09-2026 21:49	INV-20078	Purchase order payment
+TXN-10079	VEND-103	Apex Office Supplies	180000	INR	18-09-2026 18:17	INV-20079	Supplier invoice settlement
+TXN-10080	VEND-109	Sapphire Security Systems	180000	INR	25-09-2026 02:31	INV-20080	Goods receipt settlement
+TXN-10081	VEND-107	Prime Components India	8500	INR	23-09-2026 11:24	INV-20081	ERP remittance
+TXN-10082	VEND-108	Metro Facilities Pvt Ltd	180000	INR	12-09-2026 13:02	INV-20082	ERP remittance
+TXN-10083	VEND-109	Sapphire Security Systems	180000	INR	20-09-2026 23:42	INV-20083	Goods receipt settlement
+TXN-10084	VEND-106	Nimbus Cloud Services	34000	INR	14-09-2026 19:41	INV-20084	ERP remittance
+TXN-10085	VEND-103	Apex Office Supplies	15000	INR	27-09-2026 19:22	INV-20085	ERP remittance
+TXN-10086	VEND-106	Nimbus Cloud Services	92000	INR	07-09-2026 04:44	INV-20086	Goods receipt settlement
+TXN-10087	VEND-108	Metro Facilities Pvt Ltd	34000	INR	23-09-2026 16:24	INV-20087	Purchase order payment
+TXN-10088	VEND-104	BluePeak Consulting	67500	INR	23-09-2026 13:51	INV-20088	Supplier invoice settlement
+TXN-10089	VEND-104	BluePeak Consulting	92000	INR	05-09-2026 15:23	INV-20089	Supplier invoice settlement
+TXN-10090	VEND-101	Global Logistics Solutions	27500	INR	12-09-2026 17:09	INV-20090	Supplier invoice settlement
+TXN-10091	VEND-100	TechNova India Pvt Ltd	27500	INR	06-09-2026 03:46	INV-20091	Supplier invoice settlement
+TXN-10092	VEND-105	Orion Manufacturing Co	34000	INR	08-09-2026 02:37	INV-20092	Purchase order payment
+TXN-10093	VEND-101	Global Logistics Solutions	27500	INR	23-09-2026 06:52	INV-20093	Service invoice payment
+TXN-10094	VEND-108	Metro Facilities Pvt Ltd	15000	INR	06-09-2026 06:20	INV-20094	Supplier invoice settlement
+TXN-10095	VEND-101	Global Logistics Solutions	67500	INR	02-09-2026 03:11	INV-20095	ERP remittance
+TXN-10096	VEND-108	Metro Facilities Pvt Ltd	12000	INR	21-09-2026 19:44	INV-20096	Goods receipt settlement
+TXN-10097	VEND-103	Apex Office Supplies	18500	INR	12-09-2026 01:44	INV-20097	Goods receipt settlement
+TXN-10098	VEND-105	Orion Manufacturing Co	84500	INR	15-09-2026 13:50	INV-20098	Supplier invoice settlement
+TXN-10099	VEND-106	Nimbus Cloud Services	22000	INR	29-09-2026 06:25	INV-20099	Goods receipt settlement
+TXN-10100	VEND-101	Global Logistics Solutions	22000	INR	09-09-2026 19:55	INV-20100	Goods receipt settlement
+TXN-10101	VEND-106	Nimbus Cloud Services	15000	INR	05-09-2026 08:39	INV-20101	Service invoice payment
+TXN-10102	VEND-105	Orion Manufacturing Co	67500	INR	29-09-2026 15:42	INV-20102	Service invoice payment
+TXN-10103	VEND-103	Apex Office Supplies	42000	INR	05-09-2026 16:11	INV-20103	ERP remittance
+TXN-10104	VEND-107	Prime Components India	84500	INR	16-09-2026 03:28	INV-20104	Supplier invoice settlement
+TXN-10105	VEND-106	Nimbus Cloud Services	8500	INR	16-09-2026 09:26	INV-20105	Purchase order payment
+TXN-10106	VEND-109	Sapphire Security Systems	56000	INR	10-09-2026 00:42	INV-20106	ERP remittance
+TXN-10107	VEND-109	Sapphire Security Systems	8500	INR	01-10-2026 00:32	INV-20107	Service invoice payment
+TXN-10108	VEND-101	Global Logistics Solutions	34000	INR	05-09-2026 07:58	INV-20108	Goods receipt settlement
+TXN-10109	VEND-102	Vertex Industrial Systems	42000	INR	15-09-2026 16:59	INV-20109	ERP remittance
+TXN-10110	VEND-107	Prime Components India	15000	INR	19-09-2026 20:12	INV-20110	Goods receipt settlement
+TXN-10111	VEND-103	Apex Office Supplies	84500	INR	25-09-2026 07:13	INV-20111	Service invoice payment
+TXN-10112	VEND-100	TechNova India Pvt Ltd	22000	INR	11-09-2026 12:52	INV-20112	Purchase order payment
+TXN-10113	VEND-109	Sapphire Security Systems	92000	INR	06-09-2026 03:02	INV-20113	Supplier invoice settlement
+TXN-10114	VEND-101	Global Logistics Solutions	42000	INR	01-09-2026 21:22	INV-20114	Service invoice payment
+TXN-10115	VEND-104	BluePeak Consulting	67500	INR	19-09-2026 12:35	INV-20115	Goods receipt settlement
+TXN-10116	VEND-104	BluePeak Consulting	92000	INR	07-09-2026 01:08	INV-20116	Goods receipt settlement
+TXN-10117	VEND-101	Global Logistics Solutions	27500	INR	21-09-2026 03:04	INV-20117	Service invoice payment
+TXN-10118	VEND-102	Vertex Industrial Systems	8500	INR	03-09-2026 15:44	INV-20118	Purchase order payment
+TXN-10119	VEND-103	Apex Office Supplies	42000	INR	14-09-2026 19:00	INV-20119	Service invoice payment
+TXN-10120	VEND-109	Sapphire Security Systems	8500	INR	26-09-2026 22:24	INV-20120	Supplier invoice settlement
+TXN-10121	VEND-104	BluePeak Consulting	22000	INR	03-09-2026 20:40	INV-20121	Supplier invoice settlement
+TXN-10122	VEND-108	Metro Facilities Pvt Ltd	12000	INR	21-09-2026 20:59	INV-20122	Service invoice payment
+TXN-10123	VEND-100	TechNova India Pvt Ltd	22000	INR	26-09-2026 01:27	INV-20123	ERP remittance
+TXN-10124	VEND-107	Prime Components India	42000	INR	18-09-2026 12:18	INV-20124	Goods receipt settlement
+TXN-10125	VEND-101	Global Logistics Solutions	8500	INR	18-09-2026 00:59	INV-20125	Supplier invoice settlement
+TXN-10126	VEND-103	Apex Office Supplies	67500	INR	08-09-2026 00:50	INV-20126	Goods receipt settlement
+TXN-10127	VEND-106	Nimbus Cloud Services	92000	INR	19-09-2026 13:33	INV-20127	ERP remittance
+TXN-10128	VEND-105	Orion Manufacturing Co	92000	INR	13-09-2026 04:18	INV-20128	ERP remittance
+TXN-10129	VEND-108	Metro Facilities Pvt Ltd	84500	INR	23-09-2026 12:52	INV-20129	ERP remittance
+TXN-10130	VEND-106	Nimbus Cloud Services	27500	INR	29-09-2026 13:29	INV-20130	Supplier invoice settlement
+TXN-10131	VEND-103	Apex Office Supplies	22000	INR	04-09-2026 09:45	INV-20131	Goods receipt settlement
+TXN-10132	VEND-108	Metro Facilities Pvt Ltd	27500	INR	26-09-2026 04:39	INV-20132	Supplier invoice settlement
+TXN-10133	VEND-101	Global Logistics Solutions	42000	INR	07-09-2026 12:26	INV-20133	ERP remittance
+TXN-10134	VEND-102	Vertex Industrial Systems	180000	INR	22-09-2026 09:34	INV-20134	Service invoice payment
+TXN-10135	VEND-105	Orion Manufacturing Co	27500	INR	06-09-2026 22:10	INV-20135	Purchase order payment
+TXN-10136	VEND-100	TechNova India Pvt Ltd	34000	INR	21-09-2026 23:18	INV-20136	Purchase order payment
+TXN-10137	VEND-101	Global Logistics Solutions	22000	INR	25-09-2026 10:48	INV-20137	ERP remittance
+TXN-10138	VEND-108	Metro Facilities Pvt Ltd	67500	INR	15-09-2026 00:42	INV-20138	Goods receipt settlement
+TXN-10139	VEND-109	Sapphire Security Systems	18500	INR	08-09-2026 03:58	INV-20139	ERP remittance
+TXN-10140	VEND-108	Metro Facilities Pvt Ltd	34000	INR	16-09-2026 16:19	INV-20140	Supplier invoice settlement
+TXN-10141	VEND-108	Metro Facilities Pvt Ltd	27500	INR	07-09-2026 01:32	INV-20141	Service invoice payment
+TXN-10142	VEND-106	Nimbus Cloud Services	180000	INR	06-09-2026 02:23	INV-20142	Goods receipt settlement
+TXN-10143	VEND-101	Global Logistics Solutions	56000	INR	29-09-2026 04:26	INV-20143	ERP remittance
+TXN-10144	VEND-105	Orion Manufacturing Co	8500	INR	13-09-2026 10:37	INV-20144	Supplier invoice settlement
+TXN-10145	VEND-105	Orion Manufacturing Co	22000	INR	01-10-2026 05:21	INV-20145	Purchase order payment
+TXN-10146	VEND-104	BluePeak Consulting	56000	INR	29-09-2026 08:50	INV-20146	Service invoice payment
+TXN-10147	VEND-105	Orion Manufacturing Co	125000	INR	12-09-2026 16:11	INV-20147	Supplier invoice settlement
+TXN-10148	VEND-101	Global Logistics Solutions	56000	INR	30-09-2026 08:52	INV-20148	Purchase order payment
+TXN-10149	VEND-102	Vertex Industrial Systems	15000	INR	11-09-2026 19:43	INV-20149	Purchase order payment
+TXN-10150	VEND-103	Apex Office Supplies	84500	INR	04-09-2026 00:02	INV-20150	Service invoice payment
+TXN-10151	VEND-104	BluePeak Consulting	8500	INR	27-09-2026 17:48	INV-20151	Service invoice payment
+TXN-10152	VEND-100	TechNova India Pvt Ltd	8500	INR	27-09-2026 17:44	INV-20152	Supplier invoice settlement
+TXN-10153	VEND-101	Global Logistics Solutions	12000	INR	25-09-2026 01:17	INV-20153	Goods receipt settlement
+TXN-10154	VEND-103	Apex Office Supplies	56000	INR	22-09-2026 03:08	INV-20154	Service invoice payment
+TXN-10155	VEND-108	Metro Facilities Pvt Ltd	34000	INR	27-09-2026 13:20	INV-20155	ERP remittance
+TXN-10156	VEND-109	Sapphire Security Systems	125000	INR	03-09-2026 13:17	INV-20156	Supplier invoice settlement
+TXN-10157	VEND-109	Sapphire Security Systems	84500	INR	25-09-2026 23:56	INV-20157	Service invoice payment
+TXN-10158	VEND-103	Apex Office Supplies	15000	INR	14-09-2026 09:33	INV-20158	Goods receipt settlement
+TXN-10159	VEND-106	Nimbus Cloud Services	92000	INR	28-09-2026 02:49	INV-20159	Service invoice payment
+TXN-10160	VEND-107	Prime Components India	84500	INR	28-09-2026 12:09	INV-20160	ERP remittance
+TXN-10161	VEND-109	Sapphire Security Systems	12000	INR	08-09-2026 00:48	INV-20161	Service invoice payment
+TXN-10162	VEND-105	Orion Manufacturing Co	56000	INR	13-09-2026 11:54	INV-20162	Supplier invoice settlement
+TXN-10163	VEND-105	Orion Manufacturing Co	180000	INR	20-09-2026 05:54	INV-20163	Purchase order payment
+TXN-10164	VEND-105	Orion Manufacturing Co	22000	INR	27-09-2026 00:06	INV-20164	Goods receipt settlement
+TXN-10165	VEND-100	TechNova India Pvt Ltd	27500	INR	19-09-2026 16:49	INV-20165	Goods receipt settlement
+TXN-10166	VEND-109	Sapphire Security Systems	15000	INR	29-09-2026 03:34	INV-20166	Purchase order payment
+TXN-10167	VEND-100	TechNova India Pvt Ltd	18500	INR	13-09-2026 10:17	INV-20167	ERP remittance
+TXN-10168	VEND-106	Nimbus Cloud Services	84500	INR	07-09-2026 23:55	INV-20168	Purchase order payment
+TXN-10169	VEND-106	Nimbus Cloud Services	92000	INR	15-09-2026 18:57	INV-20169	Goods receipt settlement
+TXN-10170	VEND-107	Prime Components India	12000	INR	23-09-2026 08:17	INV-20170	Purchase order payment
+TXN-10171	VEND-108	Metro Facilities Pvt Ltd	15000	INR	19-09-2026 13:06	INV-20171	Purchase order payment
+TXN-10172	VEND-109	Sapphire Security Systems	27500	INR	13-09-2026 08:31	INV-20172	ERP remittance
+TXN-10173	VEND-100	TechNova India Pvt Ltd	84500	INR	04-09-2026 21:01	INV-20173	Goods receipt settlement
+TXN-10174	VEND-100	TechNova India Pvt Ltd	15000	INR	18-09-2026 00:13	INV-20174	Supplier invoice settlement
+TXN-10175	VEND-106	Nimbus Cloud Services	18500	INR	14-09-2026 13:07	INV-20175	ERP remittance
+TXN-10176	VEND-103	Apex Office Supplies	8500	INR	20-09-2026 03:40	INV-20176	Goods receipt settlement
+TXN-10177	VEND-102	Vertex Industrial Systems	42000	INR	08-09-2026 09:46	INV-20177	Purchase order payment
+TXN-10178	VEND-106	Nimbus Cloud Services	34000	INR	08-09-2026 17:04	INV-20178	ERP remittance
+TXN-10179	VEND-103	Apex Office Supplies	42000	INR	07-09-2026 18:30	INV-20179	Goods receipt settlement
+TXN-10180	VEND-108	Metro Facilities Pvt Ltd	22000	INR	26-09-2026 14:45	INV-20180	Purchase order payment
+TXN-10181	VEND-109	Sapphire Security Systems	34000	INR	30-09-2026 17:53	INV-20181	Supplier invoice settlement
+TXN-10182	VEND-107	Prime Components India	56000	INR	22-09-2026 18:13	INV-20182	Goods receipt settlement
+TXN-10183	VEND-102	Vertex Industrial Systems	12000	INR	29-09-2026 10:02	INV-20183	Service invoice payment
+TXN-10184	VEND-109	Sapphire Security Systems	67500	INR	25-09-2026 01:44	INV-20184	Service invoice payment
+TXN-10185	VEND-102	Vertex Industrial Systems	67500	INR	12-09-2026 02:47	INV-20185	Purchase order payment
+TXN-10186	VEND-105	Orion Manufacturing Co	22000	INR	20-09-2026 14:00	INV-20186	Goods receipt settlement
+TXN-10187	VEND-107	Prime Components India	8500	INR	12-09-2026 15:02	INV-20187	Service invoice payment
+TXN-10188	VEND-105	Orion Manufacturing Co	12000	INR	28-09-2026 23:17	INV-20188	ERP remittance
+TXN-10189	VEND-102	Vertex Industrial Systems	125000	INR	11-09-2026 18:19	INV-20189	Purchase order payment
+TXN-10190	VEND-102	Vertex Industrial Systems	18500	INR	16-09-2026 22:51	INV-20190	Service invoice payment
+TXN-10191	VEND-108	Metro Facilities Pvt Ltd	180000	INR	24-09-2026 13:13	INV-20191	Supplier invoice settlement
+TXN-10192	VEND-101	Global Logistics Solutions	22000	INR	23-09-2026 05:33	INV-20192	Service invoice payment
+TXN-10193	VEND-107	Prime Components India	92000	INR	05-09-2026 06:38	INV-20193	Goods receipt settlement
+TXN-10194	VEND-102	Vertex Industrial Systems	67500	INR	01-09-2026 14:50	INV-20194	Purchase order payment
+TXN-10195	VEND-108	Metro Facilities Pvt Ltd	125000	INR	08-09-2026 23:34	INV-20195	Service invoice payment
+TXN-10196	VEND-100	TechNova India Pvt Ltd	56000	INR	30-09-2026 06:54	INV-20196	Goods receipt settlement
+TXN-10197	VEND-106	Nimbus Cloud Services	92000	INR	10-09-2026 16:01	INV-20197	Service invoice payment
+TXN-10198	VEND-106	Nimbus Cloud Services	22000	INR	27-09-2026 04:47	INV-20198	ERP remittance
+TXN-10199	VEND-101	Global Logistics Solutions	84500	INR	30-09-2026 21:18	INV-20199	Service invoice payment
+TXN-10200	VEND-104	BluePeak Consulting	42000	INR	19-09-2026 09:17	INV-20200	Service invoice payment
+TXN-10201	VEND-108	Metro Facilities Pvt Ltd	27500	INR	24-09-2026 10:25	INV-20201	Purchase order payment
+TXN-10202	VEND-100	TechNova India Pvt Ltd	56000	INR	22-09-2026 23:47	INV-20202	Service invoice payment
+TXN-10203	VEND-101	Global Logistics Solutions	8500	INR	08-09-2026 16:22	INV-20203	Purchase order payment
+TXN-10204	VEND-106	Nimbus Cloud Services	56000	INR	23-09-2026 08:02	INV-20204	Goods receipt settlement
+TXN-10205	VEND-100	TechNova India Pvt Ltd	180000	INR	10-09-2026 06:00	INV-20205	Purchase order payment
+TXN-10206	VEND-107	Prime Components India	8500	INR	06-09-2026 17:07	INV-20206	Supplier invoice settlement
+TXN-10207	VEND-104	BluePeak Consulting	84500	INR	01-09-2026 15:06	INV-20207	Service invoice payment
+TXN-10208	VEND-106	Nimbus Cloud Services	8500	INR	23-09-2026 18:54	INV-20208	ERP remittance
+TXN-10209	VEND-101	Global Logistics Solutions	15000	INR	21-09-2026 18:02	INV-20209	Service invoice payment
+TXN-10210	VEND-100	TechNova India Pvt Ltd	92000	INR	06-09-2026 00:00	INV-20210	Service invoice payment
+TXN-10211	VEND-106	Nimbus Cloud Services	42000	INR	17-09-2026 09:11	INV-20211	Service invoice payment
+TXN-10212	VEND-102	Vertex Industrial Systems	15000	INR	20-09-2026 14:54	INV-20212	Purchase order payment
+TXN-10213	VEND-106	Nimbus Cloud Services	56000	INR	23-09-2026 16:40	INV-20213	Purchase order payment
+TXN-10214	VEND-107	Prime Components India	27500	INR	05-09-2026 18:11	INV-20214	Goods receipt settlement
+TXN-10215	VEND-104	BluePeak Consulting	125000	INR	11-09-2026 07:18	INV-20215	Goods receipt settlement
+TXN-10216	VEND-105	Orion Manufacturing Co	34000	INR	06-09-2026 16:21	INV-20216	ERP remittance
+TXN-10217	VEND-102	Vertex Industrial Systems	15000	INR	03-09-2026 12:30	INV-20217	ERP remittance
+TXN-10218	VEND-107	Prime Components India	8500	INR	18-09-2026 07:46	INV-20218	Service invoice payment
+TXN-10219	VEND-109	Sapphire Security Systems	12000	INR	02-09-2026 08:17	INV-20219	Service invoice payment
+TXN-10220	VEND-104	BluePeak Consulting	15000	INR	15-09-2026 19:59	INV-20220	Purchase order payment
+TXN-10221	VEND-108	Metro Facilities Pvt Ltd	8500	INR	10-09-2026 19:54	INV-20221	Supplier invoice settlement
+TXN-10222	VEND-100	TechNova India Pvt Ltd	56000	INR	04-09-2026 00:32	INV-20222	Supplier invoice settlement
+TXN-10223	VEND-104	BluePeak Consulting	42000	INR	25-09-2026 19:14	INV-20223	Supplier invoice settlement
+TXN-10224	VEND-105	Orion Manufacturing Co	84500	INR	15-09-2026 01:40	INV-20224	Supplier invoice settlement
+TXN-10225	VEND-105	Orion Manufacturing Co	8500	INR	01-10-2026 07:04	INV-20225	Service invoice payment
+TXN-10226	VEND-102	Vertex Industrial Systems	92000	INR	28-09-2026 20:00	INV-20226	Service invoice payment
+TXN-10227	VEND-108	Metro Facilities Pvt Ltd	27500	INR	04-09-2026 00:49	INV-20227	Purchase order payment
+TXN-10228	VEND-105	Orion Manufacturing Co	180000	INR	14-09-2026 00:32	INV-20228	ERP remittance
+TXN-10229	VEND-107	Prime Components India	27500	INR	28-09-2026 17:08	INV-20229	Goods receipt settlement
+TXN-10230	VEND-101	Global Logistics Solutions	67500	INR	11-09-2026 05:28	INV-20230	ERP remittance
+TXN-10231	VEND-107	Prime Components India	42000	INR	05-09-2026 01:55	INV-20231	Goods receipt settlement
+TXN-10232	VEND-104	BluePeak Consulting	84500	INR	17-09-2026 09:44	INV-20232	Supplier invoice settlement
+TXN-10233	VEND-104	BluePeak Consulting	84500	INR	19-09-2026 08:51	INV-20233	Goods receipt settlement
+TXN-10234	VEND-109	Sapphire Security Systems	92000	INR	17-09-2026 21:28	INV-20234	ERP remittance
+TXN-10235	VEND-106	Nimbus Cloud Services	18500	INR	12-09-2026 02:37	INV-20235	Purchase order payment
+TXN-10236	VEND-105	Orion Manufacturing Co	42000	INR	05-09-2026 06:16	INV-20236	Purchase order payment
+TXN-10237	VEND-105	Orion Manufacturing Co	42000	INR	04-09-2026 03:06	INV-20237	Service invoice payment
+TXN-10238	VEND-107	Prime Components India	56000	INR	04-09-2026 10:31	INV-20238	Goods receipt settlement
+TXN-10239	VEND-102	Vertex Industrial Systems	34000	INR	23-09-2026 14:06	INV-20239	Goods receipt settlement
+TXN-10240	VEND-108	Metro Facilities Pvt Ltd	42000	INR	14-09-2026 07:10	INV-20240	Purchase order payment
+TXN-10241	VEND-108	Metro Facilities Pvt Ltd	18500	INR	21-09-2026 17:06	INV-20241	Purchase order payment
+TXN-10242	VEND-107	Prime Components India	8500	INR	28-09-2026 09:00	INV-20242	Purchase order payment
+TXN-10243	VEND-104	BluePeak Consulting	27500	INR	01-10-2026 02:05	INV-20243	Purchase order payment
+TXN-10244	VEND-100	TechNova India Pvt Ltd	34000	INR	04-09-2026 11:15	INV-20244	Goods receipt settlement
+TXN-10245	VEND-107	Prime Components India	180000	INR	05-09-2026 18:45	INV-20245	Supplier invoice settlement
+TXN-10246	VEND-109	Sapphire Security Systems	67500	INR	06-09-2026 09:19	INV-20246	Purchase order payment
+TXN-10247	VEND-108	Metro Facilities Pvt Ltd	84500	INR	18-09-2026 00:28	INV-20247	Supplier invoice settlement
+TXN-10248	VEND-108	Metro Facilities Pvt Ltd	27500	INR	30-09-2026 13:02	INV-20248	Goods receipt settlement
+TXN-10249	VEND-107	Prime Components India	42000	INR	25-09-2026 15:44	INV-20249	Service invoice payment
+TXN-10250	VEND-104	BluePeak Consulting	42000	INR	21-09-2026 05:07	INV-20250	ERP remittance
+TXN-10251	VEND-107	Prime Components India	12000	INR	08-09-2026 10:17	INV-20251	Service invoice payment
+TXN-10252	VEND-109	Sapphire Security Systems	67500	INR	17-09-2026 20:50	INV-20252	Service invoice payment
+TXN-10253	VEND-104	BluePeak Consulting	56000	INR	17-09-2026 04:34	INV-20253	ERP remittance
+TXN-10254	VEND-100	TechNova India Pvt Ltd	125000	INR	22-09-2026 03:27	INV-20254	Service invoice payment
+TXN-10255	VEND-102	Vertex Industrial Systems	84500	INR	09-09-2026 23:38	INV-20255	Service invoice payment
+TXN-10256	VEND-100	TechNova India Pvt Ltd	84500	INR	02-09-2026 18:44	INV-20256	ERP remittance
+TXN-10257	VEND-101	Global Logistics Solutions	22000	INR	10-09-2026 13:56	INV-20257	Service invoice payment
+TXN-10258	VEND-103	Apex Office Supplies	92000	INR	09-09-2026 11:32	INV-20258	Purchase order payment
+TXN-10259	VEND-103	Apex Office Supplies	56000	INR	08-09-2026 01:05	INV-20259	ERP remittance
+TXN-10260	VEND-100	TechNova India Pvt Ltd	22000	INR	11-09-2026 14:31	INV-20260	Purchase order payment
+TXN-10261	VEND-107	Prime Components India	27500	INR	14-09-2026 14:18	INV-20261	Goods receipt settlement
+TXN-10262	VEND-103	Apex Office Supplies	15000	INR	07-09-2026 19:03	INV-20262	Purchase order payment
+TXN-10263	VEND-104	BluePeak Consulting	67500	INR	04-09-2026 16:57	INV-20263	Supplier invoice settlement
+TXN-10264	VEND-109	Sapphire Security Systems	18500	INR	03-09-2026 12:07	INV-20264	ERP remittance
+TXN-10265	VEND-102	Vertex Industrial Systems	22000	INR	16-09-2026 23:08	INV-20265	Supplier invoice settlement
+TXN-10266	VEND-105	Orion Manufacturing Co	125000	INR	01-09-2026 12:24	INV-20266	Supplier invoice settlement
+TXN-10267	VEND-105	Orion Manufacturing Co	56000	INR	12-09-2026 16:32	INV-20267	Goods receipt settlement
+TXN-10268	VEND-108	Metro Facilities Pvt Ltd	8500	INR	13-09-2026 23:57	INV-20268	Service invoice payment
+TXN-10269	VEND-109	Sapphire Security Systems	15000	INR	24-09-2026 21:52	INV-20269	Service invoice payment
+TXN-10270	VEND-103	Apex Office Supplies	92000	INR	13-09-2026 09:28	INV-20270	Supplier invoice settlement
+TXN-10271	VEND-105	Orion Manufacturing Co	92000	INR	13-09-2026 19:53	INV-20271	Goods receipt settlement
+TXN-10272	VEND-101	Global Logistics Solutions	27500	INR	23-09-2026 13:08	INV-20272	Service invoice payment
+TXN-10273	VEND-106	Nimbus Cloud Services	22000	INR	21-09-2026 01:17	INV-20273	Supplier invoice settlement
+TXN-10274	VEND-100	TechNova India Pvt Ltd	67500	INR	15-09-2026 16:46	INV-20274	Supplier invoice settlement
+TXN-10275	VEND-100	TechNova India Pvt Ltd	27500	INR	12-09-2026 01:34	INV-20275	Service invoice payment
+TXN-10276	VEND-103	Apex Office Supplies	12000	INR	26-09-2026 09:59	INV-20276	Goods receipt settlement
+TXN-10277	VEND-108	Metro Facilities Pvt Ltd	34000	INR	20-09-2026 08:28	INV-20277	Goods receipt settlement
+TXN-10278	VEND-106	Nimbus Cloud Services	18500	INR	27-09-2026 09:27	INV-20278	Service invoice payment
+TXN-10279	VEND-109	Sapphire Security Systems	22000	INR	21-09-2026 11:29	INV-20279	Supplier invoice settlement
+TXN-10280	VEND-104	BluePeak Consulting	22000	INR	11-09-2026 15:20	INV-20280	Supplier invoice settlement
+TXN-10281	VEND-100	TechNova India Pvt Ltd	56000	INR	30-09-2026 21:11	INV-20281	Purchase order payment
+TXN-10282	VEND-104	BluePeak Consulting	180000	INR	25-09-2026 08:55	INV-20282	Goods receipt settlement
+TXN-10283	VEND-108	Metro Facilities Pvt Ltd	180000	INR	27-09-2026 10:52	INV-20283	ERP remittance
+TXN-10284	VEND-101	Global Logistics Solutions	92000	INR	01-10-2026 02:01	INV-20284	Supplier invoice settlement
+TXN-10285	VEND-102	Vertex Industrial Systems	67500	INR	23-09-2026 19:00	INV-20285	Purchase order payment
+TXN-10286	VEND-106	Nimbus Cloud Services	34000	INR	09-09-2026 16:40	INV-20286	Goods receipt settlement
+TXN-10287	VEND-104	BluePeak Consulting	12000	INR	02-09-2026 01:38	INV-20287	Purchase order payment
+TXN-10288	VEND-108	Metro Facilities Pvt Ltd	18500	INR	11-09-2026 20:26	INV-20288	Service invoice payment
+TXN-10289	VEND-105	Orion Manufacturing Co	125000	INR	29-09-2026 17:24	INV-20289	ERP remittance
+TXN-10290	VEND-108	Metro Facilities Pvt Ltd	84500	INR	02-09-2026 21:52	INV-20290	Service invoice payment
+TXN-10291	VEND-107	Prime Components India	84500	INR	02-09-2026 13:12	INV-20291	Purchase order payment
+TXN-10292	VEND-100	TechNova India Pvt Ltd	67500	INR	14-09-2026 08:06	INV-20292	ERP remittance
+TXN-10293	VEND-101	Global Logistics Solutions	84500	INR	25-09-2026 09:53	INV-20293	ERP remittance
+TXN-10294	VEND-106	Nimbus Cloud Services	27500	INR	11-09-2026 01:39	INV-20294	Purchase order payment
+TXN-10295	VEND-105	Orion Manufacturing Co	92000	INR	17-09-2026 10:31	INV-20295	Goods receipt settlement
+TXN-10296	VEND-106	Nimbus Cloud Services	18500	INR	06-09-2026 18:11	INV-20296	Goods receipt settlement
+TXN-10297	VEND-107	Prime Components India	92000	INR	23-09-2026 01:47	INV-20297	ERP remittance
+TXN-10298	VEND-107	Prime Components India	12000	INR	13-09-2026 02:40	INV-20298	Service invoice payment
+TXN-10299	VEND-104	BluePeak Consulting	92000	INR	28-09-2026 06:20	INV-20299	ERP remittance
+TXN-10300	VEND-100	TechNova India Pvt Ltd	8500	INR	07-09-2026 22:00	INV-20300	Service invoice payment
+TXN-10301	VEND-109	Sapphire Security Systems	22000	INR	29-09-2026 09:35	INV-20301	Goods receipt settlement
+TXN-10302	VEND-101	Global Logistics Solutions	84500	INR	26-09-2026 00:20	INV-20302	Service invoice payment
+TXN-10303	VEND-105	Orion Manufacturing Co	12000	INR	15-09-2026 02:37	INV-20303	Service invoice payment
+TXN-10304	VEND-109	Sapphire Security Systems	125000	INR	17-09-2026 13:12	INV-20304	Purchase order payment
+TXN-10305	VEND-100	TechNova India Pvt Ltd	56000	INR	20-09-2026 06:02	INV-20305	Supplier invoice settlement
+TXN-10306	VEND-105	Orion Manufacturing Co	42000	INR	03-09-2026 10:51	INV-20306	ERP remittance
+TXN-10307	VEND-109	Sapphire Security Systems	12000	INR	29-09-2026 19:28	INV-20307	Goods receipt settlement
+TXN-10308	VEND-100	TechNova India Pvt Ltd	42000	INR	13-09-2026 20:14	INV-20308	Goods receipt settlement
+TXN-10309	VEND-105	Orion Manufacturing Co	42000	INR	08-09-2026 20:15	INV-20309	Service invoice payment
+TXN-10310	VEND-105	Orion Manufacturing Co	18500	INR	01-10-2026 05:37	INV-20310	Goods receipt settlement
+TXN-10311	VEND-101	Global Logistics Solutions	12000	INR	06-09-2026 03:52	INV-20311	ERP remittance
+TXN-10312	VEND-105	Orion Manufacturing Co	34000	INR	22-09-2026 10:01	INV-20312	Goods receipt settlement
+TXN-10313	VEND-102	Vertex Industrial Systems	27500	INR	03-09-2026 16:59	INV-20313	ERP remittance
+TXN-10314	VEND-102	Vertex Industrial Systems	84500	INR	17-09-2026 19:56	INV-20314	Service invoice payment
+TXN-10315	VEND-108	Metro Facilities Pvt Ltd	92000	INR	08-09-2026 10:30	INV-20315	Supplier invoice settlement
+TXN-10316	VEND-103	Apex Office Supplies	125000	INR	06-09-2026 18:11	INV-20316	ERP remittance
+TXN-10317	VEND-109	Sapphire Security Systems	15000	INR	07-09-2026 13:47	INV-20317	Service invoice payment
+TXN-10318	VEND-105	Orion Manufacturing Co	42000	INR	22-09-2026 23:58	INV-20318	Supplier invoice settlement
+TXN-10319	VEND-102	Vertex Industrial Systems	125000	INR	06-09-2026 06:22	INV-20319	ERP remittance
+TXN-10320	VEND-101	Global Logistics Solutions	27500	INR	07-09-2026 12:41	INV-20320	ERP remittance
+TXN-10321	VEND-102	Vertex Industrial Systems	22000	INR	03-09-2026 00:58	INV-20321	Service invoice payment
+TXN-10322	VEND-103	Apex Office Supplies	92000	INR	08-09-2026 22:38	INV-20322	Service invoice payment
+TXN-10323	VEND-101	Global Logistics Solutions	22000	INR	16-09-2026 12:57	INV-20323	Purchase order payment
+TXN-10324	VEND-101	Global Logistics Solutions	18500	INR	02-09-2026 01:12	INV-20324	Purchase order payment
+TXN-10325	VEND-101	Global Logistics Solutions	56000	INR	06-09-2026 11:22	INV-20325	Purchase order payment
+TXN-10326	VEND-107	Prime Components India	84500	INR	29-09-2026 17:30	INV-20326	Goods receipt settlement
+TXN-10327	VEND-109	Sapphire Security Systems	18500	INR	05-09-2026 07:25	INV-20327	Purchase order payment
+TXN-10328	VEND-103	Apex Office Supplies	42000	INR	14-09-2026 04:19	INV-20328	Supplier invoice settlement
+TXN-10329	VEND-109	Sapphire Security Systems	15000	INR	18-09-2026 03:10	INV-20329	Purchase order payment
+TXN-10330	VEND-103	Apex Office Supplies	22000	INR	20-09-2026 14:57	INV-20330	Goods receipt settlement
+TXN-10331	VEND-108	Metro Facilities Pvt Ltd	15000	INR	11-09-2026 07:06	INV-20331	Service invoice payment
+TXN-10332	VEND-103	Apex Office Supplies	27500	INR	02-09-2026 14:13	INV-20332	Purchase order payment
+TXN-10333	VEND-101	Global Logistics Solutions	18500	INR	11-09-2026 00:12	INV-20333	Purchase order payment
+TXN-10334	VEND-100	TechNova India Pvt Ltd	12000	INR	20-09-2026 08:10	INV-20334	Purchase order payment
+TXN-10335	VEND-105	Orion Manufacturing Co	67500	INR	15-09-2026 14:39	INV-20335	Service invoice payment
+TXN-10336	VEND-106	Nimbus Cloud Services	84500	INR	22-09-2026 17:48	INV-20336	ERP remittance
+TXN-10337	VEND-107	Prime Components India	67500	INR	17-09-2026 01:01	INV-20337	Service invoice payment
+TXN-10338	VEND-101	Global Logistics Solutions	67500	INR	23-09-2026 11:03	INV-20338	Service invoice payment
+TXN-10339	VEND-107	Prime Components India	125000	INR	11-09-2026 18:27	INV-20339	Goods receipt settlement
+TXN-10340	VEND-107	Prime Components India	92000	INR	25-09-2026 18:37	INV-20340	Purchase order payment
+TXN-10341	VEND-104	BluePeak Consulting	125000	INR	16-09-2026 13:29	INV-20341	Service invoice payment
+TXN-10342	VEND-102	Vertex Industrial Systems	84500	INR	26-09-2026 10:35	INV-20342	Service invoice payment
+TXN-10343	VEND-104	BluePeak Consulting	180000	INR	27-09-2026 02:27	INV-20343	Goods receipt settlement
+TXN-10344	VEND-105	Orion Manufacturing Co	12000	INR	07-09-2026 23:37	INV-20344	Supplier invoice settlement
+TXN-10345	VEND-107	Prime Components India	8500	INR	14-09-2026 12:53	INV-20345	Goods receipt settlement
+TXN-10346	VEND-104	BluePeak Consulting	125000	INR	30-09-2026 12:03	INV-20346	ERP remittance
+TXN-10347	VEND-101	Global Logistics Solutions	34000	INR	22-09-2026 07:26	INV-20347	ERP remittance
+TXN-10348	VEND-101	Global Logistics Solutions	8500	INR	30-09-2026 10:12	INV-20348	Goods receipt settlement
+TXN-10349	VEND-106	Nimbus Cloud Services	8500	INR	20-09-2026 15:45	INV-20349	Purchase order payment
+TXN-10350	VEND-100	TechNova India Pvt Ltd	34000	INR	28-09-2026 09:23	INV-20350	Goods receipt settlement
+TXN-10351	VEND-100	TechNova India Pvt Ltd	56000	INR	02-09-2026 22:24	INV-20351	Supplier invoice settlement
+TXN-10352	VEND-101	Global Logistics Solutions	56000	INR	21-09-2026 18:49	INV-20352	Supplier invoice settlement
+TXN-10353	VEND-106	Nimbus Cloud Services	56000	INR	13-09-2026 22:13	INV-20353	Goods receipt settlement
+TXN-10354	VEND-106	Nimbus Cloud Services	125000	INR	22-09-2026 11:35	INV-20354	Purchase order payment
+TXN-10355	VEND-101	Global Logistics Solutions	27500	INR	22-09-2026 17:12	INV-20355	Service invoice payment
+TXN-10356	VEND-106	Nimbus Cloud Services	84500	INR	10-09-2026 05:53	INV-20356	Goods receipt settlement
+TXN-10357	VEND-102	Vertex Industrial Systems	56000	INR	23-09-2026 18:51	INV-20357	Goods receipt settlement
+TXN-10358	VEND-106	Nimbus Cloud Services	42000	INR	12-09-2026 14:31	INV-20358	Supplier invoice settlement
+TXN-10359	VEND-102	Vertex Industrial Systems	180000	INR	11-09-2026 02:32	INV-20359	Goods receipt settlement
+TXN-10360	VEND-100	TechNova India Pvt Ltd	12000	INR	16-09-2026 15:13	INV-20360	Goods receipt settlement
+TXN-10361	VEND-106	Nimbus Cloud Services	42000	INR	21-09-2026 12:30	INV-20361	Purchase order payment
+TXN-10362	VEND-100	TechNova India Pvt Ltd	12000	INR	26-09-2026 03:27	INV-20362	ERP remittance
+TXN-10363	VEND-109	Sapphire Security Systems	56000	INR	03-09-2026 07:23	INV-20363	Service invoice payment
+TXN-10364	VEND-109	Sapphire Security Systems	12000	INR	20-09-2026 06:16	INV-20364	Purchase order payment
+TXN-10365	VEND-102	Vertex Industrial Systems	67500	INR	16-09-2026 16:45	INV-20365	ERP remittance
+TXN-10366	VEND-108	Metro Facilities Pvt Ltd	15000	INR	18-09-2026 11:27	INV-20366	Service invoice payment
+TXN-10367	VEND-106	Nimbus Cloud Services	8500	INR	20-09-2026 12:26	INV-20367	Goods receipt settlement
+TXN-10368	VEND-109	Sapphire Security Systems	8500	INR	09-09-2026 07:10	INV-20368	Service invoice payment
+TXN-10369	VEND-104	BluePeak Consulting	18500	INR	20-09-2026 08:33	INV-20369	ERP remittance
+TXN-10370	VEND-101	Global Logistics Solutions	180000	INR	08-09-2026 16:01	INV-20370	ERP remittance
+TXN-10371	VEND-104	BluePeak Consulting	34000	INR	24-09-2026 21:28	INV-20371	Service invoice payment
+TXN-10372	VEND-107	Prime Components India	8500	INR	11-09-2026 16:29	INV-20372	Supplier invoice settlement
+TXN-10373	VEND-104	BluePeak Consulting	92000	INR	22-09-2026 20:40	INV-20373	ERP remittance
+TXN-10374	VEND-101	Global Logistics Solutions	34000	INR	27-09-2026 06:25	INV-20374	Service invoice payment
+TXN-10375	VEND-109	Sapphire Security Systems	42000	INR	27-09-2026 14:33	INV-20375	Service invoice payment
+TXN-10376	VEND-106	Nimbus Cloud Services	125000	INR	16-09-2026 18:20	INV-20376	ERP remittance
+TXN-10377	VEND-101	Global Logistics Solutions	84500	INR	15-09-2026 13:52	INV-20377	Goods receipt settlement
+TXN-10378	VEND-105	Orion Manufacturing Co	56000	INR	24-09-2026 08:26	INV-20378	Goods receipt settlement
+TXN-10379	VEND-102	Vertex Industrial Systems	15000	INR	23-09-2026 10:54	INV-20379	Supplier invoice settlement
+TXN-10380	VEND-109	Sapphire Security Systems	22000	INR	07-09-2026 13:30	INV-20380	Supplier invoice settlement
+TXN-10381	VEND-100	TechNova India Pvt Ltd	92000	INR	29-09-2026 08:09	INV-20381	Service invoice payment
+TXN-10382	VEND-108	Metro Facilities Pvt Ltd	92000	INR	07-09-2026 09:30	INV-20382	Goods receipt settlement
+TXN-10383	VEND-104	BluePeak Consulting	18500	INR	24-09-2026 18:42	INV-20383	Service invoice payment
+TXN-10384	VEND-104	BluePeak Consulting	56000	INR	10-09-2026 04:53	INV-20384	Goods receipt settlement
+TXN-10385	VEND-101	Global Logistics Solutions	18500	INR	22-09-2026 07:14	INV-20385	Goods receipt settlement
+TXN-10386	VEND-105	Orion Manufacturing Co	34000	INR	08-09-2026 19:30	INV-20386	Goods receipt settlement
+TXN-10387	VEND-102	Vertex Industrial Systems	180000	INR	03-09-2026 00:20	INV-20387	Purchase order payment
+TXN-10388	VEND-102	Vertex Industrial Systems	180000	INR	18-09-2026 03:27	INV-20388	Goods receipt settlement
+TXN-10389	VEND-108	Metro Facilities Pvt Ltd	42000	INR	15-09-2026 07:25	INV-20389	ERP remittance
+TXN-10390	VEND-107	Prime Components India	84500	INR	10-09-2026 21:28	INV-20390	Service invoice payment
+TXN-10391	VEND-101	Global Logistics Solutions	15000	INR	11-09-2026 01:42	INV-20391	Purchase order payment
+TXN-10392	VEND-108	Metro Facilities Pvt Ltd	92000	INR	20-09-2026 19:36	INV-20392	Supplier invoice settlement
+TXN-10393	VEND-106	Nimbus Cloud Services	18500	INR	26-09-2026 08:35	INV-20393	Supplier invoice settlement
+TXN-10394	VEND-103	Apex Office Supplies	34000	INR	25-09-2026 18:04	INV-20394	Purchase order payment
+TXN-10395	VEND-100	TechNova India Pvt Ltd	15000	INR	26-09-2026 04:03	INV-20395	Purchase order payment
+TXN-10396	VEND-103	Apex Office Supplies	67500	INR	16-09-2026 14:21	INV-20396	Goods receipt settlement
+TXN-10397	VEND-104	BluePeak Consulting	180000	INR	26-09-2026 04:32	INV-20397	Purchase order payment
+TXN-10398	VEND-102	Vertex Industrial Systems	18500	INR	15-09-2026 13:50	INV-20398	Supplier invoice settlement
+TXN-10399	VEND-105	Orion Manufacturing Co	15000	INR	23-09-2026 11:12	INV-20399	Goods receipt settlement
+TXN-10400	VEND-100	TechNova India Pvt Ltd	125000	INR	30-09-2026 23:22	INV-20400	Supplier invoice settlement
+TXN-10401	VEND-104	BluePeak Consulting	27500	INR	10-09-2026 22:44	INV-20401	Purchase order payment
+TXN-10402	VEND-100	TechNova India Pvt Ltd	15000	INR	21-09-2026 05:28	INV-20402	Supplier invoice settlement
+TXN-10403	VEND-103	Apex Office Supplies	34000	INR	17-09-2026 12:08	INV-20403	Purchase order payment
+TXN-10404	VEND-107	Prime Components India	8500	INR	28-09-2026 11:29	INV-20404	Service invoice payment
+TXN-10405	VEND-102	Vertex Industrial Systems	15000	INR	24-09-2026 00:18	INV-20405	Goods receipt settlement
+TXN-10406	VEND-103	Apex Office Supplies	125000	INR	09-09-2026 14:37	INV-20406	Goods receipt settlement
+TXN-10407	VEND-101	Global Logistics Solutions	125000	INR	19-09-2026 07:02	INV-20407	Goods receipt settlement
+TXN-10408	VEND-104	BluePeak Consulting	34000	INR	26-09-2026 01:52	INV-20408	Supplier invoice settlement
+TXN-10409	VEND-101	Global Logistics Solutions	27500	INR	05-09-2026 10:08	INV-20409	ERP remittance
+TXN-10410	VEND-106	Nimbus Cloud Services	180000	INR	12-09-2026 15:27	INV-20410	Supplier invoice settlement
+TXN-10411	VEND-107	Prime Components India	67500	INR	17-09-2026 11:21	INV-20411	ERP remittance
+TXN-10412	VEND-106	Nimbus Cloud Services	84500	INR	29-09-2026 01:01	INV-20412	ERP remittance
+TXN-10413	VEND-102	Vertex Industrial Systems	56000	INR	02-09-2026 18:24	INV-20413	ERP remittance
+TXN-10414	VEND-104	BluePeak Consulting	92000	INR	04-09-2026 08:18	INV-20414	Service invoice payment
+TXN-10415	VEND-100	TechNova India Pvt Ltd	125000	INR	10-09-2026 09:10	INV-20415	ERP remittance
+TXN-10416	VEND-100	TechNova India Pvt Ltd	27500	INR	06-09-2026 15:25	INV-20416	ERP remittance
+TXN-10417	VEND-104	BluePeak Consulting	125000	INR	10-09-2026 06:42	INV-20417	Supplier invoice settlement
+TXN-10418	VEND-100	TechNova India Pvt Ltd	42000	INR	23-09-2026 03:53	INV-20418	Purchase order payment
+TXN-10419	VEND-107	Prime Components India	15000	INR	30-09-2026 06:05	INV-20419	ERP remittance
+TXN-10420	VEND-101	Global Logistics Solutions	18500	INR	16-09-2026 10:44	INV-20420	Goods receipt settlement
+TXN-10421	VEND-103	Apex Office Supplies	92000	INR	05-09-2026 00:44	INV-20421	Service invoice payment
+TXN-10422	VEND-102	Vertex Industrial Systems	34000	INR	04-09-2026 22:09	INV-20422	ERP remittance
+TXN-10423	VEND-100	TechNova India Pvt Ltd	92000	INR	22-09-2026 10:48	INV-20423	Purchase order payment
+TXN-10424	VEND-104	BluePeak Consulting	42000	INR	25-09-2026 03:55	INV-20424	ERP remittance
+TXN-10425	VEND-101	Global Logistics Solutions	15000	INR	19-09-2026 00:25	INV-20425	Supplier invoice settlement
+TXN-10426	VEND-103	Apex Office Supplies	125000	INR	13-09-2026 20:45	INV-20426	Purchase order payment
+TXN-10427	VEND-100	TechNova India Pvt Ltd	12000	INR	19-09-2026 07:00	INV-20427	Service invoice payment
+TXN-10428	VEND-106	Nimbus Cloud Services	67500	INR	10-09-2026 12:32	INV-20428	ERP remittance
+TXN-10429	VEND-102	Vertex Industrial Systems	18500	INR	28-09-2026 11:28	INV-20429	Service invoice payment
+TXN-10430	VEND-103	Apex Office Supplies	125000	INR	17-09-2026 17:18	INV-20430	Goods receipt settlement
+TXN-10431	VEND-106	Nimbus Cloud Services	22000	INR	11-09-2026 00:23	INV-20431	Service invoice payment
+TXN-10432	VEND-109	Sapphire Security Systems	84500	INR	10-09-2026 05:22	INV-20432	Supplier invoice settlement
+TXN-10433	VEND-101	Global Logistics Solutions	8500	INR	27-09-2026 21:33	INV-20433	Service invoice payment
+TXN-10434	VEND-107	Prime Components India	18500	INR	07-09-2026 07:21	INV-20434	ERP remittance
+TXN-10435	VEND-105	Orion Manufacturing Co	12000	INR	23-09-2026 12:02	INV-20435	Service invoice payment
+TXN-10436	VEND-101	Global Logistics Solutions	18500	INR	03-09-2026 05:36	INV-20436	Goods receipt settlement
+TXN-10437	VEND-105	Orion Manufacturing Co	125000	INR	16-09-2026 07:49	INV-20437	ERP remittance
+TXN-10438	VEND-105	Orion Manufacturing Co	125000	INR	22-09-2026 03:09	INV-20438	Supplier invoice settlement
+TXN-10439	VEND-105	Orion Manufacturing Co	22000	INR	08-09-2026 23:22	INV-20439	Service invoice payment
+TXN-10440	VEND-106	Nimbus Cloud Services	12000	INR	25-09-2026 15:31	INV-20440	Supplier invoice settlement
+TXN-10441	VEND-102	Vertex Industrial Systems	12000	INR	06-09-2026 16:38	INV-20441	Purchase order payment
+TXN-10442	VEND-105	Orion Manufacturing Co	42000	INR	22-09-2026 17:06	INV-20442	ERP remittance
+TXN-10443	VEND-103	Apex Office Supplies	180000	INR	08-09-2026 03:18	INV-20443	Service invoice payment
+TXN-10444	VEND-109	Sapphire Security Systems	12000	INR	03-09-2026 10:23	INV-20444	Purchase order payment
+TXN-10445	VEND-108	Metro Facilities Pvt Ltd	67500	INR	07-09-2026 23:39	INV-20445	Purchase order payment
+TXN-10446	VEND-108	Metro Facilities Pvt Ltd	27500	INR	11-09-2026 10:12	INV-20446	Supplier invoice settlement
+TXN-10447	VEND-105	Orion Manufacturing Co	84500	INR	02-09-2026 06:55	INV-20447	Service invoice payment
+TXN-10448	VEND-103	Apex Office Supplies	18500	INR	27-09-2026 13:51	INV-20448	Supplier invoice settlement
+TXN-10449	VEND-109	Sapphire Security Systems	125000	INR	23-09-2026 12:06	INV-20449	ERP remittance
+TXN-10450	VEND-101	Global Logistics Solutions	8500	INR	16-09-2026 05:32	INV-20450	ERP remittance
+TXN-10451	VEND-105	Orion Manufacturing Co	84500	INR	15-09-2026 03:37	INV-20451	Goods receipt settlement
+TXN-10452	VEND-100	TechNova India Pvt Ltd	125000	INR	14-09-2026 12:55	INV-20452	Purchase order payment
+TXN-10453	VEND-106	Nimbus Cloud Services	84500	INR	14-09-2026 12:18	INV-20453	Service invoice payment
+TXN-10454	VEND-108	Metro Facilities Pvt Ltd	84500	INR	10-09-2026 21:33	INV-20454	ERP remittance
+TXN-10455	VEND-104	BluePeak Consulting	67500	INR	20-09-2026 14:12	INV-20455	Service invoice payment
+TXN-10456	VEND-106	Nimbus Cloud Services	180000	INR	21-09-2026 08:11	INV-20456	Service invoice payment
+TXN-10457	VEND-103	Apex Office Supplies	84500	INR	10-09-2026 12:48	INV-20457	Supplier invoice settlement
+TXN-10458	VEND-107	Prime Components India	8500	INR	29-09-2026 01:13	INV-20458	Service invoice payment
+TXN-10459	VEND-108	Metro Facilities Pvt Ltd	18500	INR	30-09-2026 06:42	INV-20459	Supplier invoice settlement
+TXN-10460	VEND-103	Apex Office Supplies	22000	INR	30-09-2026 23:50	INV-20460	Purchase order payment
+TXN-10461	VEND-100	TechNova India Pvt Ltd	42000	INR	25-09-2026 14:47	INV-20461	Service invoice payment
+TXN-10462	VEND-100	TechNova India Pvt Ltd	84500	INR	14-09-2026 23:39	INV-20462	Goods receipt settlement
+TXN-10463	VEND-103	Apex Office Supplies	180000	INR	13-09-2026 21:38	INV-20463	ERP remittance
+TXN-10464	VEND-102	Vertex Industrial Systems	84500	INR	11-09-2026 20:32	INV-20464	ERP remittance
+TXN-10465	VEND-105	Orion Manufacturing Co	67500	INR	28-09-2026 02:22	INV-20465	Service invoice payment
+TXN-10466	VEND-102	Vertex Industrial Systems	67500	INR	08-09-2026 20:29	INV-20466	Service invoice payment
+TXN-10467	VEND-101	Global Logistics Solutions	125000	INR	06-09-2026 11:41	INV-20467	Supplier invoice settlement
+TXN-10468	VEND-101	Global Logistics Solutions	22000	INR	18-09-2026 03:56	INV-20468	Supplier invoice settlement
+TXN-10469	VEND-109	Sapphire Security Systems	8500	INR	21-09-2026 17:32	INV-20469	Service invoice payment
+TXN-10470	VEND-103	Apex Office Supplies	180000	INR	27-09-2026 05:29	INV-20470	Supplier invoice settlement
+TXN-10471	VEND-100	TechNova India Pvt Ltd	84500	INR	09-09-2026 23:43	INV-20471	Service invoice payment
+TXN-10472	VEND-105	Orion Manufacturing Co	67500	INR	21-09-2026 04:31	INV-20472	ERP remittance
+TXN-10473	VEND-105	Orion Manufacturing Co	180000	INR	11-09-2026 20:35	INV-20473	Purchase order payment
+TXN-10474	VEND-102	Vertex Industrial Systems	15000	INR	28-09-2026 09:50	INV-20474	Purchase order payment
+TXN-10475	VEND-105	Orion Manufacturing Co	180000	INR	10-09-2026 08:51	INV-20475	Purchase order payment
+TXN-10476	VEND-100	TechNova India Pvt Ltd	84500	INR	11-09-2026 03:24	INV-20476	Supplier invoice settlement
+TXN-10477	VEND-107	Prime Components India	92000	INR	13-09-2026 23:49	INV-20477	Goods receipt settlement
+TXN-10478	VEND-105	Orion Manufacturing Co	12000	INR	27-09-2026 08:08	INV-20478	Service invoice payment
+TXN-10479	VEND-108	Metro Facilities Pvt Ltd	180000	INR	19-09-2026 23:04	INV-20479	ERP remittance
+TXN-10480	VEND-103	Apex Office Supplies	92000	INR	23-09-2026 04:20	INV-20480	Goods receipt settlement
+TXN-10481	VEND-109	Sapphire Security Systems	18500	INR	21-09-2026 15:21	INV-20481	Purchase order payment
+TXN-10482	VEND-106	Nimbus Cloud Services	67500	INR	28-09-2026 13:48	INV-20482	Purchase order payment
+TXN-10483	VEND-100	TechNova India Pvt Ltd	12000	INR	11-09-2026 13:22	INV-20483	Supplier invoice settlement
+TXN-10484	VEND-104	BluePeak Consulting	92000	INR	24-09-2026 15:58	INV-20484	Service invoice payment
+TXN-10485	VEND-102	Vertex Industrial Systems	92000	INR	22-09-2026 06:20	INV-20485	Supplier invoice settlement
+TXN-10486	VEND-100	TechNova India Pvt Ltd	12000	INR	03-09-2026 05:12	INV-20486	ERP remittance
+TXN-10487	VEND-107	Prime Components India	34000	INR	19-09-2026 03:42	INV-20487	ERP remittance
+TXN-10488	VEND-104	BluePeak Consulting	125000	INR	14-09-2026 16:37	INV-20488	Purchase order payment
+TXN-10489	VEND-103	Apex Office Supplies	180000	INR	12-09-2026 18:01	INV-20489	Supplier invoice settlement
+TXN-10490	VEND-104	BluePeak Consulting	180000	INR	12-09-2026 03:23	INV-20490	Goods receipt settlement
+TXN-10491	VEND-100	TechNova India Pvt Ltd	34000	INR	08-09-2026 02:54	INV-20491	Service invoice payment
+TXN-10492	VEND-103	Apex Office Supplies	12000	INR	28-09-2026 17:11	INV-20492	ERP remittance
+TXN-10493	VEND-103	Apex Office Supplies	18500	INR	14-09-2026 15:23	INV-20493	Goods receipt settlement
+TXN-10494	VEND-101	Global Logistics Solutions	56000	INR	01-09-2026 09:23	INV-20494	ERP remittance
+TXN-10495	VEND-102	Vertex Industrial Systems	84500	INR	16-09-2026 08:51	INV-20495	ERP remittance
+TXN-10496	VEND-108	Metro Facilities Pvt Ltd	34000	INR	29-09-2026 11:14	INV-20496	Goods receipt settlement
+TXN-10497	VEND-109	Sapphire Security Systems	56000	INR	14-09-2026 16:25	INV-20497	Purchase order payment
+TXN-10498	VEND-101	Global Logistics Solutions	56000	INR	09-09-2026 01:27	INV-20498	Goods receipt settlement
+TXN-10499	VEND-105	Orion Manufacturing Co	84500	INR	24-09-2026 19:46	INV-20499	ERP remittance
+TXN-10500	VEND-104	BluePeak Consulting	67500	INR	29-09-2026 08:51	INV-20500	Service invoice payment
+TXN-10501	VEND-101	Global Logistics Solutions	42000	INR	09-09-2026 23:07	INV-20501	ERP remittance
+TXN-10502	VEND-103	Apex Office Supplies	67500	INR	27-09-2026 03:01	INV-20502	Supplier invoice settlement
+TXN-10503	VEND-105	Orion Manufacturing Co	42000	INR	16-09-2026 08:51	INV-20503	Goods receipt settlement
+TXN-10504	VEND-104	BluePeak Consulting	42000	INR	11-09-2026 21:28	INV-20504	Service invoice payment
+TXN-10505	VEND-101	Global Logistics Solutions	34000	INR	04-09-2026 09:53	INV-20505	Purchase order payment
+TXN-10506	VEND-100	TechNova India Pvt Ltd	125000	INR	19-09-2026 21:48	INV-20506	Supplier invoice settlement
+TXN-10507	VEND-101	Global Logistics Solutions	18500	INR	30-09-2026 04:13	INV-20507	ERP remittance
+TXN-10508	VEND-109	Sapphire Security Systems	84500	INR	30-09-2026 00:08	INV-20508	Supplier invoice settlement
+TXN-10509	VEND-104	BluePeak Consulting	180000	INR	14-09-2026 21:35	INV-20509	Purchase order payment
+TXN-10510	VEND-102	Vertex Industrial Systems	92000	INR	25-09-2026 23:49	INV-20510	Supplier invoice settlement
+TXN-10511	VEND-102	Vertex Industrial Systems	125000	INR	06-09-2026 07:46	INV-20511	Purchase order payment
+TXN-10512	VEND-106	Nimbus Cloud Services	42000	INR	06-09-2026 07:38	INV-20512	Purchase order payment
+TXN-10513	VEND-103	Apex Office Supplies	42000	INR	10-09-2026 06:15	INV-20513	ERP remittance
+TXN-10514	VEND-103	Apex Office Supplies	56000	INR	03-09-2026 06:40	INV-20514	Purchase order payment
+TXN-10515	VEND-106	Nimbus Cloud Services	92000	INR	21-09-2026 22:24	INV-20515	Goods receipt settlement
+TXN-10516	VEND-107	Prime Components India	18500	INR	07-09-2026 12:21	INV-20516	Goods receipt settlement
+TXN-10517	VEND-100	TechNova India Pvt Ltd	27500	INR	01-09-2026 17:19	INV-20517	ERP remittance
+TXN-10518	VEND-106	Nimbus Cloud Services	27500	INR	08-09-2026 16:38	INV-20518	Goods receipt settlement
+TXN-10519	VEND-109	Sapphire Security Systems	125000	INR	27-09-2026 17:43	INV-20519	Purchase order payment
+TXN-10520	VEND-107	Prime Components India	22000	INR	25-09-2026 11:44	INV-20520	Goods receipt settlement
+TXN-10521	VEND-104	BluePeak Consulting	180000	INR	20-09-2026 17:01	INV-20521	Service invoice payment
+TXN-10522	VEND-108	Metro Facilities Pvt Ltd	18500	INR	16-09-2026 07:26	INV-20522	Goods receipt settlement
+TXN-10523	VEND-103	Apex Office Supplies	27500	INR	06-09-2026 07:46	INV-20523	Purchase order payment
+TXN-10524	VEND-105	Orion Manufacturing Co	92000	INR	22-09-2026 05:07	INV-20524	Service invoice payment
+TXN-10525	VEND-108	Metro Facilities Pvt Ltd	18500	INR	24-09-2026 13:45	INV-20525	Goods receipt settlement
+TXN-10526	VEND-101	Global Logistics Solutions	18500	INR	18-09-2026 09:12	INV-20526	Goods receipt settlement
+TXN-10527	VEND-104	BluePeak Consulting	92000	INR	06-09-2026 05:30	INV-20527	Purchase order payment
+TXN-10528	VEND-103	Apex Office Supplies	15000	INR	11-09-2026 06:18	INV-20528	Service invoice payment
+TXN-10529	VEND-103	Apex Office Supplies	125000	INR	12-09-2026 02:58	INV-20529	Service invoice payment
+TXN-10530	VEND-100	TechNova India Pvt Ltd	84500	INR	29-09-2026 06:21	INV-20530	Service invoice payment
+TXN-10531	VEND-105	Orion Manufacturing Co	180000	INR	07-09-2026 18:41	INV-20531	Service invoice payment
+TXN-10532	VEND-101	Global Logistics Solutions	22000	INR	15-09-2026 03:43	INV-20532	Service invoice payment
+TXN-10533	VEND-103	Apex Office Supplies	84500	INR	02-09-2026 05:37	INV-20533	Goods receipt settlement
+TXN-10534	VEND-100	TechNova India Pvt Ltd	8500	INR	07-09-2026 14:28	INV-20534	Purchase order payment
+TXN-10535	VEND-104	BluePeak Consulting	18500	INR	24-09-2026 18:24	INV-20535	Goods receipt settlement
+TXN-10536	VEND-108	Metro Facilities Pvt Ltd	27500	INR	22-09-2026 21:20	INV-20536	Purchase order payment
+TXN-10537	VEND-102	Vertex Industrial Systems	27500	INR	13-09-2026 16:41	INV-20537	Purchase order payment
+TXN-10538	VEND-105	Orion Manufacturing Co	12000	INR	02-09-2026 17:36	INV-20538	Supplier invoice settlement
+TXN-10539	VEND-104	BluePeak Consulting	42000	INR	17-09-2026 05:49	INV-20539	Goods receipt settlement
+TXN-10540	VEND-108	Metro Facilities Pvt Ltd	42000	INR	14-09-2026 19:16	INV-20540	Supplier invoice settlement
+TXN-10541	VEND-109	Sapphire Security Systems	15000	INR	18-09-2026 10:50	INV-20541	Service invoice payment
+TXN-10542	VEND-104	BluePeak Consulting	12000	INR	09-09-2026 22:08	INV-20542	Service invoice payment
+TXN-10543	VEND-102	Vertex Industrial Systems	27500	INR	07-09-2026 19:05	INV-20543	Service invoice payment
+TXN-10544	VEND-107	Prime Components India	27500	INR	16-09-2026 20:32	INV-20544	ERP remittance
+TXN-10545	VEND-101	Global Logistics Solutions	125000	INR	30-09-2026 00:55	INV-20545	Supplier invoice settlement
+TXN-10546	VEND-108	Metro Facilities Pvt Ltd	18500	INR	17-09-2026 21:11	INV-20546	Goods receipt settlement
+TXN-10547	VEND-100	TechNova India Pvt Ltd	92000	INR	15-09-2026 16:44	INV-20547	Supplier invoice settlement
+TXN-10548	VEND-104	BluePeak Consulting	27500	INR	27-09-2026 18:39	INV-20548	Purchase order payment
+TXN-10549	VEND-108	Metro Facilities Pvt Ltd	15000	INR	14-09-2026 05:36	INV-20549	Goods receipt settlement
+TXN-10550	VEND-108	Metro Facilities Pvt Ltd	180000	INR	22-09-2026 12:45	INV-20550	ERP remittance
+TXN-10551	VEND-103	Apex Office Supplies	18500	INR	24-09-2026 17:03	INV-20551	Purchase order payment
+TXN-10552	VEND-106	Nimbus Cloud Services	15000	INR	06-09-2026 10:59	INV-20552	Goods receipt settlement
+TXN-10553	VEND-104	BluePeak Consulting	27500	INR	01-10-2026 02:25	INV-20553	Supplier invoice settlement
+TXN-10554	VEND-100	TechNova India Pvt Ltd	84500	INR	15-09-2026 11:50	INV-20554	Service invoice payment
+TXN-10555	VEND-106	Nimbus Cloud Services	125000	INR	28-09-2026 19:40	INV-20555	ERP remittance
+TXN-10556	VEND-107	Prime Components India	34000	INR	09-09-2026 04:02	INV-20556	ERP remittance
+TXN-10557	VEND-108	Metro Facilities Pvt Ltd	125000	INR	07-09-2026 22:27	INV-20557	Supplier invoice settlement
+TXN-10558	VEND-101	Global Logistics Solutions	42000	INR	02-09-2026 12:28	INV-20558	Supplier invoice settlement
+TXN-10559	VEND-108	Metro Facilities Pvt Ltd	67500	INR	21-09-2026 17:21	INV-20559	Supplier invoice settlement
+TXN-10560	VEND-105	Orion Manufacturing Co	34000	INR	08-09-2026 12:12	INV-20560	Supplier invoice settlement
+TXN-10561	VEND-100	TechNova India Pvt Ltd	18500	INR	17-09-2026 16:04	INV-20561	ERP remittance
+TXN-10562	VEND-109	Sapphire Security Systems	15000	INR	16-09-2026 02:05	INV-20562	Supplier invoice settlement
+TXN-10563	VEND-102	Vertex Industrial Systems	56000	INR	03-09-2026 04:45	INV-20563	Supplier invoice settlement
+TXN-10564	VEND-109	Sapphire Security Systems	34000	INR	09-09-2026 14:06	INV-20564	Goods receipt settlement
+TXN-10565	VEND-108	Metro Facilities Pvt Ltd	84500	INR	06-09-2026 13:32	INV-20565	Goods receipt settlement
+TXN-10566	VEND-102	Vertex Industrial Systems	34000	INR	22-09-2026 21:30	INV-20566	Service invoice payment
+TXN-10567	VEND-104	BluePeak Consulting	8500	INR	11-09-2026 22:39	INV-20567	ERP remittance
+TXN-10568	VEND-101	Global Logistics Solutions	8500	INR	13-09-2026 08:51	INV-20568	Supplier invoice settlement
+TXN-10569	VEND-109	Sapphire Security Systems	12000	INR	29-09-2026 17:22	INV-20569	ERP remittance
+TXN-10570	VEND-102	Vertex Industrial Systems	42000	INR	27-09-2026 05:38	INV-20570	Supplier invoice settlement
+TXN-10571	VEND-108	Metro Facilities Pvt Ltd	15000	INR	08-09-2026 02:20	INV-20571	Goods receipt settlement
+TXN-10572	VEND-100	TechNova India Pvt Ltd	84500	INR	21-09-2026 11:09	INV-20572	Service invoice payment
+TXN-10573	VEND-108	Metro Facilities Pvt Ltd	12000	INR	16-09-2026 00:53	INV-20573	Goods receipt settlement
+TXN-10574	VEND-104	BluePeak Consulting	84500	INR	06-09-2026 14:28	INV-20574	Service invoice payment
+TXN-10575	VEND-103	Apex Office Supplies	180000	INR	04-09-2026 06:50	INV-20575	Purchase order payment
+TXN-10576	VEND-106	Nimbus Cloud Services	22000	INR	05-09-2026 18:42	INV-20576	Supplier invoice settlement
+TXN-10577	VEND-106	Nimbus Cloud Services	15000	INR	18-09-2026 12:54	INV-20577	Goods receipt settlement
+TXN-10578	VEND-105	Orion Manufacturing Co	8500	INR	18-09-2026 13:29	INV-20578	ERP remittance
+TXN-10579	VEND-103	Apex Office Supplies	27500	INR	25-09-2026 18:02	INV-20579	Supplier invoice settlement
+TXN-10580	VEND-103	Apex Office Supplies	84500	INR	25-09-2026 23:28	INV-20580	Service invoice payment
+TXN-10581	VEND-101	Global Logistics Solutions	22000	INR	27-09-2026 08:34	INV-20581	Purchase order payment
+TXN-10582	VEND-101	Global Logistics Solutions	34000	INR	24-09-2026 00:47	INV-20582	Service invoice payment
+TXN-10583	VEND-109	Sapphire Security Systems	15000	INR	25-09-2026 06:56	INV-20583	Goods receipt settlement
+TXN-10584	VEND-102	Vertex Industrial Systems	42000	INR	06-09-2026 18:06	INV-20584	Goods receipt settlement
+TXN-10585	VEND-109	Sapphire Security Systems	15000	INR	12-09-2026 19:34	INV-20585	ERP remittance
+TXN-10586	VEND-109	Sapphire Security Systems	67500	INR	27-09-2026 19:35	INV-20586	Goods receipt settlement
+TXN-10587	VEND-108	Metro Facilities Pvt Ltd	18500	INR	23-09-2026 04:10	INV-20587	Supplier invoice settlement
+TXN-10588	VEND-109	Sapphire Security Systems	8500	INR	09-09-2026 06:23	INV-20588	Service invoice payment
+TXN-10589	VEND-109	Sapphire Security Systems	125000	INR	21-09-2026 02:35	INV-20589	ERP remittance
+TXN-10590	VEND-102	Vertex Industrial Systems	22000	INR	29-09-2026 21:44	INV-20590	Goods receipt settlement
+TXN-10591	VEND-106	Nimbus Cloud Services	84500	INR	13-09-2026 07:37	INV-20591	ERP remittance
+TXN-10592	VEND-104	BluePeak Consulting	27500	INR	15-09-2026 16:07	INV-20592	Service invoice payment
+TXN-10593	VEND-102	Vertex Industrial Systems	15000	INR	05-09-2026 17:06	INV-20593	Goods receipt settlement
+TXN-10594	VEND-107	Prime Components India	27500	INR	24-09-2026 12:20	INV-20594	Service invoice payment
+TXN-10595	VEND-100	TechNova India Pvt Ltd	22000	INR	14-09-2026 22:52	INV-20595	Supplier invoice settlement
+TXN-10596	VEND-104	BluePeak Consulting	125000	INR	08-09-2026 11:16	INV-20596	Purchase order payment
+TXN-10597	VEND-105	Orion Manufacturing Co	15000	INR	19-09-2026 13:09	INV-20597	Purchase order payment
+TXN-10598	VEND-100	TechNova India Pvt Ltd	125000	INR	13-09-2026 11:28	INV-20598	Purchase order payment
+TXN-10599	VEND-109	Sapphire Security Systems	27500	INR	06-09-2026 17:55	INV-20599	Supplier invoice settlement
+TXN-10600	VEND-103	Apex Office Supplies	56000	INR	18-09-2026 23:16	INV-20600	Purchase order payment
+TXN-10601	VEND-100	TechNova India Pvt Ltd	18500	INR	14-09-2026 14:15	INV-20601	Supplier invoice settlement
+TXN-10602	VEND-106	Nimbus Cloud Services	22000	INR	07-09-2026 22:51	INV-20602	Service invoice payment
+TXN-10603	VEND-107	Prime Components India	42000	INR	03-09-2026 10:49	INV-20603	Purchase order payment
+TXN-10604	VEND-105	Orion Manufacturing Co	84500	INR	21-09-2026 18:08	INV-20604	ERP remittance
+TXN-10605	VEND-108	Metro Facilities Pvt Ltd	12000	INR	02-09-2026 05:22	INV-20605	ERP remittance
+TXN-10606	VEND-100	TechNova India Pvt Ltd	180000	INR	05-09-2026 00:03	INV-20606	ERP remittance
+TXN-10607	VEND-107	Prime Components India	22000	INR	08-09-2026 01:47	INV-20607	Goods receipt settlement
+TXN-10608	VEND-105	Orion Manufacturing Co	56000	INR	01-10-2026 03:39	INV-20608	Service invoice payment
+TXN-10609	VEND-109	Sapphire Security Systems	67500	INR	21-09-2026 11:32	INV-20609	Supplier invoice settlement
+TXN-10610	VEND-104	BluePeak Consulting	56000	INR	29-09-2026 05:08	INV-20610	ERP remittance
+TXN-10611	VEND-107	Prime Components India	34000	INR	25-09-2026 04:15	INV-20611	Goods receipt settlement
+TXN-10612	VEND-106	Nimbus Cloud Services	8500	INR	01-09-2026 11:52	INV-20612	Goods receipt settlement
+TXN-10613	VEND-109	Sapphire Security Systems	180000	INR	16-09-2026 06:29	INV-20613	Goods receipt settlement
+TXN-10614	VEND-106	Nimbus Cloud Services	84500	INR	05-09-2026 17:20	INV-20614	Purchase order payment
+TXN-10615	VEND-104	BluePeak Consulting	125000	INR	04-09-2026 22:10	INV-20615	Supplier invoice settlement
+TXN-10616	VEND-104	BluePeak Consulting	22000	INR	30-09-2026 20:53	INV-20616	Purchase order payment
+TXN-10617	VEND-104	BluePeak Consulting	12000	INR	21-09-2026 00:38	INV-20617	Service invoice payment
+TXN-10618	VEND-107	Prime Components India	56000	INR	19-09-2026 11:23	INV-20618	Service invoice payment
+TXN-10619	VEND-104	BluePeak Consulting	12000	INR	01-10-2026 08:39	INV-20619	Supplier invoice settlement
+TXN-10620	VEND-102	Vertex Industrial Systems	12000	INR	24-09-2026 19:15	INV-20620	Goods receipt settlement
+TXN-10621	VEND-108	Metro Facilities Pvt Ltd	8500	INR	19-09-2026 18:37	INV-20621	Goods receipt settlement
+TXN-10622	VEND-101	Global Logistics Solutions	18500	INR	22-09-2026 03:04	INV-20622	Service invoice payment
+TXN-10623	VEND-100	TechNova India Pvt Ltd	27500	INR	28-09-2026 17:53	INV-20623	ERP remittance
+TXN-10624	VEND-104	BluePeak Consulting	42000	INR	11-09-2026 15:11	INV-20624	ERP remittance
+TXN-10625	VEND-105	Orion Manufacturing Co	84500	INR	01-09-2026 19:49	INV-20625	Purchase order payment
+TXN-10626	VEND-103	Apex Office Supplies	56000	INR	18-09-2026 12:09	INV-20626	ERP remittance
+TXN-10627	VEND-104	BluePeak Consulting	56000	INR	14-09-2026 19:37	INV-20627	Goods receipt settlement
+TXN-10628	VEND-105	Orion Manufacturing Co	27500	INR	13-09-2026 17:27	INV-20628	Purchase order payment
+TXN-10629	VEND-108	Metro Facilities Pvt Ltd	27500	INR	26-09-2026 07:08	INV-20629	Goods receipt settlement
+TXN-10630	VEND-109	Sapphire Security Systems	180000	INR	28-09-2026 15:01	INV-20630	Goods receipt settlement
+TXN-10631	VEND-106	Nimbus Cloud Services	34000	INR	11-09-2026 11:25	INV-20631	Purchase order payment
+TXN-10632	VEND-108	Metro Facilities Pvt Ltd	15000	INR	01-09-2026 23:41	INV-20632	Service invoice payment
+TXN-10633	VEND-108	Metro Facilities Pvt Ltd	27500	INR	02-09-2026 13:18	INV-20633	Goods receipt settlement
+TXN-10634	VEND-104	BluePeak Consulting	180000	INR	27-09-2026 19:14	INV-20634	Goods receipt settlement
+TXN-10635	VEND-104	BluePeak Consulting	67500	INR	25-09-2026 00:00	INV-20635	Goods receipt settlement
+TXN-10636	VEND-107	Prime Components India	42000	INR	30-09-2026 00:58	INV-20636	Goods receipt settlement
+TXN-10637	VEND-106	Nimbus Cloud Services	12000	INR	11-09-2026 02:59	INV-20637	Purchase order payment
+TXN-10638	VEND-100	TechNova India Pvt Ltd	18500	INR	19-09-2026 19:51	INV-20638	Service invoice payment
+TXN-10639	VEND-104	BluePeak Consulting	27500	INR	03-09-2026 21:49	INV-20639	ERP remittance
+TXN-10640	VEND-106	Nimbus Cloud Services	125000	INR	05-09-2026 00:52	INV-20640	Goods receipt settlement
+TXN-10641	VEND-104	BluePeak Consulting	15000	INR	26-09-2026 21:50	INV-20641	Service invoice payment
+TXN-10642	VEND-106	Nimbus Cloud Services	27500	INR	27-09-2026 19:06	INV-20642	Goods receipt settlement
+TXN-10643	VEND-106	Nimbus Cloud Services	56000	INR	04-09-2026 08:35	INV-20643	Service invoice payment
+TXN-10644	VEND-105	Orion Manufacturing Co	84500	INR	18-09-2026 20:35	INV-20644	Purchase order payment
+TXN-10645	VEND-109	Sapphire Security Systems	8500	INR	12-09-2026 04:43	INV-20645	Supplier invoice settlement
+TXN-10646	VEND-103	Apex Office Supplies	27500	INR	12-09-2026 16:57	INV-20646	Service invoice payment
+TXN-10647	VEND-105	Orion Manufacturing Co	8500	INR	01-10-2026 07:04	INV-20647	Service invoice payment
+TXN-10648	VEND-105	Orion Manufacturing Co	92000	INR	25-09-2026 12:17	INV-20648	ERP remittance
+TXN-10649	VEND-109	Sapphire Security Systems	8500	INR	11-09-2026 10:10	INV-20649	ERP remittance
+TXN-10650	VEND-107	Prime Components India	180000	INR	13-09-2026 12:24	INV-20650	Goods receipt settlement
+TXN-10651	VEND-103	Apex Office Supplies	180000	INR	04-09-2026 19:48	INV-20651	Service invoice payment
+TXN-10652	VEND-106	Nimbus Cloud Services	12000	INR	20-09-2026 20:24	INV-20652	Goods receipt settlement
+TXN-10653	VEND-107	Prime Components India	27500	INR	27-09-2026 17:16	INV-20653	Purchase order payment
+TXN-10654	VEND-109	Sapphire Security Systems	84500	INR	01-09-2026 17:09	INV-20654	Purchase order payment
+TXN-10655	VEND-106	Nimbus Cloud Services	27500	INR	29-09-2026 03:44	INV-20655	ERP remittance
+TXN-10656	VEND-109	Sapphire Security Systems	84500	INR	09-09-2026 05:52	INV-20656	Goods receipt settlement
+TXN-10657	VEND-104	BluePeak Consulting	8500	INR	28-09-2026 07:55	INV-20657	Purchase order payment
+TXN-10658	VEND-101	Global Logistics Solutions	18500	INR	02-09-2026 05:37	INV-20658	Supplier invoice settlement
+TXN-10659	VEND-105	Orion Manufacturing Co	125000	INR	10-09-2026 23:27	INV-20659	Purchase order payment
+TXN-10660	VEND-108	Metro Facilities Pvt Ltd	34000	INR	21-09-2026 00:39	INV-20660	ERP remittance
+TXN-10661	VEND-103	Apex Office Supplies	27500	INR	07-09-2026 22:43	INV-20661	Service invoice payment
+TXN-10662	VEND-107	Prime Components India	42000	INR	27-09-2026 17:15	INV-20662	Supplier invoice settlement
+TXN-10663	VEND-108	Metro Facilities Pvt Ltd	92000	INR	02-09-2026 04:42	INV-20663	Purchase order payment
+TXN-10664	VEND-107	Prime Components India	18500	INR	27-09-2026 03:20	INV-20664	Service invoice payment
+TXN-10665	VEND-109	Sapphire Security Systems	67500	INR	05-09-2026 16:53	INV-20665	Purchase order payment
+TXN-10666	VEND-107	Prime Components India	22000	INR	25-09-2026 13:42	INV-20666	Purchase order payment
+TXN-10667	VEND-103	Apex Office Supplies	92000	INR	20-09-2026 08:11	INV-20667	Goods receipt settlement
+TXN-10668	VEND-109	Sapphire Security Systems	22000	INR	20-09-2026 04:33	INV-20668	Goods receipt settlement
+TXN-10669	VEND-109	Sapphire Security Systems	27500	INR	29-09-2026 07:59	INV-20669	Service invoice payment
+TXN-10670	VEND-109	Sapphire Security Systems	56000	INR	04-09-2026 08:44	INV-20670	Service invoice payment
+TXN-10671	VEND-104	BluePeak Consulting	92000	INR	08-09-2026 05:38	INV-20671	Purchase order payment
+TXN-10672	VEND-109	Sapphire Security Systems	92000	INR	18-09-2026 16:21	INV-20672	ERP remittance
+TXN-10673	VEND-105	Orion Manufacturing Co	125000	INR	08-09-2026 23:27	INV-20673	Service invoice payment
+TXN-10674	VEND-101	Global Logistics Solutions	27500	INR	18-09-2026 17:36	INV-20674	Goods receipt settlement
+TXN-10675	VEND-102	Vertex Industrial Systems	125000	INR	09-09-2026 17:44	INV-20675	Purchase order payment
+TXN-10676	VEND-108	Metro Facilities Pvt Ltd	42000	INR	24-09-2026 23:50	INV-20676	Supplier invoice settlement
+TXN-10677	VEND-105	Orion Manufacturing Co	180000	INR	26-09-2026 09:02	INV-20677	Supplier invoice settlement
+TXN-10678	VEND-107	Prime Components India	15000	INR	15-09-2026 09:02	INV-20678	Purchase order payment
+TXN-10679	VEND-106	Nimbus Cloud Services	84500	INR	11-09-2026 14:45	INV-20679	Service invoice payment
+TXN-10680	VEND-109	Sapphire Security Systems	27500	INR	21-09-2026 22:51	INV-20680	Purchase order payment
+TXN-10681	VEND-107	Prime Components India	125000	INR	12-09-2026 06:42	INV-20681	Goods receipt settlement
+TXN-10682	VEND-109	Sapphire Security Systems	92000	INR	06-09-2026 06:39	INV-20682	Supplier invoice settlement
+TXN-10683	VEND-102	Vertex Industrial Systems	125000	INR	09-09-2026 22:04	INV-20683	ERP remittance
+TXN-10684	VEND-107	Prime Components India	125000	INR	18-09-2026 17:33	INV-20684	Supplier invoice settlement
+TXN-10685	VEND-103	Apex Office Supplies	92000	INR	01-09-2026 14:20	INV-20685	Supplier invoice settlement
+TXN-10686	VEND-103	Apex Office Supplies	92000	INR	25-09-2026 20:01	INV-20686	Supplier invoice settlement
+TXN-10687	VEND-109	Sapphire Security Systems	92000	INR	07-09-2026 07:02	INV-20687	Service invoice payment
+TXN-10688	VEND-102	Vertex Industrial Systems	15000	INR	22-09-2026 00:17	INV-20688	Goods receipt settlement
+TXN-10689	VEND-106	Nimbus Cloud Services	42000	INR	30-09-2026 01:51	INV-20689	Purchase order payment
+TXN-10690	VEND-106	Nimbus Cloud Services	15000	INR	20-09-2026 03:55	INV-20690	Purchase order payment
+TXN-10691	VEND-104	BluePeak Consulting	18500	INR	06-09-2026 10:36	INV-20691	Goods receipt settlement
+TXN-10692	VEND-101	Global Logistics Solutions	56000	INR	06-09-2026 19:47	INV-20692	Supplier invoice settlement
+TXN-10693	VEND-109	Sapphire Security Systems	180000	INR	24-09-2026 23:58	INV-20693	ERP remittance
+TXN-10694	VEND-107	Prime Components India	8500	INR	04-09-2026 11:02	INV-20694	Service invoice payment
+TXN-10695	VEND-107	Prime Components India	8500	INR	19-09-2026 07:39	INV-20695	Service invoice payment
+TXN-10696	VEND-106	Nimbus Cloud Services	92000	INR	27-09-2026 22:42	INV-20696	Service invoice payment
+TXN-10697	VEND-100	TechNova India Pvt Ltd	125000	INR	06-09-2026 03:39	INV-20697	Purchase order payment
+TXN-10698	VEND-100	TechNova India Pvt Ltd	8500	INR	11-09-2026 14:35	INV-20698	Supplier invoice settlement
+TXN-10699	VEND-108	Metro Facilities Pvt Ltd	15000	INR	06-09-2026 08:14	INV-20699	Purchase order payment
+TXN-10700	VEND-102	Vertex Industrial Systems	92000	INR	14-09-2026 06:58	INV-20700	Service invoice payment
+TXN-10701	VEND-108	Metro Facilities Pvt Ltd	18500	INR	05-09-2026 07:44	INV-20701	Supplier invoice settlement
+TXN-10702	VEND-104	BluePeak Consulting	15000	INR	22-09-2026 01:08	INV-20702	Purchase order payment
+TXN-10703	VEND-108	Metro Facilities Pvt Ltd	84500	INR	25-09-2026 20:09	INV-20703	Purchase order payment
+TXN-10704	VEND-102	Vertex Industrial Systems	92000	INR	05-09-2026 10:09	INV-20704	Purchase order payment
+TXN-10705	VEND-104	BluePeak Consulting	22000	INR	22-09-2026 14:05	INV-20705	Goods receipt settlement
+TXN-10706	VEND-100	TechNova India Pvt Ltd	125000	INR	09-09-2026 07:16	INV-20706	Service invoice payment
+TXN-10707	VEND-100	TechNova India Pvt Ltd	92000	INR	25-09-2026 18:40	INV-20707	Goods receipt settlement
+TXN-10708	VEND-107	Prime Components India	180000	INR	24-09-2026 16:24	INV-20708	ERP remittance
+TXN-10709	VEND-109	Sapphire Security Systems	18500	INR	19-09-2026 00:21	INV-20709	Service invoice payment
+TXN-10710	VEND-108	Metro Facilities Pvt Ltd	180000	INR	21-09-2026 09:36	INV-20710	Goods receipt settlement
+TXN-10711	VEND-101	Global Logistics Solutions	42000	INR	29-09-2026 10:46	INV-20711	Purchase order payment
+TXN-10712	VEND-108	Metro Facilities Pvt Ltd	34000	INR	24-09-2026 23:01	INV-20712	ERP remittance
+TXN-10713	VEND-107	Prime Components India	18500	INR	08-09-2026 13:52	INV-20713	Supplier invoice settlement
+TXN-10714	VEND-101	Global Logistics Solutions	12000	INR	07-09-2026 21:50	INV-20714	Goods receipt settlement
+TXN-10715	VEND-102	Vertex Industrial Systems	84500	INR	08-09-2026 07:36	INV-20715	Goods receipt settlement
+TXN-10716	VEND-106	Nimbus Cloud Services	56000	INR	27-09-2026 02:43	INV-20716	ERP remittance
+TXN-10717	VEND-103	Apex Office Supplies	22000	INR	13-09-2026 05:03	INV-20717	Service invoice payment
+TXN-10718	VEND-109	Sapphire Security Systems	18500	INR	03-09-2026 03:25	INV-20718	Goods receipt settlement
+TXN-10719	VEND-102	Vertex Industrial Systems	12000	INR	17-09-2026 20:13	INV-20719	ERP remittance
+TXN-10720	VEND-101	Global Logistics Solutions	67500	INR	09-09-2026 10:47	INV-20720	Purchase order payment
+TXN-10721	VEND-106	Nimbus Cloud Services	84500	INR	15-09-2026 09:02	INV-20721	Purchase order payment
+TXN-10722	VEND-103	Apex Office Supplies	27500	INR	09-09-2026 02:53	INV-20722	Service invoice payment
+TXN-10723	VEND-100	TechNova India Pvt Ltd	42000	INR	24-09-2026 06:43	INV-20723	Goods receipt settlement
+TXN-10724	VEND-100	TechNova India Pvt Ltd	18500	INR	16-09-2026 12:41	INV-20724	Goods receipt settlement
+TXN-10725	VEND-106	Nimbus Cloud Services	27500	INR	03-09-2026 18:42	INV-20725	Service invoice payment
+TXN-10726	VEND-100	TechNova India Pvt Ltd	27500	INR	11-09-2026 02:39	INV-20726	ERP remittance
+TXN-10727	VEND-101	Global Logistics Solutions	18500	INR	29-09-2026 12:54	INV-20727	Goods receipt settlement
+TXN-10728	VEND-104	BluePeak Consulting	42000	INR	05-09-2026 09:52	INV-20728	Goods receipt settlement
+TXN-10729	VEND-101	Global Logistics Solutions	56000	INR	29-09-2026 23:09	INV-20729	Goods receipt settlement
+TXN-10730	VEND-102	Vertex Industrial Systems	67500	INR	16-09-2026 06:04	INV-20730	ERP remittance
+TXN-10731	VEND-106	Nimbus Cloud Services	125000	INR	16-09-2026 14:23	INV-20731	Purchase order payment
+TXN-10732	VEND-103	Apex Office Supplies	12000	INR	26-09-2026 16:35	INV-20732	Supplier invoice settlement
+TXN-10733	VEND-103	Apex Office Supplies	8500	INR	17-09-2026 10:57	INV-20733	Goods receipt settlement
+TXN-10734	VEND-104	BluePeak Consulting	92000	INR	26-09-2026 19:23	INV-20734	Goods receipt settlement
+TXN-10735	VEND-105	Orion Manufacturing Co	84500	INR	06-09-2026 17:35	INV-20735	Purchase order payment
+TXN-10736	VEND-108	Metro Facilities Pvt Ltd	42000	INR	19-09-2026 00:12	INV-20736	Service invoice payment
+TXN-10737	VEND-108	Metro Facilities Pvt Ltd	125000	INR	22-09-2026 06:06	INV-20737	Purchase order payment
+TXN-10738	VEND-106	Nimbus Cloud Services	42000	INR	15-09-2026 15:54	INV-20738	Goods receipt settlement
+TXN-10739	VEND-102	Vertex Industrial Systems	67500	INR	30-09-2026 13:32	INV-20739	ERP remittance
+TXN-10740	VEND-105	Orion Manufacturing Co	180000	INR	07-09-2026 05:23	INV-20740	Service invoice payment
+TXN-10741	VEND-108	Metro Facilities Pvt Ltd	15000	INR	17-09-2026 08:10	INV-20741	Service invoice payment
+TXN-10742	VEND-106	Nimbus Cloud Services	22000	INR	20-09-2026 08:41	INV-20742	Service invoice payment
+TXN-10743	VEND-107	Prime Components India	84500	INR	04-09-2026 16:45	INV-20743	Purchase order payment
+TXN-10744	VEND-103	Apex Office Supplies	22000	INR	27-09-2026 04:51	INV-20744	Service invoice payment
+TXN-10745	VEND-103	Apex Office Supplies	125000	INR	14-09-2026 13:44	INV-20745	Purchase order payment
+TXN-10746	VEND-101	Global Logistics Solutions	15000	INR	27-09-2026 08:57	INV-20746	Service invoice payment
+TXN-10747	VEND-104	BluePeak Consulting	27500	INR	24-09-2026 16:16	INV-20747	Goods receipt settlement
+TXN-10748	VEND-102	Vertex Industrial Systems	12000	INR	09-09-2026 22:29	INV-20748	Goods receipt settlement
+TXN-10749	VEND-106	Nimbus Cloud Services	15000	INR	27-09-2026 18:23	INV-20749	Goods receipt settlement
+TXN-10750	VEND-107	Prime Components India	34000	INR	13-09-2026 17:21	INV-20750	Goods receipt settlement
+TXN-10751	VEND-100	TechNova India Pvt Ltd	15000	INR	22-09-2026 08:35	INV-20751	Goods receipt settlement
+TXN-10752	VEND-102	Vertex Industrial Systems	34000	INR	30-09-2026 08:11	INV-20752	ERP remittance
+TXN-10753	VEND-108	Metro Facilities Pvt Ltd	125000	INR	06-09-2026 21:56	INV-20753	ERP remittance
+TXN-10754	VEND-103	Apex Office Supplies	67500	INR	20-09-2026 19:39	INV-20754	Supplier invoice settlement
+TXN-10755	VEND-106	Nimbus Cloud Services	22000	INR	16-09-2026 20:48	INV-20755	ERP remittance
+TXN-10756	VEND-104	BluePeak Consulting	180000	INR	27-09-2026 06:11	INV-20756	Goods receipt settlement
+TXN-10757	VEND-103	Apex Office Supplies	27500	INR	26-09-2026 04:12	INV-20757	ERP remittance
+TXN-10758	VEND-106	Nimbus Cloud Services	22000	INR	24-09-2026 22:01	INV-20758	Service invoice payment
+TXN-10759	VEND-102	Vertex Industrial Systems	34000	INR	13-09-2026 11:33	INV-20759	ERP remittance
+TXN-10760	VEND-101	Global Logistics Solutions	12000	INR	21-09-2026 03:03	INV-20760	ERP remittance
+TXN-10761	VEND-105	Orion Manufacturing Co	8500	INR	17-09-2026 19:00	INV-20761	Goods receipt settlement
+TXN-10762	VEND-108	Metro Facilities Pvt Ltd	27500	INR	12-09-2026 13:37	INV-20762	Service invoice payment
+TXN-10763	VEND-103	Apex Office Supplies	56000	INR	11-09-2026 11:47	INV-20763	Purchase order payment
+TXN-10764	VEND-106	Nimbus Cloud Services	42000	INR	27-09-2026 21:17	INV-20764	Purchase order payment
+TXN-10765	VEND-102	Vertex Industrial Systems	84500	INR	24-09-2026 20:23	INV-20765	ERP remittance
+TXN-10766	VEND-108	Metro Facilities Pvt Ltd	34000	INR	29-09-2026 13:13	INV-20766	Purchase order payment
+TXN-10767	VEND-107	Prime Components India	67500	INR	01-09-2026 09:36	INV-20767	Service invoice payment
+TXN-10768	VEND-109	Sapphire Security Systems	22000	INR	08-09-2026 20:59	INV-20768	Service invoice payment
+TXN-10769	VEND-103	Apex Office Supplies	92000	INR	26-09-2026 16:20	INV-20769	Purchase order payment
+TXN-10770	VEND-105	Orion Manufacturing Co	22000	INR	23-09-2026 10:32	INV-20770	ERP remittance
+TXN-10771	VEND-107	Prime Components India	84500	INR	13-09-2026 18:22	INV-20771	Purchase order payment
+TXN-10772	VEND-102	Vertex Industrial Systems	125000	INR	03-09-2026 20:07	INV-20772	Service invoice payment
+TXN-10773	VEND-109	Sapphire Security Systems	15000	INR	24-09-2026 00:34	INV-20773	Goods receipt settlement
+TXN-10774	VEND-106	Nimbus Cloud Services	67500	INR	05-09-2026 00:21	INV-20774	Service invoice payment
+TXN-10775	VEND-108	Metro Facilities Pvt Ltd	18500	INR	29-09-2026 14:26	INV-20775	Goods receipt settlement
+TXN-10776	VEND-109	Sapphire Security Systems	125000	INR	27-09-2026 08:52	INV-20776	Goods receipt settlement
+TXN-10777	VEND-105	Orion Manufacturing Co	34000	INR	19-09-2026 14:19	INV-20777	Goods receipt settlement
+TXN-10778	VEND-101	Global Logistics Solutions	67500	INR	12-09-2026 02:06	INV-20778	Purchase order payment
+TXN-10779	VEND-102	Vertex Industrial Systems	12000	INR	15-09-2026 06:41	INV-20779	ERP remittance
+TXN-10780	VEND-109	Sapphire Security Systems	22000	INR	18-09-2026 23:42	INV-20780	Supplier invoice settlement
+TXN-10781	VEND-104	BluePeak Consulting	12000	INR	01-09-2026 11:10	INV-20781	Service invoice payment
+TXN-10782	VEND-109	Sapphire Security Systems	34000	INR	09-09-2026 08:12	INV-20782	Purchase order payment
+TXN-10783	VEND-107	Prime Components India	56000	INR	14-09-2026 13:13	INV-20783	Supplier invoice settlement
+TXN-10784	VEND-106	Nimbus Cloud Services	34000	INR	07-09-2026 08:44	INV-20784	Supplier invoice settlement
+TXN-10785	VEND-106	Nimbus Cloud Services	22000	INR	30-09-2026 09:29	INV-20785	ERP remittance
+TXN-10786	VEND-109	Sapphire Security Systems	27500	INR	05-09-2026 16:52	INV-20786	ERP remittance
+TXN-10787	VEND-109	Sapphire Security Systems	92000	INR	03-09-2026 07:11	INV-20787	Service invoice payment
+TXN-10788	VEND-100	TechNova India Pvt Ltd	42000	INR	07-09-2026 00:51	INV-20788	ERP remittance
+TXN-10789	VEND-101	Global Logistics Solutions	27500	INR	10-09-2026 20:28	INV-20789	ERP remittance
+TXN-10790	VEND-108	Metro Facilities Pvt Ltd	125000	INR	17-09-2026 13:46	INV-20790	Purchase order payment
+TXN-10791	VEND-102	Vertex Industrial Systems	42000	INR	29-09-2026 06:34	INV-20791	Purchase order payment
+TXN-10792	VEND-101	Global Logistics Solutions	56000	INR	01-09-2026 13:45	INV-20792	Supplier invoice settlement
+TXN-10793	VEND-105	Orion Manufacturing Co	56000	INR	08-09-2026 14:37	INV-20793	Service invoice payment
+TXN-10794	VEND-103	Apex Office Supplies	8500	INR	12-09-2026 07:30	INV-20794	Purchase order payment
+TXN-10795	VEND-101	Global Logistics Solutions	15000	INR	03-09-2026 19:23	INV-20795	Goods receipt settlement
+TXN-10796	VEND-105	Orion Manufacturing Co	42000	INR	17-09-2026 17:18	INV-20796	ERP remittance
+TXN-10797	VEND-100	TechNova India Pvt Ltd	56000	INR	15-09-2026 22:17	INV-20797	Supplier invoice settlement
+TXN-10798	VEND-102	Vertex Industrial Systems	180000	INR	06-09-2026 01:44	INV-20798	Goods receipt settlement
+TXN-10799	VEND-102	Vertex Industrial Systems	180000	INR	17-09-2026 09:19	INV-20799	Goods receipt settlement
+TXN-10800	VEND-105	Orion Manufacturing Co	180000	INR	04-09-2026 09:04	INV-20800	Purchase order payment
+TXN-10801	VEND-100	TechNova India Pvt Ltd	27500	INR	23-09-2026 06:07	INV-20801	Purchase order payment
+TXN-10802	VEND-107	Prime Components India	34000	INR	05-09-2026 13:05	INV-20802	Goods receipt settlement
+TXN-10803	VEND-101	Global Logistics Solutions	92000	INR	19-09-2026 16:00	INV-20803	ERP remittance
+TXN-10804	VEND-109	Sapphire Security Systems	84500	INR	03-09-2026 01:11	INV-20804	Purchase order payment
+TXN-10805	VEND-103	Apex Office Supplies	67500	INR	10-09-2026 12:19	INV-20805	Goods receipt settlement
+TXN-10806	VEND-105	Orion Manufacturing Co	22000	INR	14-09-2026 20:42	INV-20806	Supplier invoice settlement
+TXN-10807	VEND-100	TechNova India Pvt Ltd	34000	INR	28-09-2026 11:29	INV-20807	ERP remittance
+TXN-10808	VEND-100	TechNova India Pvt Ltd	180000	INR	22-09-2026 00:52	INV-20808	Purchase order payment
+TXN-10809	VEND-102	Vertex Industrial Systems	12000	INR	19-09-2026 17:58	INV-20809	Purchase order payment
+TXN-10810	VEND-109	Sapphire Security Systems	56000	INR	13-09-2026 06:28	INV-20810	Purchase order payment
+TXN-10811	VEND-102	Vertex Industrial Systems	34000	INR	20-09-2026 20:10	INV-20811	Service invoice payment
+TXN-10812	VEND-106	Nimbus Cloud Services	125000	INR	16-09-2026 10:53	INV-20812	Purchase order payment
+TXN-10813	VEND-109	Sapphire Security Systems	18500	INR	08-09-2026 05:49	INV-20813	Purchase order payment
+TXN-10814	VEND-105	Orion Manufacturing Co	22000	INR	19-09-2026 21:59	INV-20814	Goods receipt settlement
+TXN-10815	VEND-103	Apex Office Supplies	27500	INR	08-09-2026 08:01	INV-20815	ERP remittance
+TXN-10816	VEND-105	Orion Manufacturing Co	27500	INR	21-09-2026 11:56	INV-20816	Goods receipt settlement
+TXN-10817	VEND-103	Apex Office Supplies	22000	INR	07-09-2026 00:58	INV-20817	Supplier invoice settlement
+TXN-10818	VEND-100	TechNova India Pvt Ltd	22000	INR	08-09-2026 08:24	INV-20818	Purchase order payment
+TXN-10819	VEND-103	Apex Office Supplies	92000	INR	13-09-2026 14:00	INV-20819	Goods receipt settlement
+TXN-10820	VEND-109	Sapphire Security Systems	56000	INR	03-09-2026 13:22	INV-20820	Supplier invoice settlement
+TXN-10821	VEND-105	Orion Manufacturing Co	27500	INR	14-09-2026 21:16	INV-20821	Purchase order payment
+TXN-10822	VEND-101	Global Logistics Solutions	180000	INR	23-09-2026 05:53	INV-20822	Supplier invoice settlement
+TXN-10823	VEND-103	Apex Office Supplies	8500	INR	04-09-2026 20:36	INV-20823	Purchase order payment
+TXN-10824	VEND-101	Global Logistics Solutions	84500	INR	26-09-2026 11:54	INV-20824	ERP remittance
+TXN-10825	VEND-105	Orion Manufacturing Co	8500	INR	11-09-2026 07:31	INV-20825	Purchase order payment
+TXN-10826	VEND-102	Vertex Industrial Systems	27500	INR	23-09-2026 07:36	INV-20826	ERP remittance
+TXN-10827	VEND-101	Global Logistics Solutions	27500	INR	14-09-2026 21:33	INV-20827	Purchase order payment
+TXN-10828	VEND-106	Nimbus Cloud Services	56000	INR	19-09-2026 08:48	INV-20828	Service invoice payment
+TXN-10829	VEND-105	Orion Manufacturing Co	12000	INR	27-09-2026 16:25	INV-20829	Service invoice payment
+TXN-10830	VEND-105	Orion Manufacturing Co	34000	INR	11-09-2026 16:23	INV-20830	ERP remittance
+TXN-10831	VEND-101	Global Logistics Solutions	56000	INR	20-09-2026 02:34	INV-20831	ERP remittance
+TXN-10832	VEND-108	Metro Facilities Pvt Ltd	125000	INR	02-09-2026 05:07	INV-20832	ERP remittance
+TXN-10833	VEND-102	Vertex Industrial Systems	27500	INR	01-09-2026 23:46	INV-20833	Service invoice payment
+TXN-10834	VEND-105	Orion Manufacturing Co	34000	INR	10-09-2026 18:02	INV-20834	Goods receipt settlement
+TXN-10835	VEND-100	TechNova India Pvt Ltd	67500	INR	07-09-2026 00:01	INV-20835	Purchase order payment
+TXN-10836	VEND-103	Apex Office Supplies	180000	INR	07-09-2026 12:36	INV-20836	ERP remittance
+TXN-10837	VEND-107	Prime Components India	67500	INR	11-09-2026 23:39	INV-20837	ERP remittance
+TXN-10838	VEND-108	Metro Facilities Pvt Ltd	56000	INR	24-09-2026 03:49	INV-20838	Purchase order payment
+TXN-10839	VEND-101	Global Logistics Solutions	15000	INR	12-09-2026 23:30	INV-20839	ERP remittance
+TXN-10840	VEND-104	BluePeak Consulting	56000	INR	05-09-2026 18:05	INV-20840	Supplier invoice settlement
+TXN-10841	VEND-105	Orion Manufacturing Co	56000	INR	12-09-2026 15:44	INV-20841	Purchase order payment
+TXN-10842	VEND-107	Prime Components India	34000	INR	05-09-2026 11:41	INV-20842	Service invoice payment
+TXN-10843	VEND-103	Apex Office Supplies	15000	INR	08-09-2026 16:19	INV-20843	Service invoice payment
+TXN-10844	VEND-109	Sapphire Security Systems	180000	INR	25-09-2026 17:01	INV-20844	ERP remittance
+TXN-10845	VEND-105	Orion Manufacturing Co	67500	INR	02-09-2026 08:20	INV-20845	Service invoice payment
+TXN-10846	VEND-104	BluePeak Consulting	34000	INR	26-09-2026 15:05	INV-20846	Purchase order payment
+TXN-10847	VEND-106	Nimbus Cloud Services	18500	INR	29-09-2026 07:15	INV-20847	Goods receipt settlement
+TXN-10848	VEND-105	Orion Manufacturing Co	84500	INR	06-09-2026 22:02	INV-20848	Goods receipt settlement
+TXN-10849	VEND-105	Orion Manufacturing Co	12000	INR	07-09-2026 22:44	INV-20849	Supplier invoice settlement
+TXN-10850	VEND-104	BluePeak Consulting	125000	INR	19-09-2026 11:54	INV-20850	Purchase order payment
+TXN-10851	VEND-104	BluePeak Consulting	67500	INR	12-09-2026 20:31	INV-20851	ERP remittance
+TXN-10852	VEND-108	Metro Facilities Pvt Ltd	56000	INR	02-09-2026 15:09	INV-20852	ERP remittance
+TXN-10853	VEND-104	BluePeak Consulting	27500	INR	09-09-2026 13:16	INV-20853	ERP remittance
+TXN-10854	VEND-103	Apex Office Supplies	42000	INR	15-09-2026 19:30	INV-20854	Service invoice payment
+TXN-10855	VEND-109	Sapphire Security Systems	92000	INR	16-09-2026 22:19	INV-20855	Goods receipt settlement
+TXN-10856	VEND-108	Metro Facilities Pvt Ltd	56000	INR	06-09-2026 20:49	INV-20856	ERP remittance
+TXN-10857	VEND-101	Global Logistics Solutions	180000	INR	15-09-2026 21:42	INV-20857	Purchase order payment
+TXN-10858	VEND-100	TechNova India Pvt Ltd	42000	INR	05-09-2026 05:37	INV-20858	Supplier invoice settlement
+TXN-10859	VEND-106	Nimbus Cloud Services	22000	INR	23-09-2026 11:29	INV-20859	Supplier invoice settlement
+TXN-10860	VEND-104	BluePeak Consulting	8500	INR	06-09-2026 09:41	INV-20860	ERP remittance
+TXN-10861	VEND-106	Nimbus Cloud Services	84500	INR	18-09-2026 23:51	INV-20861	Purchase order payment
+TXN-10862	VEND-103	Apex Office Supplies	84500	INR	05-09-2026 21:16	INV-20862	Goods receipt settlement
+TXN-10863	VEND-104	BluePeak Consulting	92000	INR	29-09-2026 11:45	INV-20863	ERP remittance
+TXN-10864	VEND-102	Vertex Industrial Systems	22000	INR	19-09-2026 23:16	INV-20864	ERP remittance
+TXN-10865	VEND-106	Nimbus Cloud Services	8500	INR	10-09-2026 11:11	INV-20865	ERP remittance
+TXN-10866	VEND-107	Prime Components India	22000	INR	27-09-2026 13:48	INV-20866	Supplier invoice settlement
+TXN-10867	VEND-101	Global Logistics Solutions	92000	INR	29-09-2026 05:53	INV-20867	Supplier invoice settlement
+TXN-10868	VEND-105	Orion Manufacturing Co	84500	INR	20-09-2026 17:36	INV-20868	ERP remittance
+TXN-10869	VEND-108	Metro Facilities Pvt Ltd	42000	INR	05-09-2026 03:27	INV-20869	ERP remittance
+TXN-10870	VEND-104	BluePeak Consulting	42000	INR	16-09-2026 03:04	INV-20870	ERP remittance
+TXN-10871	VEND-109	Sapphire Security Systems	125000	INR	10-09-2026 20:20	INV-20871	Purchase order payment
+TXN-10872	VEND-102	Vertex Industrial Systems	84500	INR	21-09-2026 03:20	INV-20872	Supplier invoice settlement
+TXN-10873	VEND-109	Sapphire Security Systems	15000	INR	21-09-2026 19:57	INV-20873	Purchase order payment
+TXN-10874	VEND-100	TechNova India Pvt Ltd	125000	INR	06-09-2026 08:41	INV-20874	Service invoice payment
+TXN-10875	VEND-108	Metro Facilities Pvt Ltd	22000	INR	02-09-2026 07:01	INV-20875	Goods receipt settlement
+TXN-10876	VEND-101	Global Logistics Solutions	22000	INR	17-09-2026 21:06	INV-20876	Purchase order payment
+TXN-10877	VEND-103	Apex Office Supplies	8500	INR	25-09-2026 00:30	INV-20877	ERP remittance
+TXN-10878	VEND-107	Prime Components India	92000	INR	22-09-2026 21:29	INV-20878	Goods receipt settlement
+TXN-10879	VEND-104	BluePeak Consulting	12000	INR	10-09-2026 05:25	INV-20879	Goods receipt settlement
+TXN-10880	VEND-100	TechNova India Pvt Ltd	12000	INR	30-09-2026 10:24	INV-20880	Goods receipt settlement
+TXN-10881	VEND-107	Prime Components India	8500	INR	03-09-2026 02:02	INV-20881	Goods receipt settlement
+TXN-10882	VEND-105	Orion Manufacturing Co	18500	INR	10-09-2026 18:56	INV-20882	Supplier invoice settlement
+TXN-10883	VEND-108	Metro Facilities Pvt Ltd	42000	INR	15-09-2026 13:53	INV-20883	Supplier invoice settlement
+TXN-10884	VEND-103	Apex Office Supplies	92000	INR	16-09-2026 07:54	INV-20884	Purchase order payment
+TXN-10885	VEND-104	BluePeak Consulting	8500	INR	29-09-2026 09:22	INV-20885	Supplier invoice settlement
+TXN-10886	VEND-100	TechNova India Pvt Ltd	8500	INR	27-09-2026 13:24	INV-20886	Supplier invoice settlement
+TXN-10887	VEND-108	Metro Facilities Pvt Ltd	56000	INR	02-09-2026 05:29	INV-20887	ERP remittance
+TXN-10888	VEND-104	BluePeak Consulting	34000	INR	13-09-2026 17:18	INV-20888	Service invoice payment
+TXN-10889	VEND-108	Metro Facilities Pvt Ltd	84500	INR	08-09-2026 19:46	INV-20889	Goods receipt settlement
+TXN-10890	VEND-101	Global Logistics Solutions	12000	INR	08-09-2026 04:52	INV-20890	Goods receipt settlement
+TXN-10891	VEND-107	Prime Components India	92000	INR	05-09-2026 10:44	INV-20891	ERP remittance
+TXN-10892	VEND-104	BluePeak Consulting	125000	INR	30-09-2026 19:45	INV-20892	Purchase order payment
+TXN-10893	VEND-108	Metro Facilities Pvt Ltd	92000	INR	30-09-2026 02:40	INV-20893	Supplier invoice settlement
+TXN-10894	VEND-101	Global Logistics Solutions	18500	INR	09-09-2026 20:08	INV-20894	ERP remittance
+TXN-10895	VEND-103	Apex Office Supplies	12000	INR	19-09-2026 05:32	INV-20895	Service invoice payment
+TXN-10896	VEND-101	Global Logistics Solutions	180000	INR	23-09-2026 00:10	INV-20896	Supplier invoice settlement
+TXN-10897	VEND-101	Global Logistics Solutions	8500	INR	26-09-2026 06:15	INV-20897	Goods receipt settlement
+TXN-10898	VEND-108	Metro Facilities Pvt Ltd	84500	INR	27-09-2026 03:46	INV-20898	Purchase order payment
+TXN-10899	VEND-100	TechNova India Pvt Ltd	12000	INR	14-09-2026 19:05	INV-20899	Supplier invoice settlement
+TXN-10900	VEND-105	Orion Manufacturing Co	34000	INR	22-09-2026 15:08	INV-20900	Service invoice payment
+TXN-10901	VEND-107	Prime Components India	180000	INR	09-09-2026 16:25	INV-20901	Purchase order payment
+TXN-10902	VEND-108	Metro Facilities Pvt Ltd	27500	INR	22-09-2026 19:50	INV-20902	Service invoice payment
+TXN-10903	VEND-107	Prime Components India	34000	INR	13-09-2026 09:16	INV-20903	Supplier invoice settlement
+TXN-10904	VEND-108	Metro Facilities Pvt Ltd	56000	INR	13-09-2026 01:10	INV-20904	ERP remittance
+TXN-10905	VEND-105	Orion Manufacturing Co	67500	INR	22-09-2026 01:48	INV-20905	Goods receipt settlement
+TXN-10906	VEND-100	TechNova India Pvt Ltd	125000	INR	09-09-2026 19:22	INV-20906	Purchase order payment
+TXN-10907	VEND-104	BluePeak Consulting	67500	INR	18-09-2026 16:04	INV-20907	ERP remittance
+TXN-10908	VEND-103	Apex Office Supplies	180000	INR	14-09-2026 09:42	INV-20908	Goods receipt settlement
+TXN-10909	VEND-100	TechNova India Pvt Ltd	15000	INR	08-09-2026 08:15	INV-20909	Purchase order payment
+TXN-10910	VEND-104	BluePeak Consulting	67500	INR	23-09-2026 08:55	INV-20910	Purchase order payment
+TXN-10911	VEND-108	Metro Facilities Pvt Ltd	180000	INR	26-09-2026 13:10	INV-20911	ERP remittance
+TXN-10912	VEND-108	Metro Facilities Pvt Ltd	12000	INR	25-09-2026 16:49	INV-20912	Supplier invoice settlement
+TXN-10913	VEND-108	Metro Facilities Pvt Ltd	67500	INR	11-09-2026 06:06	INV-20913	Supplier invoice settlement
+TXN-10914	VEND-103	Apex Office Supplies	67500	INR	02-09-2026 10:42	INV-20914	Service invoice payment
+TXN-10915	VEND-109	Sapphire Security Systems	18500	INR	24-09-2026 04:59	INV-20915	Supplier invoice settlement
+TXN-10916	VEND-102	Vertex Industrial Systems	27500	INR	15-09-2026 14:14	INV-20916	Purchase order payment
+TXN-10917	VEND-107	Prime Components India	34000	INR	18-09-2026 06:30	INV-20917	Supplier invoice settlement
+TXN-10918	VEND-101	Global Logistics Solutions	56000	INR	23-09-2026 12:38	INV-20918	Purchase order payment
+TXN-10919	VEND-107	Prime Components India	125000	INR	20-09-2026 22:46	INV-20919	Supplier invoice settlement
+TXN-10920	VEND-105	Orion Manufacturing Co	34000	INR	01-09-2026 19:41	INV-20920	Purchase order payment
+TXN-10921	VEND-105	Orion Manufacturing Co	56000	INR	20-09-2026 08:13	INV-20921	Service invoice payment
+TXN-10922	VEND-102	Vertex Industrial Systems	84500	INR	17-09-2026 14:43	INV-20922	Purchase order payment
+TXN-10923	VEND-108	Metro Facilities Pvt Ltd	15000	INR	24-09-2026 19:15	INV-20923	Service invoice payment
+TXN-10924	VEND-105	Orion Manufacturing Co	56000	INR	13-09-2026 22:16	INV-20924	Service invoice payment
+TXN-10925	VEND-105	Orion Manufacturing Co	67500	INR	13-09-2026 16:15	INV-20925	Supplier invoice settlement
+TXN-10926	VEND-107	Prime Components India	42000	INR	16-09-2026 04:37	INV-20926	Service invoice payment
+TXN-10927	VEND-109	Sapphire Security Systems	67500	INR	02-09-2026 01:50	INV-20927	Purchase order payment
+TXN-10928	VEND-109	Sapphire Security Systems	125000	INR	19-09-2026 12:51	INV-20928	Service invoice payment
+TXN-10929	VEND-100	TechNova India Pvt Ltd	42000	INR	03-09-2026 00:35	INV-20929	ERP remittance
+TXN-10930	VEND-100	TechNova India Pvt Ltd	92000	INR	18-09-2026 09:16	INV-20930	Supplier invoice settlement
+TXN-10931	VEND-102	Vertex Industrial Systems	125000	INR	17-09-2026 03:23	INV-20931	Supplier invoice settlement
+TXN-10932	VEND-106	Nimbus Cloud Services	180000	INR	26-09-2026 15:50	INV-20932	ERP remittance
+TXN-10933	VEND-107	Prime Components India	8500	INR	12-09-2026 01:48	INV-20933	ERP remittance
+TXN-10934	VEND-102	Vertex Industrial Systems	84500	INR	12-09-2026 04:02	INV-20934	Supplier invoice settlement
+TXN-10935	VEND-101	Global Logistics Solutions	12000	INR	14-09-2026 13:22	INV-20935	Goods receipt settlement
+TXN-10936	VEND-104	BluePeak Consulting	12000	INR	09-09-2026 14:16	INV-20936	ERP remittance
+TXN-10937	VEND-109	Sapphire Security Systems	22000	INR	24-09-2026 07:46	INV-20937	ERP remittance
+TXN-10938	VEND-107	Prime Components India	27500	INR	15-09-2026 16:24	INV-20938	Supplier invoice settlement
+TXN-10939	VEND-103	Apex Office Supplies	34000	INR	22-09-2026 15:03	INV-20939	Supplier invoice settlement
+TXN-10940	VEND-109	Sapphire Security Systems	84500	INR	26-09-2026 17:10	INV-20940	ERP remittance
+TXN-10941	VEND-107	Prime Components India	125000	INR	13-09-2026 17:54	INV-20941	Service invoice payment
+TXN-10942	VEND-101	Global Logistics Solutions	56000	INR	10-09-2026 04:00	INV-20942	Goods receipt settlement
+TXN-10943	VEND-105	Orion Manufacturing Co	8500	INR	04-09-2026 15:11	INV-20943	ERP remittance
+TXN-10944	VEND-100	TechNova India Pvt Ltd	8500	INR	28-09-2026 02:18	INV-20944	Purchase order payment
+TXN-10945	VEND-105	Orion Manufacturing Co	8500	INR	23-09-2026 04:03	INV-20945	Purchase order payment
+TXN-10946	VEND-109	Sapphire Security Systems	125000	INR	20-09-2026 19:49	INV-20946	Goods receipt settlement
+TXN-10947	VEND-102	Vertex Industrial Systems	18500	INR	18-09-2026 10:33	INV-20947	Supplier invoice settlement
+TXN-10948	VEND-101	Global Logistics Solutions	84500	INR	23-09-2026 12:10	INV-20948	Supplier invoice settlement
+TXN-10949	VEND-108	Metro Facilities Pvt Ltd	15000	INR	15-09-2026 21:30	INV-20949	ERP remittance
+TXN-10950	VEND-106	Nimbus Cloud Services	27500	INR	01-10-2026 04:22	INV-20950	Goods receipt settlement
+TXN-10951	VEND-103	Apex Office Supplies	92000	INR	26-09-2026 23:58	INV-20951	ERP remittance
+TXN-10952	VEND-105	Orion Manufacturing Co	22000	INR	30-09-2026 08:51	INV-20952	Purchase order payment
+TXN-10953	VEND-106	Nimbus Cloud Services	42000	INR	17-09-2026 16:08	INV-20953	ERP remittance
+TXN-10954	VEND-108	Metro Facilities Pvt Ltd	27500	INR	12-09-2026 06:18	INV-20954	Purchase order payment
+TXN-10955	VEND-103	Apex Office Supplies	180000	INR	18-09-2026 05:52	INV-20955	Supplier invoice settlement
+TXN-10956	VEND-109	Sapphire Security Systems	125000	INR	03-09-2026 22:07	INV-20956	Purchase order payment
+TXN-10957	VEND-106	Nimbus Cloud Services	22000	INR	29-09-2026 00:12	INV-20957	Supplier invoice settlement
+TXN-10958	VEND-109	Sapphire Security Systems	8500	INR	03-09-2026 12:19	INV-20958	ERP remittance
+TXN-10959	VEND-109	Sapphire Security Systems	18500	INR	05-09-2026 08:14	INV-20959	Service invoice payment
+TXN-10960	VEND-106	Nimbus Cloud Services	15000	INR	16-09-2026 09:39	INV-20960	Supplier invoice settlement
+TXN-10961	VEND-103	Apex Office Supplies	8500	INR	22-09-2026 14:50	INV-20961	Supplier invoice settlement
+TXN-10962	VEND-103	Apex Office Supplies	8500	INR	11-09-2026 20:12	INV-20962	Service invoice payment
+TXN-10963	VEND-100	TechNova India Pvt Ltd	34000	INR	15-09-2026 13:55	INV-20963	Supplier invoice settlement
+TXN-10964	VEND-102	Vertex Industrial Systems	34000	INR	13-09-2026 18:12	INV-20964	Service invoice payment
+TXN-10965	VEND-100	TechNova India Pvt Ltd	8500	INR	28-09-2026 16:25	INV-20965	Service invoice payment
+TXN-10966	VEND-107	Prime Components India	12000	INR	17-09-2026 20:37	INV-20966	Supplier invoice settlement
+TXN-10967	VEND-109	Sapphire Security Systems	84500	INR	23-09-2026 06:52	INV-20967	Supplier invoice settlement
+TXN-10968	VEND-104	BluePeak Consulting	42000	INR	17-09-2026 09:24	INV-20968	ERP remittance
+TXN-10969	VEND-109	Sapphire Security Systems	56000	INR	18-09-2026 22:46	INV-20969	ERP remittance
+TXN-10970	VEND-108	Metro Facilities Pvt Ltd	8500	INR	23-09-2026 04:56	INV-20970	Supplier invoice settlement
+TXN-10971	VEND-103	Apex Office Supplies	180000	INR	09-09-2026 14:45	INV-20971	Purchase order payment
+TXN-10972	VEND-104	BluePeak Consulting	12000	INR	17-09-2026 05:02	INV-20972	Service invoice payment
+TXN-10973	VEND-102	Vertex Industrial Systems	8500	INR	12-09-2026 00:20	INV-20973	Purchase order payment
+TXN-10974	VEND-107	Prime Components India	18500	INR	30-09-2026 23:37	INV-20974	Purchase order payment
+TXN-10975	VEND-103	Apex Office Supplies	12000	INR	24-09-2026 20:44	INV-20975	ERP remittance
+TXN-10976	VEND-103	Apex Office Supplies	8500	INR	23-09-2026 12:26	INV-20976	Goods receipt settlement
+TXN-10977	VEND-104	BluePeak Consulting	8500	INR	18-09-2026 20:03	INV-20977	Supplier invoice settlement
+TXN-10978	VEND-106	Nimbus Cloud Services	27500	INR	05-09-2026 20:42	INV-20978	Supplier invoice settlement
+TXN-10979	VEND-108	Metro Facilities Pvt Ltd	56000	INR	29-09-2026 14:39	INV-20979	ERP remittance
+TXN-10980	VEND-103	Apex Office Supplies	67500	INR	10-09-2026 22:00	INV-20980	Supplier invoice settlement
+TXN-20004	VEND-101	Global Logistics Solutions	135000	INR	03-09-2026 17:15	INV-31002	Duplicate supplier payment candidate
+TXN-20005	VEND-101	Global Logistics Solutions	135000	INR	03-09-2026 17:36	INV-31002	Duplicate supplier payment candidate
+TXN-20006	VEND-103	Apex Office Supplies	110000	INR	11-09-2026 17:38	INV-31003	Duplicate supplier payment candidate
+TXN-20007	VEND-103	Apex Office Supplies	110000	INR	11-09-2026 17:43	INV-31003	Duplicate supplier payment candidate
+TXN-20008	VEND-102	Vertex Industrial Systems	135000	INR	12-09-2026 15:15	INV-31004	Duplicate supplier payment candidate
+TXN-20009	VEND-102	Vertex Industrial Systems	135000	INR	12-09-2026 15:50	INV-31004	Duplicate supplier payment candidate
+TXN-20010	VEND-108	Metro Facilities Pvt Ltd	110000	INR	22-09-2026 20:09	INV-31005	Duplicate supplier payment candidate
+TXN-20011	VEND-108	Metro Facilities Pvt Ltd	110000	INR	22-09-2026 20:20	INV-31005	Duplicate supplier payment candidate
+TXN-20012	VEND-103	Apex Office Supplies	180000	INR	25-09-2026 00:58	INV-31006	Duplicate supplier payment candidate
+TXN-20013	VEND-103	Apex Office Supplies	180000	INR	25-09-2026 01:33	INV-31006	Duplicate supplier payment candidate
+TXN-20014	VEND-102	Vertex Industrial Systems	135000	INR	20-09-2026 13:03	INV-31007	Duplicate supplier payment candidate
+TXN-20015	VEND-102	Vertex Industrial Systems	135000	INR	20-09-2026 13:34	INV-31007	Duplicate supplier payment candidate
+TXN-20016	VEND-105	Orion Manufacturing Co	22500	INR	13-09-2026 20:24	INV-31008	Duplicate supplier payment candidate
+TXN-20017	VEND-105	Orion Manufacturing Co	22500	INR	13-09-2026 20:47	INV-31008	Duplicate supplier payment candidate
+TXN-20018	VEND-107	Prime Components India	110000	INR	12-09-2026 02:40	INV-31009	Duplicate supplier payment candidate
+TXN-20019	VEND-107	Prime Components India	110000	INR	12-09-2026 02:44	INV-31009	Duplicate supplier payment candidate
+TXN-20020	VEND-106	Nimbus Cloud Services	84500	INR	12-09-2026 10:42	INV-31010	Duplicate supplier payment candidate
+TXN-20021	VEND-106	Nimbus Cloud Services	84500	INR	12-09-2026 10:54	INV-31010	Duplicate supplier payment candidate
+TXN-8392	VEND-882	Acme Cloud Services Ltd.	84500	INR	12-09-2026 10:14	INV-1001	Cloud services payment
+TXN-8417	VEND-882	Acme Cloud Services Ltd.	84500	INR	12-09-2026 10:31	INV-1001	Cloud services payment
