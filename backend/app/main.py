@@ -4,8 +4,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.investigations import (
     router as investigations_router,
 )
+
 from app.routes.detection import (
     router as detection_router,
+)
+
+from app.routes.import_csv import (
+    router as import_csv_router,
 )
 
 
@@ -14,6 +19,8 @@ app = FastAPI(
     description="Human-in-the-loop financial investigation engine",
     version="1.0.0",
 )
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -26,8 +33,14 @@ app.add_middleware(
 )
 
 
+# Existing investigation API
 app.include_router(investigations_router)
+
+# Existing detection API
 app.include_router(detection_router)
+
+# CSV import API
+app.include_router(import_csv_router)
 
 
 @app.get("/")
