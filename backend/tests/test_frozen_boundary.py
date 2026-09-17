@@ -16,7 +16,10 @@ class TestFrozenBoundary(unittest.TestCase):
 
     def test_no_forbidden_imports(self):
         pkg_root = pathlib.Path(__file__).parent.parent
-        py_files = list(pkg_root.rglob("*.py"))
+        py_files = [
+            p for p in pkg_root.rglob("*.py")
+            if "venv" not in p.parts and ".venv" not in p.parts
+        ]
         self.assertGreater(len(py_files), 5, "Should find multiple python source files in package")
 
         violations = []

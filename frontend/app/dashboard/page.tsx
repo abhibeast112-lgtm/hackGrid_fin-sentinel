@@ -4,14 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { CashflowTrendChart } from '@/components/dashboard/CashflowTrendChart';
 import { ExceptionsTable } from '@/components/dashboard/ExceptionsTable';
+import { MetricKpiCard } from '@/components/dashboard/MetricKpiCard';
 import { fetchExceptions } from '@/lib/api-client';
 import { FinancialException } from '@/lib/types';
 import { INITIAL_EXCEPTIONS } from '@/lib/mock-data';
-import { 
-  ArrowUpRight, 
-  AlertTriangle, 
-  RefreshCw
-} from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { useTheme } from '@/lib/theme-context';
 
 export default function DashboardPage() {
@@ -55,7 +52,7 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       {/* Top Header & Surveillance Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 transition-all duration-300 ease-in-out">
         <div>
           <div className="flex items-center gap-3">
             <h1 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
@@ -65,10 +62,10 @@ export default function DashboardPage() {
               className={`hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium ${
                 isMorning
                   ? 'bg-stone-100 text-stone-700 border border-stone-200'
-                  : 'bg-slate-800/80 text-slate-300 border border-white/10'
+                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
               }`}
             >
-              <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-stone-500' : 'bg-emerald-500'}`} />
+              <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-stone-500' : 'bg-emerald-400'}`} />
               Surveillance Mesh Active
             </span>
           </div>
@@ -81,7 +78,7 @@ export default function DashboardPage() {
           <button
             onClick={handleManualRefresh}
             disabled={refreshing}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all active:scale-95 disabled:opacity-50 ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all duration-200 active:scale-95 disabled:opacity-50 ${
               isMorning
                 ? 'bg-white hover:bg-[#f6efe6] border border-[#eadbce] text-[#1c1917] shadow-xs'
                 : 'bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white'
@@ -93,141 +90,94 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Screen 1: Metric Cards (4 Grid Layout) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        
+      {/* Screen 1: Interactive Metric KPI Accordions (4 Grid Layout with Dynamic Layout Reflows) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-300 ease-in-out">
         {/* Card 1: Total Cash Position */}
-        <div
-          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
-            isMorning
-              ? 'bg-white/10 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-white/[0.01] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
-          }`}
-        >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
-            <span>TOTAL CASH POSITION</span>
-            <span
-              className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
-                isMorning
-                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                  : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-              }`}
-            >
-              <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
-              +4.2%
-            </span>
-          </div>
-          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
-            ₹42.8 L
-          </div>
-          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
-            <span>Liquid Reserves</span>
-            <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>HDFC + ICICI Pools</span>
-          </div>
-        </div>
+        <MetricKpiCard
+          id="kpi-cash"
+          title="TOTAL CASH POSITION"
+          value="₹42.8 L"
+          badgeText="+4.2%"
+          badgeType="emerald"
+          footerLabel="Liquid Reserves"
+          footerValue="HDFC + ICICI Pools"
+          sparklineData={[38.2, 39.5, 40.1, 41.2, 41.8, 42.8]}
+          sparklineColor="#10b981"
+          deltaDescription="+₹1.8L vs Target"
+          breakdownItems={[
+            { label: 'HDFC Corporate Treasury', value: '₹28.5 L', highlightColor: 'emerald' },
+            { label: 'ICICI Operations Escrow', value: '₹14.3 L' },
+            { label: 'Coverage Runway Ratio', value: '48 Days' },
+          ]}
+        />
 
         {/* Card 2: Monthly Revenue */}
-        <div
-          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
-            isMorning
-              ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-white/[0.00] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
-          }`}
-        >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
-            <span>MONTHLY REVENUE</span>
-            <span
-              className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
-                isMorning
-                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                  : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-              }`}
-            >
-              <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
-              +12.4%
-            </span>
-          </div>
-          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
-            ₹1.82 Cr
-          </div>
-          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
-            <span>Target: ₹1.62 Cr</span>
-            <span className={`font-mono font-medium ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>112% Target</span>
-          </div>
-        </div>
+        <MetricKpiCard
+          id="kpi-revenue"
+          title="MONTHLY REVENUE"
+          value="₹1.82 Cr"
+          badgeText="+12.4%"
+          badgeType="emerald"
+          footerLabel="Target: ₹1.62 Cr"
+          footerValue="112% Target"
+          sparklineData={[1.45, 1.52, 1.64, 1.58, 1.71, 1.82]}
+          sparklineColor="#10b981"
+          deltaDescription="+₹20L Above Plan"
+          breakdownItems={[
+            { label: 'Domestic Supply Billing', value: '₹1.24 Cr', highlightColor: 'emerald' },
+            { label: 'Direct Exports Wire', value: '₹0.58 Cr' },
+            { label: 'Collection Realization', value: '96.2%' },
+          ]}
+        />
 
         {/* Card 3: Monthly Expenses */}
-        <div
-          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
-            isMorning
-              ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-white/[0.00] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
-          }`}
-        >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
-            <span>MONTHLY EXPENSES</span>
-            <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                isMorning
-                  ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                  : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-              }`}
-            >
-              <AlertTriangle className="h-3 w-3" />
-              +18.4%
-            </span>
-          </div>
-          <div className={`mt-3 text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
-            ₹1.31 Cr
-          </div>
-          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
-            <span className={isMorning ? 'text-amber-800 font-medium' : 'text-amber-400 font-medium'}>Budget Inflection</span>
-            <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>+₹20.4 L delta</span>
-          </div>
-        </div>
+        <MetricKpiCard
+          id="kpi-expenses"
+          title="MONTHLY EXPENSES"
+          value="₹1.31 Cr"
+          badgeText="+18.4%"
+          badgeType="amber"
+          footerLabel="Budget Inflection"
+          footerValue="+₹20.4 L delta"
+          sparklineData={[1.05, 1.10, 1.18, 1.12, 1.20, 1.31]}
+          sparklineColor="#f59e0b"
+          deltaDescription="Breached Limit"
+          breakdownItems={[
+            { label: 'Vendor AP Invoices', value: '₹89.2 L', highlightColor: 'amber' },
+            { label: 'Operational Freight', value: '₹41.8 L' },
+            { label: 'Duplicate Surcharge Spike', value: '+₹20.4 L', highlightColor: 'rose' },
+          ]}
+        />
 
-        {/* Card 4: Active Exceptions Flagged */}
-        <div
-          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-300 group ${
-            isMorning
-              ? 'bg-white/80 backdrop-blur-xl border border-[#eadbce] shadow-xs hover:border-[#dfcebe]'
-              : 'bg-white/[0.00] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-white/25'
-          }`}
-        >
-          <div className={`flex items-center justify-between text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-300'}`}>
-            <span>ACTIVE EXCEPTIONS</span>
-            <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                isMorning
-                  ? 'bg-rose-50 text-rose-800 border border-rose-200'
-                  : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
-              }`}
-            >
-              <span className={`h-1.5 w-1.5 rounded-full ${isMorning ? 'bg-rose-600' : 'bg-rose-500'}`} />
-              3 Critical
-            </span>
-          </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className={`text-3xl font-extrabold font-mono tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
-              {activeExceptionsCount} Pending
-            </span>
-            <span className={`text-xs font-mono font-medium ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
-              ₹{(totalAtRisk / 1000).toFixed(1)}k At Risk
-            </span>
-          </div>
-          <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
-            <span className={isMorning ? 'text-rose-800 font-medium' : 'text-rose-400 font-medium'}>Tiered Gates Armed</span>
-            <span className={`font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>SOX Escalation</span>
-          </div>
-        </div>
-
+        {/* Card 4: Active Exceptions */}
+        <MetricKpiCard
+          id="kpi-exceptions"
+          title="ACTIVE EXCEPTIONS"
+          value={`${activeExceptionsCount} Pending`}
+          badgeText="3 Critical"
+          badgeType="rose"
+          footerLabel="Tiered Gates Armed"
+          footerValue={`₹${(totalAtRisk / 1000).toFixed(1)}k At Risk`}
+          sparklineData={[5, 4, 6, 3, 4, 3]}
+          sparklineColor="#f43f5e"
+          deltaDescription="Quarantined"
+          breakdownItems={[
+            { label: 'EXC-101 Duplicate Pay', value: '₹84,500', highlightColor: 'rose' },
+            { label: 'EXC-102 Rate Variance', value: '₹15,000', highlightColor: 'amber' },
+            { label: 'EXC-103 Logistics Spike', value: '₹1,80,000', highlightColor: 'amber' },
+          ]}
+        />
       </div>
 
-      {/* Cashflow Trend Telemetry Chart */}
-      <CashflowTrendChart />
+      {/* Cashflow Trend Telemetry Chart with Dynamic Spatial Resizing & Viewport */}
+      <div className="transition-all duration-300 ease-in-out">
+        <CashflowTrendChart />
+      </div>
 
       {/* Critical Exceptions Table */}
-      <ExceptionsTable exceptions={exceptions} onRefresh={loadData} />
+      <div className="transition-all duration-300 ease-in-out">
+        <ExceptionsTable exceptions={exceptions} onRefresh={loadData} />
+      </div>
     </AppLayout>
   );
 }
