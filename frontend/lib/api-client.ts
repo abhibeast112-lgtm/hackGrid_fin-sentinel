@@ -230,64 +230,57 @@ export async function submitDecision(
   /*
    * IMPORTANT:
    *
-   * The current backend's /resume endpoint is the actual
-   * human decision mechanism for LangGraph checkpoints.
+   * /api/decision is a Next.js API route.
    *
-   * Final dashboard decision persistence is still using
-   * the existing frontend decision API/fallback for now.
+   * Therefore it must NOT use FASTAPI_BASE_URL.
    *
-   * We will connect this part to the backend after the
-   * checkpoint flow is working.
+   * FASTAPI_BASE_URL points to:
+   *   http://127.0.0.1:8000
+   *
+   * while the Next.js API route lives on:
+   *   http://localhost:3000/api/decision
+   *
+   * Using a relative URL automatically sends the request
+   * to the current Next.js frontend server.
    */
 
-  try {
-    const response = await fetch(
-      `${FASTAPI_BASE_URL}/api/decision`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+  const response = await fetch('/api/decision', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let message = `Decision API returned ${response.status}`;
+
+    try {
+      const errorData = await response.json();
+
+      if (errorData?.error) {
+        message = errorData.error;
+      } else if (errorData?.detail) {
+        message = errorData.detail;
       }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-
-      syncLocalDecision(payload, data.record);
-
-      return data;
+    } catch {
+      // Keep default error message
     }
-  } catch {
-    // Continue to local fallback.
+
+    throw new Error(message);
   }
 
-  /*
-   * Temporary frontend persistence.
-   * This will be replaced by the backend audit endpoint.
-   */
+  const data = await response.json();
 
-  const mockRecord: DecisionRecord = {
-    id: `DEC-${Date.now().toString().slice(-4)}`,
-    exception_id: payload.exception_id,
-    decision: payload.decision,
-    reviewer_notes: payload.reviewer_notes,
-    timestamp: new Date().toISOString(),
-    reviewer: 'Financial Controller (FC-84)',
-    audit_hash: `0x${Math.random()
-      .toString(16)
-      .substring(2, 10)}`,
-    status: 'COMMITTED',
-  };
+  if (!data?.success || !data?.record) {
+    throw new Error(
+      data?.message || 'Decision API returned an invalid response.'
+    );
+  }
 
-  syncLocalDecision(payload, mockRecord);
+  syncLocalDecision(payload, data.record);
 
-  return {
-    success: true,
-    message: `Decision [${payload.decision}] successfully committed to the immutable audit trail.`,
-    record: mockRecord,
-  };
+  return data;
 }
 
 /* =========================================================

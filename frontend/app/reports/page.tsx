@@ -73,6 +73,41 @@ export default function ReportsPage() {
   const pendingAmount = pendingExceptions.reduce((acc, curr) => acc + (curr.amount_at_risk || 0), 0);
   const resolvedAmount = resolvedExceptions.reduce((acc, curr) => acc + (curr.amount_at_risk || 0), 0);
 
+  /*
+   * The audit ledger may contain multiple historical decisions for one
+   * exception. The summary therefore uses the latest decision per exception.
+   */
+  const latestDecisionByException = useMemo(() => {
+    const latest = new Map<string, DecisionRecord>();
+
+    for (const decision of uniqueDecisions) {
+      const existing = latest.get(decision.exception_id);
+
+      if (
+        !existing ||
+        new Date(decision.timestamp).getTime() >
+          new Date(existing.timestamp).getTime()
+      ) {
+        latest.set(decision.exception_id, decision);
+      }
+    }
+
+    return latest;
+  }, [uniqueDecisions]);
+
+  const getResolvedDecisionLabel = (exception: FinancialException) => {
+    const latestDecision = latestDecisionByException.get(exception.id);
+
+    if (latestDecision?.decision === 'REJECT') return 'BLOCKED';
+    if (latestDecision?.decision === 'ESCALATE') return 'ESCALATED';
+    if (latestDecision?.decision === 'APPROVE') return 'APPROVED';
+
+    if (exception.status === 'RESOLVED_REJECT') return 'BLOCKED';
+    if (exception.status === 'RESOLVED_ESCALATE') return 'ESCALATED';
+
+    return 'APPROVED';
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -316,7 +351,7 @@ export default function ReportsPage() {
                         : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
                     }`}
                   >
-                    {resolvedExceptions.length + uniqueDecisions.length} Interceptions
+                    {resolvedExceptions.length} Interceptions
                   </span>
                 </div>
 
@@ -327,7 +362,7 @@ export default function ReportsPage() {
                       : '₹1,24,000 Saved'}
                   </span>
                   <span className={`text-xs font-mono font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
-                    100% Capital Preserved
+                    {resolvedExceptions.length > 0 ? 'Decision Recorded' : 'Awaiting Decision'}
                   </span>
                 </div>
 
@@ -344,7 +379,7 @@ export default function ReportsPage() {
                         <ExternalLink className="h-3 w-3 opacity-60 inline shrink-0" />
                       </Link>
                       <span className={`font-bold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
-                        {e.status === 'RESOLVED_REJECT' ? 'BLOCKED' : 'APPROVED'} · {e.formatted_amount}
+                        {getResolvedDecisionLabel(e)} · {e.formatted_amount}
                       </span>
                     </div>
                   ))}
@@ -383,10 +418,10 @@ export default function ReportsPage() {
                 <span className={`font-mono font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>₹{totalAtRisk.toLocaleString('en-IN')}</span> in anomalous accounts payable requests across {exceptions.length} critical suppliers prior to ledger clearance. These variances were evaluated by the multi-agent cognitive architecture utilizing counterfactual adversarial proofing and tiered checkpoint gates.
               </p>
               <p>
-                Most significantly, exception <strong>EXC-101 (Acme Systems, ₹84,500)</strong> demonstrated an acute duplicate invoice payment attempt generated across parallel ERP queues within a 17-minute delta. The Adversarial Challenge Agent disproved vendor claims of contractual installment tranches, proving 100% upfront satisfaction under PO-902. Step-by-step human sign-off ensures complete segregation of duties before transaction release.
+                Most significantly, exception <strong>EXC-101 (Acme Systems, ₹84,500)</strong> demonstrated an acute duplicate invoice payment attempt generated across parallel ERP queues within a 17-minute delta. The Adversarial Challenge Agent disproved vendor claims of contractual installment tranches, proving 100% upfront satisfaction under PO-902. Step-by-step human sign-off ensures complete segregation of duties before transaction release. The latest recorded dashboard decision for this exception is <strong>{getResolvedDecisionLabel(exceptions.find((e) => e.id === 'EXC-101') || INITIAL_EXCEPTIONS[0])}</strong>.
               </p>
               <p>
-                Additionally, <strong>EXC-102 (TechCorp India, ₹15,000 rate variance)</strong> and <strong>EXC-103 (Global Logistics, ₹1,80,000 volume surge)</strong> highlight the necessity of immediate supplier contract enforcement and gate telemetry audits. With 4 autonomous evaluator nodes and tiered human checkpoints active, Acme Manufacturing maintains a 100% SOX-compliant defensive posture.
+                Additionally, <strong>EXC-102 (TechCorp India, ₹15,000 rate variance)</strong> and <strong>EXC-103 (Global Logistics, ₹1,80,000 volume surge)</strong> highlight the necessity of immediate supplier contract enforcement and gate telemetry audits. With 4 autonomous evaluator nodes and tiered human checkpoints active, Acme Manufacturing maintains a audit-oriented defensive posture with tiered human checkpoints
               </p>
             </div>
 
@@ -397,7 +432,7 @@ export default function ReportsPage() {
               </div>
               <div className={`flex items-center gap-2 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>
                 <Lock className="h-3.5 w-3.5" />
-                <span>Cryptographically Sealed: SHA-256 (SOX-404 Compliant)</span>
+                <span>Cryptographically Sealed: SHA-256 Audit Hash </span>
               </div>
             </div>
           </div>
@@ -436,7 +471,7 @@ export default function ReportsPage() {
                 Immutable Decision Audit Trail (Live Ledger)
               </h3>
               <span className={`text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
-                Tamper-Resistant SHA Hash Verification
+                SHA-256 Audit Hash Verification
               </span>
             </div>
 

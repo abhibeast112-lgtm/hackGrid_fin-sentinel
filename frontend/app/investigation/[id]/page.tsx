@@ -10,7 +10,13 @@ import {
   submitDecision,
   resumeInvestigation,
 } from '@/lib/api-client';
-import { InvestigationDetail, SourceDocument, DecisionType, DecisionRecord, AgentTimelineStep } from '@/lib/types';
+import {
+  InvestigationDetail,
+  SourceDocument,
+  DecisionType,
+  DecisionRecord,
+  AgentTimelineStep,
+} from '@/lib/types';
 import { INVESTIGATION_DATABASE } from '@/lib/mock-data';
 import {
   Shield,
@@ -29,7 +35,7 @@ import {
   ArrowRight,
   UserCheck,
   Loader2,
-  CheckCheck
+  CheckCheck,
 } from 'lucide-react';
 import { useTheme } from '@/lib/theme-context';
 
@@ -43,21 +49,164 @@ export default function InvestigationRoomPage() {
   const [data, setData] = useState<InvestigationDetail>(
     INVESTIGATION_DATABASE[id] || INVESTIGATION_DATABASE['EXC-101']
   );
-  const [selectedDoc, setSelectedDoc] = useState<SourceDocument | null>(null);
+
+  const [selectedDoc, setSelectedDoc] =
+    useState<SourceDocument | null>(null);
+
   const [reviewerNotes, setReviewerNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [decisionRecord, setDecisionRecord] = useState<DecisionRecord | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [decisionRecord, setDecisionRecord] =
+    useState<DecisionRecord | null>(null);
+  const [toastMessage, setToastMessage] =
+    useState<string | null>(null);
   const [copiedHash, setCopiedHash] = useState(false);
 
   // Tiered Human Checkpoint States
-  const [timelineSteps, setTimelineSteps] = useState<AgentTimelineStep[]>([]);
-  const [activeStepIndex, setActiveStepIndex] = useState<number>(2);
-  const [isAdvancingStep, setIsAdvancingStep] = useState<boolean>(false);
-  const [stepAdvancingMsg, setStepAdvancingMsg] = useState<string>('');
+  const [timelineSteps, setTimelineSteps] =
+    useState<AgentTimelineStep[]>([]);
+
+  const [activeStepIndex, setActiveStepIndex] =
+    useState<number>(2);
+
+  const [isAdvancingStep, setIsAdvancingStep] =
+    useState<boolean>(false);
+
+  const [stepAdvancingMsg, setStepAdvancingMsg] =
+    useState<string>('');
+
+  /*
+   * Synchronize the visual 4-gate timeline with the actual
+   * LangGraph backend state.
+   *
+   * Backend flow:
+   *
+   * orchestrator checkpoint
+   *        ↓
+   * specialist
+   *        ↓
+   * evidence checkpoint
+   *        ↓
+   * challenge checkpoint
+   *        ↓
+   * completed
+   *
+   * The frontend has four visual agent gates:
+   *
+   * Gate 1 = Orchestrator
+   * Gate 2 = Risk Investigator / Specialist
+   * Gate 3 = Evidence
+   * Gate 4 = Adversarial Challenge
+   *
+   * Specialist itself has no human interrupt, so once the backend
+   * reaches specialist/evidence, Gates 1 and 2 are considered
+   * completed and Gate 3 becomes the active human-verification stage.
+   */
+  const updateTimelineFromBackend = (currentStep: string) => {
+    setTimelineSteps((prev) =>
+      prev.map((step) => {
+        let status: AgentTimelineStep['status'] = 'locked';
+
+        /*
+         * The specialist node has completed and the next
+         * human checkpoint is the Evidence stage.
+         */
+        if (currentStep === 'specialist') {
+          if (step.step <= 2) {
+            status = 'completed';
+          } else if (step.step === 3) {
+            status = 'awaiting_input';
+          }
+        }
+
+        /*
+         * Evidence has completed and the next human
+         * checkpoint is the Challenge stage.
+         */
+        else if (currentStep === 'evidence') {
+          if (step.step <= 2) {
+            status = 'completed';
+          } else if (step.step === 3) {
+            status = 'awaiting_input';
+          }
+        }
+
+        /*
+         * Challenge is now the active human checkpoint.
+         */
+        else if (currentStep === 'challenge') {
+          if (step.step <= 3) {
+            status = 'completed';
+          } else if (step.step === 4) {
+            status = 'awaiting_input';
+          }
+        }
+
+        /*
+         * LangGraph has completed the entire investigation.
+         */
+        else if (currentStep === 'completed') {
+          if (step.step <= 4) {
+            status = 'completed';
+          }
+        }
+
+        /*
+         * Fallback for an initial/start state.
+         *
+         * The existing mock UI starts the high-risk case at
+         * the first visible human verification stage.
+         */
+        else if (currentStep === 'start') {
+          if (step.step === 1) {
+            status = 'completed';
+          } else if (step.step === 2) {
+            status = 'awaiting_input';
+          }
+        }
+
+        return {
+          ...step,
+          status,
+          confirmedByHuman:
+            status === 'completed'
+              ? true
+              : step.confirmedByHuman,
+        };
+      })
+    );
+  };
+
+  /*
+   * Determine which visual gate should be displayed as active
+   * after receiving the backend response.
+   */
+  const getActiveGateFromBackendStep = (
+    currentStep: string
+  ): number => {
+    switch (currentStep) {
+      case 'start':
+        return 2;
+
+      case 'specialist':
+        return 3;
+
+      case 'evidence':
+        return 3;
+
+      case 'challenge':
+        return 4;
+
+      case 'completed':
+        return 5;
+
+      default:
+        return 2;
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
+
     fetchInvestigation(id)
       .then((detail) => {
         if (isMounted && detail) {
@@ -67,7 +216,10 @@ export default function InvestigationRoomPage() {
         }
       })
       .catch((err) => {
-        console.error('Error fetching investigation:', err);
+        console.error(
+          'Error fetching investigation:',
+          err
+        );
       });
 
     return () => {
@@ -76,80 +228,142 @@ export default function InvestigationRoomPage() {
   }, [id]);
 
   const requiresApproval = data.requires_approval;
-  const agentSteps = timelineSteps.filter((s) => s.step <= 4);
-  const allGatesCompleted = !requiresApproval || agentSteps.every((s) => s.status === 'completed');
 
-const handleConfirmStep = async (stepNumber: number) => {
-  setIsAdvancingStep(true);
-  setStepAdvancingMsg(`Confirming Gate ${stepNumber}...`);
+  const agentSteps = timelineSteps.filter(
+    (s) => s.step <= 4
+  );
 
-  try {
-    /*
-     * The frontend step number is only a UI concept.
-     * LangGraph itself decides which checkpoint comes next.
-     *
-     * The backend investigation ID is required here.
-     */
-    const investigationId =
-      data.backend_investigation_id || data.id;
-
-    const response = await resumeInvestigation(
-      investigationId,
-      'APPROVE',
-      `Human approved checkpoint ${stepNumber}.`,
-      'frontend_reviewer'
+  const allGatesCompleted =
+    !requiresApproval ||
+    agentSteps.every(
+      (s) => s.status === 'completed'
     );
 
-    console.log(
-      'LangGraph checkpoint response:',
-      response
+  const handleConfirmStep = async (
+    stepNumber: number
+  ) => {
+    if (isAdvancingStep) return;
+
+    setIsAdvancingStep(true);
+    setStepAdvancingMsg(
+      `Confirming Gate ${stepNumber}...`
     );
 
-    /*
-     * Backend has actually resumed the graph.
-     * Update the UI using the backend response.
-     */
-    setActiveStepIndex((prev) => prev + 1);
+    try {
+      /*
+       * The frontend step number is only a visual/UI concept.
+       * LangGraph decides which checkpoint is actually active.
+       *
+       * Always use the real backend investigation ID when
+       * available.
+       */
+      const investigationId =
+        data.backend_investigation_id || data.id;
 
-    if (response.status === 'COMPLETED') {
-      setStepAdvancingMsg(
-        'Investigation completed successfully.'
+      /*
+       * Do not send the visual Gate number to the backend.
+       *
+       * The visual gate numbers and LangGraph checkpoint
+       * numbers are not identical.
+       *
+       * A generic reviewer message keeps the audit trail
+       * accurate instead of recording a false checkpoint number.
+       */
+      const response = await resumeInvestigation(
+        investigationId,
+        'APPROVE',
+        'Human approved the active investigation checkpoint.',
+        'frontend_reviewer'
       );
-    } else {
-      setStepAdvancingMsg(
-        response.checkpoint_prompt ||
-          `Gate ${stepNumber} confirmed.`
+
+      console.log(
+        'LangGraph checkpoint response:',
+        response
       );
+
+      /*
+       * IMPORTANT:
+       *
+       * The backend is now the source of truth for the
+       * investigation state.
+       */
+      if (response.current_step) {
+        updateTimelineFromBackend(
+          response.current_step
+        );
+
+        setActiveStepIndex(
+          getActiveGateFromBackendStep(
+            response.current_step
+          )
+        );
+      }
+
+      /*
+       * Investigation workflow is finished.
+       *
+       * Note:
+       * requires_approval = false here means there are no more
+       * LangGraph investigation checkpoints.
+       *
+       * It does NOT mean the final financial decision has been
+       * automatically made. The existing final decision panel
+       * still requires the reviewer to Approve / Reject /
+       * Escalate.
+       */
+      if (response.status === 'COMPLETED') {
+        setData((prev) => ({
+          ...prev,
+          requires_approval: false,
+        }));
+
+        setActiveStepIndex(5);
+
+        setStepAdvancingMsg(
+          'Investigation completed successfully.'
+        );
+      } else {
+        setStepAdvancingMsg(
+          response.checkpoint_prompt ||
+            `Gate ${stepNumber} confirmed.`
+        );
+      }
+
+      /*
+       * Give the UI a short moment to display the result.
+       */
+      setTimeout(() => {
+        setIsAdvancingStep(false);
+        setStepAdvancingMsg('');
+      }, 500);
+    } catch (error) {
+      console.error(
+        'Failed to resume investigation:',
+        error
+      );
+
+      setStepAdvancingMsg(
+        error instanceof Error
+          ? error.message
+          : 'Failed to contact investigation backend.'
+      );
+
+      setIsAdvancingStep(false);
+    }
+  };
+
+  const handleDecision = async (
+    decision: DecisionType
+  ) => {
+    if (isSubmitting || !allGatesCompleted) {
+      return;
     }
 
-    /*
-     * Give the UI a short moment to display the result.
-     */
-    setTimeout(() => {
-      setIsAdvancingStep(false);
-      setStepAdvancingMsg('');
-    }, 500);
-  } catch (error) {
-    console.error(
-      'Failed to resume investigation:',
-      error
-    );
-
-    setStepAdvancingMsg(
-      error instanceof Error
-        ? error.message
-        : 'Failed to contact investigation backend.'
-    );
-
-    setIsAdvancingStep(false);
-  }
-};
-
-  const handleDecision = async (decision: DecisionType) => {
-    if (isSubmitting || !allGatesCompleted) return;
-
     setIsSubmitting(true);
-    const finalNotes = reviewerNotes.trim() || getDefaultNotes(decision);
+
+    const finalNotes =
+      reviewerNotes.trim() ||
+      getDefaultNotes(decision);
 
     try {
       const response = await submitDecision({
@@ -160,38 +374,57 @@ const handleConfirmStep = async (stepNumber: number) => {
 
       if (response.success) {
         setDecisionRecord(response.record);
+
         setToastMessage(
           `Decision [${decision}] permanently sealed to audit trail with cryptographic hash ${response.record.audit_hash}.`
         );
       }
     } catch (err) {
       console.error('Decision error:', err);
-      setToastMessage('Error recording decision. Please try again.');
+
+      setToastMessage(
+        'Error recording decision. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const getDefaultNotes = (decision: DecisionType) => {
+  const getDefaultNotes = (
+    decision: DecisionType
+  ) => {
     if (decision === 'REJECT') {
       return `Transaction blocked based on refutation of installment hypothesis. Unreconciled anomaly for ${data.vendor}.`;
     }
+
     if (decision === 'APPROVE') {
       return `Override approved by Controller following manual verification of ERP ledger.`;
     }
+
     return `Escalated to CFO due to material exposure of ${data.formatted_amount}.`;
   };
 
   const copyHash = (hash: string) => {
     navigator.clipboard.writeText(hash);
+
     setCopiedHash(true);
-    setTimeout(() => setCopiedHash(false), 2000);
+
+    setTimeout(
+      () => setCopiedHash(false),
+      2000
+    );
   };
 
   return (
     <AppLayout>
       {/* Top Header & Quick Switcher */}
-      <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
+      <div
+        className={`flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b ${
+          isMorning
+            ? 'border-[#eadbce]'
+            : 'border-white/10'
+        }`}
+      >
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
@@ -203,15 +436,38 @@ const handleConfirmStep = async (stepNumber: number) => {
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
+
           <div>
-            <div className={`flex items-center gap-2 text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+            <div
+              className={`flex items-center gap-2 text-xs font-mono ${
+                isMorning
+                  ? 'text-[#78716c]'
+                  : 'text-slate-400'
+              }`}
+            >
               <span>CONTROL TOWER</span>
               <span>/</span>
               <span>INVESTIGATION</span>
               <span>/</span>
-              <span className={`font-bold ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>{data.id}</span>
+
+              <span
+                className={`font-bold ${
+                  isMorning
+                    ? 'text-[#c51636]'
+                    : 'text-emerald-400'
+                }`}
+              >
+                {data.id}
+              </span>
             </div>
-            <h1 className={`text-xl sm:text-2xl font-extrabold tracking-tight mt-0.5 flex items-center gap-3 ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+
+            <h1
+              className={`text-xl sm:text-2xl font-extrabold tracking-tight mt-0.5 flex items-center gap-3 ${
+                isMorning
+                  ? 'text-[#1c1917]'
+                  : 'text-white'
+              }`}
+            >
               {data.vendor} · {data.title}
             </h1>
           </div>
@@ -227,7 +483,13 @@ const handleConfirmStep = async (stepNumber: number) => {
                   : 'bg-amber-500/10 text-amber-400 border border-amber-500/25'
               }`}
             >
-              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-amber-600' : 'bg-amber-400'}`} />
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  isMorning
+                    ? 'bg-amber-600'
+                    : 'bg-amber-400'
+                }`}
+              />
               Tiered Human Checkpoints Enforced
             </span>
           ) : (
@@ -238,8 +500,14 @@ const handleConfirmStep = async (stepNumber: number) => {
                   : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
               }`}
             >
-              <CheckCheck className={`h-3.5 w-3.5 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`} />
-              Auto-Verified Pipeline
+              <CheckCheck
+                className={`h-3.5 w-3.5 ${
+                  isMorning
+                    ? 'text-emerald-700'
+                    : 'text-emerald-400'
+                }`}
+              />
+              Investigation Checkpoints Complete
             </span>
           )}
 
@@ -250,8 +518,21 @@ const handleConfirmStep = async (stepNumber: number) => {
                 : 'bg-white/[0.04] border-white/10'
             }`}
           >
-            <span className={`px-2 text-[11px] uppercase font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>Cases:</span>
-            {['EXC-101', 'EXC-102', 'EXC-103'].map((caseId) => (
+            <span
+              className={`px-2 text-[11px] uppercase font-semibold ${
+                isMorning
+                  ? 'text-[#78716c]'
+                  : 'text-slate-400'
+              }`}
+            >
+              Cases:
+            </span>
+
+            {[
+              'EXC-101',
+              'EXC-102',
+              'EXC-103',
+            ].map((caseId) => (
               <Link
                 key={caseId}
                 href={`/investigation/${caseId}`}
@@ -285,30 +566,113 @@ const handleConfirmStep = async (stepNumber: number) => {
             <div className="flex items-start gap-3.5">
               <div
                 className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl font-bold ${
-                  isMorning ? 'bg-emerald-600 text-white' : 'bg-emerald-500 text-slate-950'
+                  isMorning
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-emerald-500 text-slate-950'
                 }`}
               >
                 <CheckCircle2 className="h-5 w-5" />
               </div>
+
               <div className="space-y-1">
                 <h4 className="text-sm font-bold flex items-center gap-2">
                   Action Executed & Sealed
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-emerald-900/60 border border-emerald-600 text-emerald-300'}`}>
+
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                      isMorning
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                        : 'bg-emerald-900/60 border border-emerald-600 text-emerald-300'
+                    }`}
+                  >
                     STATUS: COMMITTED
                   </span>
                 </h4>
-                <p className={`text-xs ${isMorning ? 'text-[#57534e]' : 'text-slate-300'}`}>{toastMessage}</p>
+
+                <p
+                  className={`text-xs ${
+                    isMorning
+                      ? 'text-[#57534e]'
+                      : 'text-slate-300'
+                  }`}
+                >
+                  {toastMessage}
+                </p>
+
                 {decisionRecord && (
-                  <div className={`mt-2 flex flex-wrap items-center gap-4 text-xs font-mono ${isMorning ? 'text-[#57534e]' : 'text-emerald-300'}`}>
-                    <span>Audit ID: <strong className={isMorning ? 'text-[#1c1917]' : 'text-white'}>{decisionRecord.id}</strong></span>
-                    <span>Decision: <strong className={isMorning ? 'text-[#1c1917]' : 'text-white'}>{decisionRecord.decision}</strong></span>
+                  <div
+                    className={`mt-2 flex flex-wrap items-center gap-4 text-xs font-mono ${
+                      isMorning
+                        ? 'text-[#57534e]'
+                        : 'text-emerald-300'
+                    }`}
+                  >
+                    <span>
+                      Audit ID:{' '}
+                      <strong
+                        className={
+                          isMorning
+                            ? 'text-[#1c1917]'
+                            : 'text-white'
+                        }
+                      >
+                        {decisionRecord.id}
+                      </strong>
+                    </span>
+
+                    <span>
+                      Decision:{' '}
+                      <strong
+                        className={
+                          isMorning
+                            ? 'text-[#1c1917]'
+                            : 'text-white'
+                        }
+                      >
+                        {decisionRecord.decision}
+                      </strong>
+                    </span>
+
                     <span className="flex items-center gap-1.5">
-                      Hash: <span className={`px-2 py-0.5 rounded-md border font-bold ${isMorning ? 'bg-white border-[#eadbce] text-[#c51636]' : 'bg-slate-900/80 border-emerald-500/30 text-white'}`}>{decisionRecord.audit_hash}</span>
-                      <button onClick={() => copyHash(decisionRecord.audit_hash)} className="hover:opacity-75 transition-opacity">
-                        {copiedHash ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+                      Hash:{' '}
+                      <span
+                        className={`px-2 py-0.5 rounded-md border font-bold ${
+                          isMorning
+                            ? 'bg-white border-[#eadbce] text-[#c51636]'
+                            : 'bg-slate-900/80 border-emerald-500/30 text-white'
+                        }`}
+                      >
+                        {decisionRecord.audit_hash}
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          copyHash(
+                            decisionRecord.audit_hash
+                          )
+                        }
+                        className="hover:opacity-75 transition-opacity"
+                      >
+                        {copiedHash ? (
+                          <Check className="h-3 w-3 text-emerald-600" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
                       </button>
                     </span>
-                    <span>Signer: <strong className={isMorning ? 'text-[#1c1917]' : 'text-white'}>{decisionRecord.reviewer}</strong></span>
+
+                    <span>
+                      Signer:{' '}
+                      <strong
+                        className={
+                          isMorning
+                            ? 'text-[#1c1917]'
+                            : 'text-white'
+                        }
+                      >
+                        {decisionRecord.reviewer}
+                      </strong>
+                    </span>
                   </div>
                 )}
               </div>
@@ -318,12 +682,18 @@ const handleConfirmStep = async (stepNumber: number) => {
               <Link
                 href="/reports"
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all ${
-                  isMorning ? 'bg-[#c51636] text-white hover:bg-[#a8132e]' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
+                  isMorning
+                    ? 'bg-[#c51636] text-white hover:bg-[#a8132e]'
+                    : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
                 }`}
               >
                 View Audit Report &rarr;
               </Link>
-              <button onClick={() => setToastMessage(null)} className="text-slate-400 hover:opacity-75 p-1 text-sm">
+
+              <button
+                onClick={() => setToastMessage(null)}
+                className="text-slate-400 hover:opacity-75 p-1 text-sm"
+              >
                 &times;
               </button>
             </div>
@@ -333,8 +703,7 @@ const handleConfirmStep = async (stepNumber: number) => {
 
       {/* 3-Column Split View Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        {/* COLUMN 1 (Left - 30% width / lg:col-span-4): Tiered Multi-Agent Stepper Gates */}
+        {/* COLUMN 1 */}
         <div className="lg:col-span-4 space-y-4">
           <div
             className={`rounded-2xl p-5 transition-all duration-300 ${
@@ -343,9 +712,14 @@ const handleConfirmStep = async (stepNumber: number) => {
                 : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-white/25 text-white'
             }`}
           >
-            
             {/* Stepper Header */}
-            <div className={`flex items-center justify-between pb-4 border-b ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
+            <div
+              className={`flex items-center justify-between pb-4 border-b ${
+                isMorning
+                  ? 'border-[#eadbce]'
+                  : 'border-white/10'
+              }`}
+            >
               <div className="flex items-center gap-2.5">
                 <div
                   className={`flex h-7 w-7 items-center justify-center rounded-lg border ${
@@ -356,28 +730,63 @@ const handleConfirmStep = async (stepNumber: number) => {
                 >
                   <ShieldCheck className="h-4 w-4" />
                 </div>
+
                 <div>
-                  <h3 className={`text-sm font-bold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                  <h3
+                    className={`text-sm font-bold tracking-tight ${
+                      isMorning
+                        ? 'text-[#1c1917]'
+                        : 'text-white'
+                    }`}
+                  >
                     Multi-Agent Approval Gates
                   </h3>
-                  <span className={`text-[11px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
-                    {requiresApproval ? 'Step-by-Step Human Verification' : 'Autonomous Trace Completed'}
+
+                  <span
+                    className={`text-[11px] font-mono ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
+                    {requiresApproval
+                      ? 'Step-by-Step Human Verification'
+                      : 'Autonomous Trace Completed'}
                   </span>
                 </div>
               </div>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce] text-[#78716c]' : 'bg-white/[0.06] text-slate-300 border border-white/10'}`}>
+
+              <span
+                className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
+                  isMorning
+                    ? 'bg-[#fcfaf6] border-[#eadbce] text-[#78716c]'
+                    : 'bg-white/[0.06] text-slate-300 border border-white/10'
+                }`}
+              >
                 4 Gates
               </span>
             </div>
 
             {/* Stepper Steps */}
-            <div className={`relative mt-5 space-y-5 before:absolute before:left-4 before:top-3 before:bottom-3 before:w-[2px] ${isMorning ? 'before:bg-[#eadbce]' : 'before:bg-white/10'}`}>
+            <div
+              className={`relative mt-5 space-y-5 before:absolute before:left-4 before:top-3 before:bottom-3 before:w-[2px] ${
+                isMorning
+                  ? 'before:bg-[#eadbce]'
+                  : 'before:bg-white/10'
+              }`}
+            >
               {timelineSteps.map((step) => {
-                const isCompleted = step.status === 'completed';
-                const isAwaiting = step.status === 'awaiting_input';
+                const isCompleted =
+                  step.status === 'completed';
+
+                const isAwaiting =
+                  step.status === 'awaiting_input';
 
                 return (
-                  <div key={step.step} className="relative flex items-start gap-3.5">
+                  <div
+                    key={step.step}
+                    className="relative flex items-start gap-3.5"
+                  >
                     {/* Stepper Node Icon */}
                     <div
                       className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold transition-all ${
@@ -420,19 +829,44 @@ const handleConfirmStep = async (stepNumber: number) => {
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className={`text-xs font-bold tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                        <span
+                          className={`text-xs font-bold tracking-tight ${
+                            isMorning
+                              ? 'text-[#1c1917]'
+                              : 'text-white'
+                          }`}
+                        >
                           Gate {step.step}: {step.agent}
                         </span>
-                        <span className={`text-[10px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                        <span
+                          className={`text-[10px] font-mono ${
+                            isMorning
+                              ? 'text-[#78716c]'
+                              : 'text-slate-400'
+                          }`}
+                        >
                           {step.duration}
                         </span>
                       </div>
 
-                      <div className={`text-[11px] font-mono mt-0.5 ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                      <div
+                        className={`text-[11px] font-mono mt-0.5 ${
+                          isMorning
+                            ? 'text-[#78716c]'
+                            : 'text-slate-400'
+                        }`}
+                      >
                         {step.role} · {step.timestamp}
                       </div>
 
-                      <p className={`text-xs leading-relaxed mt-1.5 ${isMorning ? 'text-[#57534e]' : 'text-slate-300'}`}>
+                      <p
+                        className={`text-xs leading-relaxed mt-1.5 ${
+                          isMorning
+                            ? 'text-[#57534e]'
+                            : 'text-slate-300'
+                        }`}
+                      >
                         {step.description}
                       </p>
 
@@ -456,45 +890,83 @@ const handleConfirmStep = async (stepNumber: number) => {
                           {isCompleted ? (
                             <CheckCircle2 className="h-3 w-3 text-emerald-600" />
                           ) : (
-                            <Clock className={`h-3 w-3 ${isMorning ? 'text-[#c51636]' : 'text-amber-400'}`} />
+                            <Clock
+                              className={`h-3 w-3 ${
+                                isMorning
+                                  ? 'text-[#c51636]'
+                                  : 'text-amber-400'
+                              }`}
+                            />
                           )}
+
                           {step.badge}
                         </span>
 
-                        {isCompleted && step.confirmedByHuman && (
-                          <span className={`text-[10px] font-mono font-semibold flex items-center gap-1 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
-                            <Check className="h-2.5 w-2.5" /> Human Verified
+                        {isCompleted && (
+                          <span
+                            className={`text-[10px] font-mono font-semibold flex items-center gap-1 ${
+                              isMorning
+                                ? 'text-emerald-700'
+                                : 'text-emerald-400'
+                            }`}
+                          >
+                            <Check className="h-2.5 w-2.5" />
+                            {step.step === 2
+                              ? 'Agent Verified'
+                              : step.confirmedByHuman
+                                ? 'Human Verified'
+                                : 'Completed'}
                           </span>
                         )}
                       </div>
 
-                      {/* Action Button under active step */}
-                      {requiresApproval && isAwaiting && step.step <= 4 && (
-                        <div className={`mt-3 pt-3 border-t ${isMorning ? 'border-rose-200' : 'border-amber-500/20'}`}>
-                          <button
-                            onClick={() => handleConfirmStep(step.step)}
-                            disabled={isAdvancingStep}
-                            className={`w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                      {/* Action Button */}
+                      {requiresApproval &&
+                        isAwaiting &&
+                        step.step <= 4 && (
+                          <div
+                            className={`mt-3 pt-3 border-t ${
                               isMorning
-                                ? 'bg-[#c51636] hover:bg-[#a8132e] text-white shadow-sm'
-                                : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 backdrop-blur-lg shadow-[0_4px_16px_rgba(16,185,129,0.15)]'
+                                ? 'border-rose-200'
+                                : 'border-amber-500/20'
                             }`}
                           >
-                            {isAdvancingStep ? (
-                              <>
-                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                <span>{stepAdvancingMsg}</span>
-                              </>
-                            ) : (
-                              <>
-                                <ShieldCheck className="h-3.5 w-3.5" />
-                                <span>{step.confirmLabel || `Confirm Gate ${step.step} Finding`}</span>
-                                <ArrowRight className="h-3 w-3 ml-1" />
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      )}
+                            <button
+                              onClick={() =>
+                                handleConfirmStep(
+                                  step.step
+                                )
+                              }
+                              disabled={isAdvancingStep}
+                              className={`w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 disabled:opacity-50 ${
+                                isMorning
+                                  ? 'bg-[#c51636] hover:bg-[#a8132e] text-white shadow-sm'
+                                  : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 backdrop-blur-lg shadow-[0_4px_16px_rgba(16,185,129,0.15)]'
+                              }`}
+                            >
+                              {isAdvancingStep ? (
+                                <>
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+
+                                  <span>
+                                    {stepAdvancingMsg}
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <ShieldCheck className="h-3.5 w-3.5" />
+
+                                  <span>
+                                    {step.confirmLabel ||
+                                      `Confirm Gate ${step.step} Finding`}
+                                  </span>
+
+                                  <ArrowRight className="h-3 w-3 ml-1" />
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        )}
                     </div>
                   </div>
                 );
@@ -502,23 +974,46 @@ const handleConfirmStep = async (stepNumber: number) => {
             </div>
 
             {/* Telemetry Footer */}
-            <div className={`mt-6 pt-4 border-t text-xs font-mono space-y-1.5 ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
+            <div
+              className={`mt-6 pt-4 border-t text-xs font-mono space-y-1.5 ${
+                isMorning
+                  ? 'border-[#eadbce] text-[#78716c]'
+                  : 'border-white/10 text-slate-400'
+              }`}
+            >
               <div className="flex justify-between">
                 <span>Ensemble Architecture:</span>
-                <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>4 Cognitive Nodes</span>
+
+                <span
+                  className={`font-semibold ${
+                    isMorning
+                      ? 'text-[#1c1917]'
+                      : 'text-white'
+                  }`}
+                >
+                  4 Cognitive Nodes
+                </span>
               </div>
+
               <div className="flex justify-between">
                 <span>Pipeline Integrity:</span>
-                <span className={`font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>SHA-256 HMAC Sealed</span>
+
+                <span
+                  className={`font-semibold ${
+                    isMorning
+                      ? 'text-emerald-700'
+                      : 'text-emerald-400'
+                  }`}
+                >
+                  SHA-256 HMAC Sealed
+                </span>
               </div>
             </div>
-
           </div>
         </div>
 
-        {/* COLUMN 2 (Middle - 45% width / lg:col-span-5): Discrepancy & Evidence Viewer */}
+        {/* COLUMN 2 */}
         <div className="lg:col-span-5 space-y-5">
-          
           {/* Anomaly Header Card */}
           <div
             className={`rounded-2xl p-5 transition-all duration-300 ${
@@ -536,45 +1031,103 @@ const handleConfirmStep = async (stepNumber: number) => {
                       : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
                   }`}
                 >
-                  {data.risk_level} · Risk Score: {data.risk_score}/100
+                  {data.risk_level} · Risk Score:{' '}
+                  {data.risk_score}/100
                 </span>
-                <h2 className={`text-lg font-bold mt-2.5 tracking-tight ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+
+                <h2
+                  className={`text-lg font-bold mt-2.5 tracking-tight ${
+                    isMorning
+                      ? 'text-[#1c1917]'
+                      : 'text-white'
+                  }`}
+                >
                   {data.title}
                 </h2>
-                <div className={`flex flex-wrap items-center gap-3 mt-1.5 text-xs ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
-                  <span className={`flex items-center gap-1.5 font-mono ${isMorning ? 'text-[#1c1917]' : 'text-slate-200'}`}>
-                    <Building2 className={`h-3.5 w-3.5 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`} />
+
+                <div
+                  className={`flex flex-wrap items-center gap-3 mt-1.5 text-xs ${
+                    isMorning
+                      ? 'text-[#78716c]'
+                      : 'text-slate-400'
+                  }`}
+                >
+                  <span
+                    className={`flex items-center gap-1.5 font-mono ${
+                      isMorning
+                        ? 'text-[#1c1917]'
+                        : 'text-slate-200'
+                    }`}
+                  >
+                    <Building2
+                      className={`h-3.5 w-3.5 ${
+                        isMorning
+                          ? 'text-[#c51636]'
+                          : 'text-emerald-400'
+                      }`}
+                    />
+
                     Vendor: {data.vendor}
                   </span>
+
                   <span>•</span>
-                  <span>Category: {data.vendor_category}</span>
+
+                  <span>
+                    Category: {data.vendor_category}
+                  </span>
                 </div>
               </div>
 
               <div className="text-right shrink-0">
-                <div className={`text-[11px] font-mono uppercase font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                <div
+                  className={`text-[11px] font-mono uppercase font-semibold ${
+                    isMorning
+                      ? 'text-[#78716c]'
+                      : 'text-slate-400'
+                  }`}
+                >
                   Amount at Risk
                 </div>
-                <div className={`text-2xl font-extrabold font-mono tracking-tight mt-0.5 ${isMorning ? 'text-[#c51636]' : 'text-white'}`}>
+
+                <div
+                  className={`text-2xl font-extrabold font-mono tracking-tight mt-0.5 ${
+                    isMorning
+                      ? 'text-[#c51636]'
+                      : 'text-white'
+                  }`}
+                >
                   {data.formatted_amount}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Side-by-Side Comparison Cards (Box A vs Box B) */}
+          {/* Side-by-Side Comparison Cards */}
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
-              <span className={`text-xs font-mono uppercase tracking-wider font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+              <span
+                className={`text-xs font-mono uppercase tracking-wider font-semibold ${
+                  isMorning
+                    ? 'text-[#78716c]'
+                    : 'text-slate-400'
+                }`}
+              >
                 Side-by-Side Transaction Differential
               </span>
-              <span className={`text-xs font-mono px-2.5 py-0.5 rounded-full ${isMorning ? 'bg-rose-100 text-[#c51636] border border-rose-200' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
+
+              <span
+                className={`text-xs font-mono px-2.5 py-0.5 rounded-full ${
+                  isMorning
+                    ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                }`}
+              >
                 17-Minute Interval
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Box A (Recorded Payment 1) */}
+              {/* Box A */}
               <div
                 className={`rounded-2xl p-4 space-y-3 relative overflow-hidden transition-all duration-300 ${
                   isMorning
@@ -582,41 +1135,143 @@ const handleConfirmStep = async (stepNumber: number) => {
                     : 'bg-white/[0.04] backdrop-blur-xl border border-emerald-500/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-emerald-500/45'
                 }`}
               >
-                <div className={`absolute top-0 left-0 right-0 h-1 ${isMorning ? 'bg-emerald-600' : 'bg-emerald-400'}`} />
+                <div
+                  className={`absolute top-0 left-0 right-0 h-1 ${
+                    isMorning
+                      ? 'bg-emerald-600'
+                      : 'bg-emerald-400'
+                  }`}
+                />
+
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs font-bold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>
+                  <span
+                    className={`text-xs font-bold ${
+                      isMorning
+                        ? 'text-emerald-700'
+                        : 'text-emerald-400'
+                    }`}
+                  >
                     {data.comparison.box_a.title}
                   </span>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/25'}`}>
+
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                      isMorning
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                        : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/25'
+                    }`}
+                  >
                     {data.comparison.box_a.status}
                   </span>
                 </div>
 
                 <div className="space-y-2 font-mono text-xs">
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Txn Ref:</span>
-                    <span className={`font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{data.comparison.box_a.txn_id}</span>
+
+                    <span
+                      className={`font-bold ${
+                        isMorning
+                          ? 'text-[#1c1917]'
+                          : 'text-white'
+                      }`}
+                    >
+                      {data.comparison.box_a.txn_id}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Date:</span>
-                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_a.date}</span>
+
+                    <span
+                      className={
+                        isMorning
+                          ? 'text-[#1c1917]'
+                          : 'text-slate-200'
+                      }
+                    >
+                      {data.comparison.box_a.date}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Amount:</span>
-                    <span className={`font-bold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>{data.comparison.box_a.amount}</span>
+
+                    <span
+                      className={`font-bold ${
+                        isMorning
+                          ? 'text-emerald-700'
+                          : 'text-emerald-400'
+                      }`}
+                    >
+                      {data.comparison.box_a.amount}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Invoice:</span>
-                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_a.invoice_ref}</span>
+
+                    <span
+                      className={
+                        isMorning
+                          ? 'text-[#1c1917]'
+                          : 'text-slate-200'
+                      }
+                    >
+                      {data.comparison.box_a.invoice_ref}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Beneficiary:</span>
-                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_a.beneficiary_account}</span>
+
+                    <span
+                      className={
+                        isMorning
+                          ? 'text-[#1c1917]'
+                          : 'text-slate-200'
+                      }
+                    >
+                      {
+                        data.comparison.box_a
+                          .beneficiary_account
+                      }
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Box B (Flagged Payment 2) */}
+              {/* Box B */}
               <div
                 className={`rounded-2xl p-4 space-y-3 relative overflow-hidden transition-all duration-300 ${
                   isMorning
@@ -624,36 +1279,138 @@ const handleConfirmStep = async (stepNumber: number) => {
                     : 'bg-white/[0.04] backdrop-blur-xl border border-rose-500/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:bg-white/[0.08] hover:border-rose-500/45'
                 }`}
               >
-                <div className={`absolute top-0 left-0 right-0 h-1 ${isMorning ? 'bg-[#c51636]' : 'bg-rose-500'}`} />
+                <div
+                  className={`absolute top-0 left-0 right-0 h-1 ${
+                    isMorning
+                      ? 'bg-[#c51636]'
+                      : 'bg-rose-500'
+                  }`}
+                />
+
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>
+                  <span
+                    className={`text-xs font-bold ${
+                      isMorning
+                        ? 'text-[#c51636]'
+                        : 'text-rose-400'
+                    }`}
+                  >
                     {data.comparison.box_b.title}
                   </span>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isMorning ? 'bg-rose-100 text-[#c51636] border border-rose-200' : 'bg-rose-500/10 text-rose-300 border border-rose-500/25'}`}>
+
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                      isMorning
+                        ? 'bg-rose-100 text-[#c51636] border border-rose-200'
+                        : 'bg-rose-500/10 text-rose-300 border border-rose-500/25'
+                    }`}
+                  >
                     {data.comparison.box_b.status}
                   </span>
                 </div>
 
                 <div className="space-y-2 font-mono text-xs">
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Txn Ref:</span>
-                    <span className={`font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>{data.comparison.box_b.txn_id}</span>
+
+                    <span
+                      className={`font-bold ${
+                        isMorning
+                          ? 'text-[#1c1917]'
+                          : 'text-white'
+                      }`}
+                    >
+                      {data.comparison.box_b.txn_id}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Date:</span>
-                    <span className={`font-semibold ${isMorning ? 'text-[#c51636]' : 'text-rose-300'}`}>{data.comparison.box_b.date}</span>
+
+                    <span
+                      className={`font-semibold ${
+                        isMorning
+                          ? 'text-[#c51636]'
+                          : 'text-rose-300'
+                      }`}
+                    >
+                      {data.comparison.box_b.date}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Amount:</span>
-                    <span className={`font-bold ${isMorning ? 'text-[#c51636]' : 'text-rose-400'}`}>{data.comparison.box_b.amount}</span>
+
+                    <span
+                      className={`font-bold ${
+                        isMorning
+                          ? 'text-[#c51636]'
+                          : 'text-rose-400'
+                      }`}
+                    >
+                      {data.comparison.box_b.amount}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Invoice:</span>
-                    <span className={`font-semibold ${isMorning ? 'text-[#c51636]' : 'text-rose-300'}`}>{data.comparison.box_b.invoice_ref}</span>
+
+                    <span
+                      className={`font-semibold ${
+                        isMorning
+                          ? 'text-[#c51636]'
+                          : 'text-rose-300'
+                      }`}
+                    >
+                      {data.comparison.box_b.invoice_ref}
+                    </span>
                   </div>
-                  <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <div
+                    className={`flex justify-between ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>Beneficiary:</span>
-                    <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-200'}>{data.comparison.box_b.beneficiary_account}</span>
+
+                    <span
+                      className={
+                        isMorning
+                          ? 'text-[#1c1917]'
+                          : 'text-slate-200'
+                      }
+                    >
+                      {
+                        data.comparison.box_b
+                          .beneficiary_account
+                      }
+                    </span>
                   </div>
                 </div>
               </div>
@@ -679,42 +1436,80 @@ const handleConfirmStep = async (stepNumber: number) => {
                 >
                   <Shield className="h-4 w-4" />
                 </div>
-                <h4 className={`text-sm font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+
+                <h4
+                  className={`text-sm font-bold ${
+                    isMorning
+                      ? 'text-[#1c1917]'
+                      : 'text-white'
+                  }`}
+                >
                   {data.adversarial_verdict.title}
                 </h4>
               </div>
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold border ${isMorning ? 'bg-rose-100 text-[#c51636] border-rose-200' : 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/25'}`}>
-                Confidence: {data.adversarial_verdict.confidence}
+
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold border ${
+                  isMorning
+                    ? 'bg-rose-100 text-[#c51636] border-rose-200'
+                    : 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/25'
+                }`}
+              >
+                Confidence:{' '}
+                {data.adversarial_verdict.confidence}
               </span>
             </div>
 
-            <p className={`text-xs leading-relaxed p-3.5 rounded-xl border ${isMorning ? 'bg-white border-[#eadbce] text-[#1c1917]' : 'bg-slate-900/40 backdrop-blur-md border-white/10 text-slate-200'}`}>
-              &ldquo;{data.adversarial_verdict.verdict}&rdquo;
+            <p
+              className={`text-xs leading-relaxed p-3.5 rounded-xl border ${
+                isMorning
+                  ? 'bg-white border-[#eadbce] text-[#1c1917]'
+                  : 'bg-slate-900/40 backdrop-blur-md border-white/10 text-slate-200'
+              }`}
+            >
+              &ldquo;
+              {data.adversarial_verdict.verdict}
+              &rdquo;
             </p>
 
             <div className="flex flex-wrap gap-2 pt-1">
-              {data.adversarial_verdict.flags.map((flag, i) => (
-                <span
-                  key={i}
-                  className={`text-[11px] font-mono px-2.5 py-1 rounded-full border ${
-                    isMorning
-                      ? 'bg-white border-[#eadbce] text-[#57534e]'
-                      : 'bg-white/[0.04] border-white/10 text-slate-300'
-                  }`}
-                >
-                  • {flag}
-                </span>
-              ))}
+              {data.adversarial_verdict.flags.map(
+                (flag, i) => (
+                  <span
+                    key={i}
+                    className={`text-[11px] font-mono px-2.5 py-1 rounded-full border ${
+                      isMorning
+                        ? 'bg-white border-[#eadbce] text-[#57534e]'
+                        : 'bg-white/[0.04] border-white/10 text-slate-300'
+                    }`}
+                  >
+                    • {flag}
+                  </span>
+                )
+              )}
             </div>
           </div>
 
           {/* Source Document Link Cards */}
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
-              <span className={`text-xs font-mono uppercase tracking-wider font-semibold ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+              <span
+                className={`text-xs font-mono uppercase tracking-wider font-semibold ${
+                  isMorning
+                    ? 'text-[#78716c]'
+                    : 'text-slate-400'
+                }`}
+              >
                 Cross-Source Evidence Dossier (Click to Inspect)
               </span>
-              <span className={`text-xs font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+              <span
+                className={`text-xs font-mono ${
+                  isMorning
+                    ? 'text-[#78716c]'
+                    : 'text-slate-400'
+                }`}
+              >
                 3 Artifacts Verified
               </span>
             </div>
@@ -740,27 +1535,54 @@ const handleConfirmStep = async (stepNumber: number) => {
                     >
                       <FileText className="h-4 w-4" />
                     </div>
-                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce] text-[#78716c]' : 'bg-white/[0.06] text-slate-300 border border-white/10'}`}>
+
+                    <span
+                      className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                        isMorning
+                          ? 'bg-[#fcfaf6] border-[#eadbce] text-[#78716c]'
+                          : 'bg-white/[0.06] text-slate-300 border border-white/10'
+                      }`}
+                    >
                       {doc.type}
                     </span>
                   </div>
 
-                  <span className={`mt-2.5 text-xs font-bold transition-colors truncate w-full font-mono ${isMorning ? 'text-[#1c1917] group-hover:text-[#c51636]' : 'text-white group-hover:text-emerald-400'}`}>
+                  <span
+                    className={`mt-2.5 text-xs font-bold transition-colors truncate w-full font-mono ${
+                      isMorning
+                        ? 'text-[#1c1917] group-hover:text-[#c51636]'
+                        : 'text-white group-hover:text-emerald-400'
+                    }`}
+                  >
                     {doc.filename}
                   </span>
 
-                  <div className={`mt-1 flex items-center justify-between w-full text-[11px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+                  <div
+                    className={`mt-1 flex items-center justify-between w-full text-[11px] font-mono ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     <span>{doc.size}</span>
-                    <span className={`font-semibold ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`}>SHA-256</span>
+
+                    <span
+                      className={`font-semibold ${
+                        isMorning
+                          ? 'text-emerald-700'
+                          : 'text-emerald-400'
+                      }`}
+                    >
+                      SHA-256
+                    </span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
-
         </div>
 
-        {/* COLUMN 3 (Right - 25% width / lg:col-span-3): Human Checkpoint & Action Panel */}
+        {/* COLUMN 3 */}
         <div className="lg:col-span-3 space-y-4">
           <div
             className={`sticky top-20 rounded-2xl p-5 space-y-5 transition-all duration-300 ${
@@ -769,9 +1591,14 @@ const handleConfirmStep = async (stepNumber: number) => {
                 : 'bg-white/[0.04] backdrop-blur-xl border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-white/25 text-white'
             }`}
           >
-            
             {/* Header */}
-            <div className={`flex items-center justify-between border-b pb-4 ${isMorning ? 'border-[#eadbce]' : 'border-white/10'}`}>
+            <div
+              className={`flex items-center justify-between border-b pb-4 ${
+                isMorning
+                  ? 'border-[#eadbce]'
+                  : 'border-white/10'
+              }`}
+            >
               <div className="flex items-center gap-2.5">
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-xl border ${
@@ -782,60 +1609,177 @@ const handleConfirmStep = async (stepNumber: number) => {
                 >
                   <UserCheck className="h-4 w-4" />
                 </div>
+
                 <div>
-                  <h3 className={`text-sm font-bold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+                  <h3
+                    className={`text-sm font-bold ${
+                      isMorning
+                        ? 'text-[#1c1917]'
+                        : 'text-white'
+                    }`}
+                  >
                     Final Sign-off Authority
                   </h3>
-                  <span className={`text-[11px] font-mono ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+                  <span
+                    className={`text-[11px] font-mono ${
+                      isMorning
+                        ? 'text-[#78716c]'
+                        : 'text-slate-400'
+                    }`}
+                  >
                     SLA: 02h 14m Remaining
                   </span>
                 </div>
               </div>
-              <span className={`h-2 w-2 rounded-full ${isMorning ? 'bg-[#c51636]' : 'bg-emerald-400'}`} />
+
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  isMorning
+                    ? 'bg-[#c51636]'
+                    : 'bg-emerald-400'
+                }`}
+              />
             </div>
 
             {/* Status Banner */}
             {!allGatesCompleted ? (
-              <div className={`rounded-xl p-3.5 space-y-1.5 border ${isMorning ? 'bg-amber-50 border-amber-200 text-amber-950' : 'bg-amber-500/10 border-amber-500/30 text-amber-200'}`}>
+              <div
+                className={`rounded-xl p-3.5 space-y-1.5 border ${
+                  isMorning
+                    ? 'bg-amber-50 border-amber-200 text-amber-950'
+                    : 'bg-amber-500/10 border-amber-500/30 text-amber-200'
+                }`}
+              >
                 <div className="flex items-center gap-2 text-xs font-bold font-mono">
-                  <Lock className={`h-3.5 w-3.5 ${isMorning ? 'text-amber-800' : 'text-amber-400'}`} />
-                  <span>Decision Panel Locked</span>
+                  <Lock
+                    className={`h-3.5 w-3.5 ${
+                      isMorning
+                        ? 'text-amber-800'
+                        : 'text-amber-400'
+                    }`}
+                  />
+
+                  <span>
+                    Decision Panel Locked
+                  </span>
                 </div>
+
                 <p className="text-[11px] leading-relaxed">
-                  Complete step-by-step verification first. Confirm active Gate {activeStepIndex}/4 in the trace timeline to unlock final decision.
+                  Complete step-by-step verification
+                  first. Confirm active Gate{' '}
+                  {activeStepIndex}/4 in the trace
+                  timeline to unlock final decision.
                 </p>
               </div>
             ) : (
-              <div className={`rounded-xl p-3.5 space-y-1 border ${isMorning ? 'bg-emerald-50 border-emerald-200 text-emerald-950' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'}`}>
+              <div
+                className={`rounded-xl p-3.5 space-y-1 border ${
+                  isMorning
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
+                    : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'
+                }`}
+              >
                 <div className="flex items-center gap-2 text-xs font-bold font-mono">
-                  <Unlock className={`h-3.5 w-3.5 ${isMorning ? 'text-emerald-700' : 'text-emerald-400'}`} />
-                  <span>All Gates Verified — Armed</span>
+                  <Unlock
+                    className={`h-3.5 w-3.5 ${
+                      isMorning
+                        ? 'text-emerald-700'
+                        : 'text-emerald-400'
+                    }`}
+                  />
+
+                  <span>
+                    All Gates Verified — Armed
+                  </span>
                 </div>
+
                 <p className="text-[11px]">
-                  All 4 multi-agent checkpoints confirmed. You may now commit the final decision.
+                  All 4 multi-agent stages completed and
+                  required human checkpoints confirmed.
+                  You may now commit the final decision.
                 </p>
               </div>
             )}
 
             {/* Reviewer Profile */}
-            <div className={`rounded-xl p-3 border text-xs font-mono space-y-1.5 ${isMorning ? 'bg-[#fcfaf6] border-[#eadbce]' : 'bg-slate-900/30 backdrop-blur-md border-white/10'}`}>
-              <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+            <div
+              className={`rounded-xl p-3 border text-xs font-mono space-y-1.5 ${
+                isMorning
+                  ? 'bg-[#fcfaf6] border-[#eadbce]'
+                  : 'bg-slate-900/30 backdrop-blur-md border-white/10'
+              }`}
+            >
+              <div
+                className={`flex justify-between ${
+                  isMorning
+                    ? 'text-[#78716c]'
+                    : 'text-slate-400'
+                }`}
+              >
                 <span>Active Reviewer:</span>
-                <span className={`font-semibold ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>Abhinav K.</span>
+
+                <span
+                  className={`font-semibold ${
+                    isMorning
+                      ? 'text-[#1c1917]'
+                      : 'text-white'
+                  }`}
+                >
+                  Abhinav K.
+                </span>
               </div>
-              <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+              <div
+                className={`flex justify-between ${
+                  isMorning
+                    ? 'text-[#78716c]'
+                    : 'text-slate-400'
+                }`}
+              >
                 <span>Role Authority:</span>
-                <span className={`font-semibold ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`}>Financial Controller</span>
+
+                <span
+                  className={`font-semibold ${
+                    isMorning
+                      ? 'text-[#c51636]'
+                      : 'text-emerald-400'
+                  }`}
+                >
+                  Financial Controller
+                </span>
               </div>
-              <div className={`flex justify-between ${isMorning ? 'text-[#78716c]' : 'text-slate-400'}`}>
+
+              <div
+                className={`flex justify-between ${
+                  isMorning
+                    ? 'text-[#78716c]'
+                    : 'text-slate-400'
+                }`}
+              >
                 <span>Certificate:</span>
-                <span className={isMorning ? 'text-[#1c1917]' : 'text-slate-300'}>FC-8812-SOX</span>
+
+                <span
+                  className={
+                    isMorning
+                      ? 'text-[#1c1917]'
+                      : 'text-slate-300'
+                  }
+                >
+                  FC-8812-SOX
+                </span>
               </div>
             </div>
 
             {/* Notes */}
             <div className="space-y-2">
-              <label className={`text-xs font-bold block ${isMorning ? 'text-[#1c1917]' : 'text-white'}`}>
+              <label
+                className={`text-xs font-bold block ${
+                  isMorning
+                    ? 'text-[#1c1917]'
+                    : 'text-white'
+                }`}
+              >
                 Reviewer Notes / Escalation Reason
               </label>
 
@@ -843,12 +1787,14 @@ const handleConfirmStep = async (stepNumber: number) => {
                 {[
                   'Confirmed Duplicate - Block',
                   'MSA Rate Non-Compliant',
-                  'Escalate to CFO'
+                  'Escalate to CFO',
                 ].map((preset, idx) => (
                   <button
                     key={idx}
                     type="button"
-                    onClick={() => setReviewerNotes(preset)}
+                    onClick={() =>
+                      setReviewerNotes(preset)
+                    }
                     className={`text-[10px] font-mono px-2 py-0.5 rounded-full border transition-colors ${
                       isMorning
                         ? 'bg-[#fcfaf6] hover:bg-white text-[#57534e] hover:text-[#1c1917] border-[#eadbce]'
@@ -862,7 +1808,9 @@ const handleConfirmStep = async (stepNumber: number) => {
 
               <textarea
                 value={reviewerNotes}
-                onChange={(e) => setReviewerNotes(e.target.value)}
+                onChange={(e) =>
+                  setReviewerNotes(e.target.value)
+                }
                 placeholder="Enter justification notes..."
                 rows={3}
                 className={`w-full rounded-xl p-3 text-xs font-mono transition-colors focus:outline-none ${
@@ -875,11 +1823,16 @@ const handleConfirmStep = async (stepNumber: number) => {
 
             {/* Final Action Buttons */}
             <div className="space-y-2.5 pt-1">
-              {/* Red Button: [ Reject & Block Transaction ] */}
+              {/* Reject */}
               <button
                 type="button"
-                onClick={() => handleDecision('REJECT')}
-                disabled={isSubmitting || !allGatesCompleted}
+                onClick={() =>
+                  handleDecision('REJECT')
+                }
+                disabled={
+                  isSubmitting ||
+                  !allGatesCompleted
+                }
                 className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs transition-all ${
                   allGatesCompleted
                     ? isMorning
@@ -891,14 +1844,22 @@ const handleConfirmStep = async (stepNumber: number) => {
                 }`}
               >
                 <XCircle className="h-4 w-4" />
-                <span>Reject & Block Transaction</span>
+
+                <span>
+                  Reject & Block Transaction
+                </span>
               </button>
 
-              {/* Amber Button: [ Escalate to CFO ] */}
+              {/* Escalate */}
               <button
                 type="button"
-                onClick={() => handleDecision('ESCALATE')}
-                disabled={isSubmitting || !allGatesCompleted}
+                onClick={() =>
+                  handleDecision('ESCALATE')
+                }
+                disabled={
+                  isSubmitting ||
+                  !allGatesCompleted
+                }
                 className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs transition-all ${
                   allGatesCompleted
                     ? isMorning
@@ -910,14 +1871,22 @@ const handleConfirmStep = async (stepNumber: number) => {
                 }`}
               >
                 <AlertTriangle className="h-4 w-4" />
-                <span>Escalate to CFO</span>
+
+                <span>
+                  Escalate to CFO
+                </span>
               </button>
 
-              {/* Green Button: [ Approve Payment ] */}
+              {/* Approve */}
               <button
                 type="button"
-                onClick={() => handleDecision('APPROVE')}
-                disabled={isSubmitting || !allGatesCompleted}
+                onClick={() =>
+                  handleDecision('APPROVE')
+                }
+                disabled={
+                  isSubmitting ||
+                  !allGatesCompleted
+                }
                 className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs transition-all ${
                   allGatesCompleted
                     ? isMorning
@@ -929,19 +1898,35 @@ const handleConfirmStep = async (stepNumber: number) => {
                 }`}
               >
                 <CheckCircle2 className="h-4 w-4" />
-                <span>Approve Payment</span>
+
+                <span>
+                  Approve Payment
+                </span>
               </button>
             </div>
 
             {/* Audit Notice */}
-            <div className={`pt-2 border-t text-[10px] font-mono flex items-center gap-1.5 ${isMorning ? 'border-[#eadbce] text-[#78716c]' : 'border-white/10 text-slate-400'}`}>
-              <Lock className={`h-3 w-3 ${isMorning ? 'text-[#c51636]' : 'text-emerald-400'}`} />
-              <span>Decisions signed with cryptographic hash</span>
-            </div>
+            <div
+              className={`pt-2 border-t text-[10px] font-mono flex items-center gap-1.5 ${
+                isMorning
+                  ? 'border-[#eadbce] text-[#78716c]'
+                  : 'border-white/10 text-slate-400'
+              }`}
+            >
+              <Lock
+                className={`h-3 w-3 ${
+                  isMorning
+                    ? 'text-[#c51636]'
+                    : 'text-emerald-400'
+                }`}
+              />
 
+              <span>
+                Decisions signed with cryptographic hash
+              </span>
+            </div>
           </div>
         </div>
-
       </div>
 
       {/* Source Document Modal */}

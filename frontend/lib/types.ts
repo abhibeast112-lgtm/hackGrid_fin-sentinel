@@ -113,18 +113,6 @@ export interface DecisionPayload {
   decision: DecisionType;
   reviewer_notes: string;
 }
-
-export interface DecisionRecord {
-  id: string;
-  exception_id: string;
-  decision: DecisionType;
-  reviewer_notes: string;
-  timestamp: string;
-  reviewer: string;
-  audit_hash: string;
-  status: string;
-}
-
 export interface DecisionRecord {
   id: string;
   exception_id: string;
