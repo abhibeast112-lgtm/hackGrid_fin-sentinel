@@ -1,792 +1,638 @@
 'use client';
 
-import React, {
-  useState,
-  useEffect,
-} from 'react';
-
+import React, { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { AppLayout } from '@/components/layout/AppLayout';
-
-import {
-  CashflowTrendChart,
-} from '@/components/dashboard/CashflowTrendChart';
-
-import {
-  ExceptionsTable,
-} from '@/components/dashboard/ExceptionsTable';
-
-import {
-  MetricKpiCard,
-} from '@/components/dashboard/MetricKpiCard';
-
 import {
   fetchExceptions,
-  importTransactionsCsv,
+  getStoredDecisions,
 } from '@/lib/api-client';
-
 import {
   FinancialException,
+  DecisionRecord,
 } from '@/lib/types';
-
 import {
   INITIAL_EXCEPTIONS,
+  INITIAL_DECISIONS,
 } from '@/lib/mock-data';
-
 import {
-  RefreshCw,
-  Upload,
+  Download,
+  Printer,
   CheckCircle2,
-  AlertCircle,
+  Lock,
+  Scale,
+  ExternalLink,
 } from 'lucide-react';
+import { useTheme } from '@/lib/theme-context';
 
-import {
-  useTheme,
-} from '@/lib/theme-context';
+export default function ReportsPage() {
+  const [exceptions, setExceptions] =
+    useState<FinancialException[]>(INITIAL_EXCEPTIONS);
 
+  const [decisions, setDecisions] =
+    useState<DecisionRecord[]>(INITIAL_DECISIONS);
 
-export default function DashboardPage() {
-
-  const [
-    exceptions,
-    setExceptions,
-  ] = useState<FinancialException[]>(
-    INITIAL_EXCEPTIONS
-  );
-
-
-  const [
-    refreshing,
-    setRefreshing,
-  ] = useState<boolean>(false);
-
-
-  const [
-    csvImporting,
-    setCsvImporting,
-  ] = useState<boolean>(false);
-
-
-  const [
-    csvMessage,
-    setCsvMessage,
-  ] = useState<string>('');
-
-
-  const [
-    csvError,
-    setCsvError,
-  ] = useState<string>('');
-
-
-  const {
-    theme,
-  } = useTheme();
-
-
-  const isMorning =
-    theme === 'morning';
-
-
-  /* =========================================================
-     Load dashboard data
-     ========================================================= */
-
-  const loadData =
-    async () => {
-
-      try {
-
-        const data =
-          await fetchExceptions();
-
-
-        if (
-          data?.exceptions?.length
-        ) {
-
-          setExceptions(
-            data.exceptions
-          );
-        }
-
-      } catch (e) {
-
-        console.error(
-          'Error fetching exceptions',
-          e
-        );
-
-      } finally {
-
-        setRefreshing(false);
-      }
-    };
-
+  const { theme } = useTheme();
+  const isMorning = theme === 'morning';
 
   useEffect(() => {
+    let isMounted = true;
 
-    loadData();
+    const loadReportData = async () => {
+      try {
+        const data = await fetchExceptions();
 
+        if (isMounted && data?.exceptions?.length) {
+          setExceptions(data.exceptions);
+        }
+      } catch (err) {
+        console.error(
+          'Error fetching exceptions for report:',
+          err
+        );
+      }
+
+      if (isMounted) {
+        setDecisions(getStoredDecisions());
+      }
+    };
+
+    loadReportData();
+
+    const handleStorageChange = () => {
+      loadReportData();
+    };
+
+    window.addEventListener(
+      'storage',
+      handleStorageChange
+    );
+
+    window.addEventListener(
+      'focus',
+      handleStorageChange
+    );
+
+    return () => {
+      isMounted = false;
+
+      window.removeEventListener(
+        'storage',
+        handleStorageChange
+      );
+
+      window.removeEventListener(
+        'focus',
+        handleStorageChange
+      );
+    };
   }, []);
 
+  const uniqueDecisions = useMemo(() => {
+    const seen = new Set<string>();
 
-  /* =========================================================
-     Manual refresh
-     ========================================================= */
+    return decisions.filter((decision) => {
+      const key =
+        decision.id ||
+        `${decision.exception_id}-${decision.timestamp}`;
 
-  const handleManualRefresh =
-    () => {
+      if (seen.has(key)) {
+        return false;
+      }
 
-      setRefreshing(true);
+      seen.add(key);
+      return true;
+    });
+  }, [decisions]);
 
-      setTimeout(
-        () => {
-          loadData();
-        },
-        400
-      );
+  const totalAtRisk = exceptions.reduce(
+    (sum, exception) =>
+      sum + (exception.amount_at_risk || 0),
+    0
+  );
+
+  const pendingAmount = exceptions
+    .filter(
+      (exception) =>
+        !exception.status.startsWith('RESOLVED_')
+    )
+    .reduce(
+      (sum, exception) =>
+        sum + (exception.amount_at_risk || 0),
+      0
+    );
+
+  const resolvedAmount = exceptions
+    .filter((exception) =>
+      exception.status.startsWith('RESOLVED_')
+    )
+    .reduce(
+      (sum, exception) =>
+        sum + (exception.amount_at_risk || 0),
+      0
+    );
+
+  const resolvedCount = exceptions.filter(
+    (exception) =>
+      exception.status.startsWith('RESOLVED_')
+  ).length;
+
+  const pendingCount =
+    exceptions.length - resolvedCount;
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleExportJSON = () => {
+    const reportData = {
+      title:
+        'Fin-Sentinel CFO Executive Briefing',
+      organization:
+        'Acme Manufacturing Pvt. Ltd.',
+      reporting_period:
+        'FY 2026-27 Q2 MTD',
+      generated_at:
+        new Date().toISOString(),
+      total_exposure: totalAtRisk,
+      pending_exposure: pendingAmount,
+      resolved_exposure: resolvedAmount,
+      exceptions,
+      audit_decisions: uniqueDecisions,
     };
 
-
-  /* =========================================================
-     CSV IMPORT
-     ========================================================= */
-
-  const handleCsvImport =
-    async (
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-
-      const file =
-        event.target.files?.[0];
-
-
-      /*
-       * Reset the input so the same CSV
-       * can be selected again later.
-       */
-
-      event.target.value = '';
-
-
-      if (!file) {
-        return;
+    const blob = new Blob(
+      [
+        JSON.stringify(
+          reportData,
+          null,
+          2
+        ),
+      ],
+      {
+        type: 'application/json',
       }
+    );
 
+    const url =
+      URL.createObjectURL(blob);
 
-      setCsvMessage('');
-      setCsvError('');
+    const link =
+      document.createElement('a');
 
+    link.href = url;
+    link.download =
+      `fin-sentinel-audit-report-${new Date()
+        .toISOString()
+        .slice(0, 10)}.json`;
 
-      /*
-       * Frontend validation.
-       */
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 
-      if (
-        !file.name
-          .toLowerCase()
-          .endsWith('.csv')
-      ) {
-
-        setCsvError(
-          'Please select a CSV file.'
-        );
-
-        return;
-      }
-
-
-      try {
-
-        setCsvImporting(true);
-
-
-        /*
-         * Send the actual selected file
-         * to FastAPI.
-         */
-
-        const result =
-          await importTransactionsCsv(
-            file
-          );
-
-
-        /*
-         * Display import result.
-         */
-
-        setCsvMessage(
-          `${result.filename}: ` +
-          `${result.rows_read.toLocaleString('en-IN')} rows processed · ` +
-          `${result.inserted.toLocaleString('en-IN')} inserted · ` +
-          `${result.skipped.toLocaleString('en-IN')} already present`
-        );
-
-
-        /*
-         * Refresh dashboard state.
-         */
-
-        await loadData();
-
-      } catch (error) {
-
-        setCsvError(
-          error instanceof Error
-            ? error.message
-            : 'CSV import failed.'
-        );
-
-      } finally {
-
-        setCsvImporting(false);
-      }
-    };
-
-
-  /* =========================================================
-     Dashboard metrics
-     ========================================================= */
-
-  const activeExceptionsCount =
-    exceptions.filter(
-      (e) =>
-        !e.status.startsWith(
-          'RESOLVED_'
-        )
-    ).length;
-
-
-  const totalAtRisk =
-    exceptions
-      .filter(
-        (e) =>
-          !e.status.startsWith(
-            'RESOLVED_'
-          )
-      )
-      .reduce(
-        (sum, e) =>
-          sum + e.amount_at_risk,
-        0
-      );
-
-
-  /* =========================================================
-     Render
-     ========================================================= */
+    URL.revokeObjectURL(url);
+  };
 
   return (
-
     <AppLayout>
-
-      {/* =====================================================
-          Header
-          ===================================================== */}
-
       <div
-        className="
-          flex
-          flex-col
-          sm:flex-row
-          sm:items-center
-          justify-between
-          gap-4
-          pb-2
-          transition-all
-          duration-300
-          ease-in-out
-        "
+        className={`space-y-6 ${
+          isMorning
+            ? 'text-[#1c1917]'
+            : 'text-white'
+        }`}
       >
+        {/* HEADER */}
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                CFO Executive Report
+              </h1>
 
-        <div>
-
-          <div
-            className="
-              flex
-              items-center
-              gap-3
-            "
-          >
-
-            <h1
-              className={`
-                text-2xl
-                sm:text-3xl
-                font-extrabold
-                tracking-tight
-                ${
-                  isMorning
-                    ? 'text-[#1c1917]'
-                    : 'text-white'
-                }
-              `}
-            >
-              Executive Control Tower
-            </h1>
-
-
-            <span
-              className={`
-                hidden
-                sm:inline-flex
-                items-center
-                gap-1.5
-                px-3
-                py-1
-                rounded-full
-                text-xs
-                font-mono
-                font-medium
-                ${
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium ${
                   isMorning
                     ? 'bg-stone-100 text-stone-700 border border-stone-200'
                     : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                }
-              `}
-            >
+                }`}
+              >
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Audit Ready
+              </span>
+            </div>
 
-              <span
-                className={`
-                  h-1.5
-                  w-1.5
-                  rounded-full
-                  ${
-                    isMorning
-                      ? 'bg-stone-500'
-                      : 'bg-emerald-400'
-                  }
-                `}
-              />
-
-              Surveillance Mesh Active
-
-            </span>
-
-          </div>
-
-
-          <p
-            className={`
-              text-sm
-              mt-1
-              ${
+            <p
+              className={`mt-2 text-sm ${
                 isMorning
                   ? 'text-[#78716c]'
                   : 'text-slate-400'
-              }
-            `}
+              }`}
+            >
+              CFO executive briefing and
+              decision audit dossier for
+              Acme Manufacturing Pvt. Ltd.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleExportJSON}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all duration-200 active:scale-95 ${
+                isMorning
+                  ? 'bg-white hover:bg-[#f6efe6] border border-[#eadbce] text-[#1c1917] shadow-xs'
+                  : 'bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white'
+              }`}
+            >
+              <Download className="h-3.5 w-3.5" />
+              Export JSON
+            </button>
+
+            <button
+              onClick={handlePrint}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all duration-200 active:scale-95 ${
+                isMorning
+                  ? 'bg-[#1c1917] text-white hover:bg-black'
+                  : 'bg-white text-black hover:bg-slate-100'
+              }`}
+            >
+              <Printer className="h-3.5 w-3.5" />
+              Export Audit Report (PDF)
+            </button>
+          </div>
+        </div>
+
+        {/* EXECUTIVE SUMMARY */}
+        <section
+          className={`rounded-2xl border p-6 ${
+            isMorning
+              ? 'bg-white border-[#eadbce]'
+              : 'bg-white/[0.03] border-white/10'
+          }`}
+        >
+          <div className="flex items-center gap-2 mb-5">
+            <Scale className="h-5 w-5" />
+            <h2 className="text-lg font-bold">
+              Executive Summary
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+              className={`rounded-xl border p-4 ${
+                isMorning
+                  ? 'border-[#eadbce] bg-[#faf7f3]'
+                  : 'border-white/10 bg-white/[0.02]'
+              }`}
+            >
+              <p className="text-xs font-mono opacity-60">
+                TOTAL EXPOSURE
+              </p>
+
+              <p className="mt-2 text-2xl font-bold">
+                ₹
+                {totalAtRisk.toLocaleString(
+                  'en-IN'
+                )}
+              </p>
+            </div>
+
+            <div
+              className={`rounded-xl border p-4 ${
+                isMorning
+                  ? 'border-[#eadbce] bg-[#faf7f3]'
+                  : 'border-white/10 bg-white/[0.02]'
+              }`}
+            >
+              <p className="text-xs font-mono opacity-60">
+                PENDING EXPOSURE
+              </p>
+
+              <p className="mt-2 text-2xl font-bold">
+                ₹
+                {pendingAmount.toLocaleString(
+                  'en-IN'
+                )}
+              </p>
+            </div>
+
+            <div
+              className={`rounded-xl border p-4 ${
+                isMorning
+                  ? 'border-[#eadbce] bg-[#faf7f3]'
+                  : 'border-white/10 bg-white/[0.02]'
+              }`}
+            >
+              <p className="text-xs font-mono opacity-60">
+                RESOLVED EXPOSURE
+              </p>
+
+              <p className="mt-2 text-2xl font-bold">
+                ₹
+                {resolvedAmount.toLocaleString(
+                  'en-IN'
+                )}
+              </p>
+            </div>
+
+            <div
+              className={`rounded-xl border p-4 ${
+                isMorning
+                  ? 'border-[#eadbce] bg-[#faf7f3]'
+                  : 'border-white/10 bg-white/[0.02]'
+              }`}
+            >
+              <p className="text-xs font-mono opacity-60">
+                EXCEPTIONS
+              </p>
+
+              <p className="mt-2 text-2xl font-bold">
+                {exceptions.length}
+              </p>
+
+              <p className="text-xs opacity-60 mt-1">
+                {resolvedCount} resolved ·{' '}
+                {pendingCount} pending
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* DECISION AUDIT TRAIL */}
+        <section
+          className={`rounded-2xl border overflow-hidden ${
+            isMorning
+              ? 'bg-white border-[#eadbce]'
+              : 'bg-white/[0.03] border-white/10'
+          }`}
+        >
+          <div
+            className={`px-6 py-5 border-b ${
+              isMorning
+                ? 'border-[#eadbce]'
+                : 'border-white/10'
+            }`}
           >
-            Real-time multi-agent reconciliation
-            monitoring Acme Manufacturing Pvt. Ltd.
-            treasury and AP pipelines.
-          </p>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Lock className="h-4 w-4" />
 
-        </div>
+                  <h2 className="text-lg font-bold">
+                    Immutable Decision Audit Trail
+                  </h2>
+                </div>
 
+                <p className="mt-1 text-xs opacity-60">
+                  Live ledger of investigation
+                  decisions and checkpoint outcomes.
+                </p>
+              </div>
 
-        {/* =================================================
-            Header controls
-            ================================================= */}
+              <span className="text-xs font-mono opacity-60">
+                {uniqueDecisions.length} recorded
+              </span>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-3">
+          {uniqueDecisions.length === 0 ? (
+            <div className="px-6 py-12 text-center">
+              <p className="text-sm opacity-60">
+                No decisions recorded yet.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-white/10">
+              {uniqueDecisions.map(
+                (decision) => (
+                  <div
+                    key={
+                      decision.id ||
+                      `${decision.exception_id}-${decision.timestamp}`
+                    }
+                    className="px-6 py-5"
+                  >
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                      <div>
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="font-mono text-sm font-semibold">
+                            {decision.exception_id}
+                          </span>
 
-  {/* =====================================================
-      IMPORT CSV
-      ===================================================== */}
+                          <span
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase ${
+                              decision.decision ===
+                              'APPROVE'
+                                ? 'bg-emerald-500/10 text-emerald-400'
+                                : decision.decision ===
+                                  'REJECT'
+                                ? 'bg-rose-500/10 text-rose-400'
+                                : 'bg-amber-500/10 text-amber-400'
+                            }`}
+                          >
+                            {decision.decision ===
+                            'ESCALATE'
+                              ? 'ESCALATED'
+                              : decision.decision}
+                          </span>
+                        </div>
 
-  <label
-    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all duration-200 active:scale-95 ${
-      csvImporting
-        ? 'opacity-50 cursor-not-allowed'
-        : isMorning
-          ? 'bg-white hover:bg-[#f6efe6] border border-[#eadbce] text-[#1c1917] shadow-xs cursor-pointer'
-          : 'bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white cursor-pointer'
-    }`}
-  >
+                        <p className="mt-2 text-xs opacity-60">
+                          {decision.timestamp
+                            ? new Date(
+                                decision.timestamp
+                              ).toLocaleString(
+                                'en-IN'
+                              )
+                            : 'Timestamp unavailable'}
+                        </p>
 
-    <Upload
-      className={`h-3.5 w-3.5 ${
-        isMorning
-          ? 'text-[#78716c]'
-          : 'text-slate-400'
-      }`}
-    />
+                        {decision.reviewer_notes && (
+                          <p className="mt-3 text-sm opacity-80">
+                            {decision.reviewer_notes}
+                          </p>
+                        )}
+                      </div>
 
-    <span>
-      {csvImporting
-        ? 'Importing...'
-        : 'Import CSV'}
-    </span>
+                      <div className="lg:text-right">
+                        <p className="text-[10px] font-mono opacity-50 uppercase">
+                          Audit Hash
+                        </p>
 
-    <input
-      type="file"
-      accept=".csv,text/csv"
-      className="hidden"
-      onChange={handleCsvImport}
-      disabled={csvImporting}
-    />
+                        <p className="mt-1 max-w-[320px] break-all font-mono text-[10px] opacity-70">
+                          {decision.audit_hash ||
+                            'SHA-256 hash unavailable'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </section>
 
-  </label>
-
-
-  {/* =====================================================
-      EXISTING REFRESH BUTTON
-      ===================================================== */}
-
-  <button
-    onClick={handleManualRefresh}
-    disabled={refreshing}
-    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all duration-200 active:scale-95 disabled:opacity-50 ${
-      isMorning
-        ? 'bg-white hover:bg-[#f6efe6] border border-[#eadbce] text-[#1c1917] shadow-xs'
-        : 'bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white'
-    }`}
-  >
-
-    <RefreshCw
-      className={`h-3.5 w-3.5 ${
-        isMorning
-          ? 'text-[#78716c]'
-          : 'text-slate-400'
-      } ${
-        refreshing
-          ? 'animate-spin'
-          : ''
-      }`}
-    />
-
-    <span>
-      {refreshing
-        ? 'Syncing...'
-        : 'Refresh Telemetry'}
-    </span>
-
-  </button>
-
-</div>
-
-      </div>
-
-
-      {/* =====================================================
-          CSV success message
-          ===================================================== */}
-
-      {csvMessage && (
-
-        <div
-          className={`
-            mt-3
-            flex
-            items-center
-            gap-2
-            rounded-xl
-            border
-            px-4
-            py-3
-            text-xs
-            font-mono
-            ${
-              isMorning
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
-            }
-          `}
+        {/* EXCEPTIONS */}
+        <section
+          className={`rounded-2xl border overflow-hidden ${
+            isMorning
+              ? 'bg-white border-[#eadbce]'
+              : 'bg-white/[0.03] border-white/10'
+          }`}
         >
-
-          <CheckCircle2
-            className="
-              h-4
-              w-4
-              shrink-0
-            "
-          />
-
-          <span>
-            {csvMessage}
-          </span>
-
-        </div>
-
-      )}
-
-
-      {/* =====================================================
-          CSV error message
-          ===================================================== */}
-
-      {csvError && (
-
-        <div
-          className={`
-            mt-3
-            flex
-            items-center
-            gap-2
-            rounded-xl
-            border
-            px-4
-            py-3
-            text-xs
-            font-mono
-            ${
+          <div
+            className={`px-6 py-5 border-b ${
               isMorning
-                ? 'bg-rose-50 border-rose-200 text-rose-800'
-                : 'bg-rose-500/10 border-rose-500/20 text-rose-300'
-            }
-          `}
+                ? 'border-[#eadbce]'
+                : 'border-white/10'
+            }`}
+          >
+            <h2 className="text-lg font-bold">
+              Exception Register
+            </h2>
+
+            <p className="mt-1 text-xs opacity-60">
+              Exceptions included in this audit
+              reporting period.
+            </p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr
+                  className={`text-[10px] font-mono uppercase tracking-wider ${
+                    isMorning
+                      ? 'bg-[#faf7f3]'
+                      : 'bg-white/[0.02]'
+                  }`}
+                >
+                  <th className="px-6 py-4">
+                    Exception
+                  </th>
+                  <th className="px-6 py-4">
+                    Vendor
+                  </th>
+                  <th className="px-6 py-4">
+                    Amount
+                  </th>
+                  <th className="px-6 py-4">
+                    Risk
+                  </th>
+                  <th className="px-6 py-4">
+                    Status
+                  </th>
+                  <th className="px-6 py-4">
+                    Investigation
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-white/10">
+                {exceptions.map(
+                  (exception) => (
+                    <tr
+                      key={exception.id}
+                      className="text-sm"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="font-mono text-xs font-semibold">
+                          {exception.id}
+                        </div>
+
+                        <div className="mt-1 opacity-60 text-xs">
+                          {exception.exception_type}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <div className="font-medium">
+                          {exception.vendor}
+                        </div>
+
+                        <div className="text-xs opacity-50 font-mono">
+                          {exception.vendor_code}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 font-mono">
+                        {exception.formatted_amount ||
+                          `₹${(
+                            exception.amount_at_risk ||
+                            0
+                          ).toLocaleString(
+                            'en-IN'
+                          )}`}
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="text-xs font-mono font-semibold">
+                          {exception.risk_level}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="text-xs font-mono">
+                          {exception.status}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <Link
+                          href={`/investigation/${exception.id}`}
+                          className="inline-flex items-center gap-1.5 text-xs font-mono underline underline-offset-4"
+                        >
+                          Open
+                          <ExternalLink className="h-3 w-3" />
+                        </Link>
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* AUDIT POSTURE */}
+        <section
+          className={`rounded-2xl border p-6 ${
+            isMorning
+              ? 'bg-white border-[#eadbce]'
+              : 'bg-white/[0.03] border-white/10'
+          }`}
         >
+          <div className="flex items-start gap-3">
+            <Lock className="h-5 w-5 mt-0.5 shrink-0" />
 
-          <AlertCircle
-            className="
-              h-4
-              w-4
-              shrink-0
-            "
-          />
+            <div>
+              <h2 className="font-bold">
+                Audit Control Posture
+              </h2>
 
-          <span>
-            {csvError}
-          </span>
+              <p className="mt-2 text-sm opacity-70 leading-relaxed">
+                Fin-Sentinel maintains an
+                audit-oriented defensive posture
+                with tiered human checkpoints.
+                Investigation decisions are recorded
+                in the decision audit trail and sealed
+                using SHA-256 audit hashes.
+              </p>
 
+              <p className="mt-3 text-xs font-mono opacity-50">
+                Cryptographically Sealed: SHA-256
+                Audit Hash
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* PRINT FOOTER */}
+        <div className="hidden print:block text-xs text-black pt-8 border-t border-black/20">
+          Fin-Sentinel CFO Executive Briefing ·
+          Generated {new Date().toLocaleString('en-IN')}
         </div>
-
-      )}
-
-
-      {/* =====================================================
-          KPI cards
-          ===================================================== */}
-
-      <div
-        className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-4
-          gap-4
-          transition-all
-          duration-300
-          ease-in-out
-        "
-      >
-
-        {/* Card 1 */}
-
-        <MetricKpiCard
-          id="kpi-cash"
-          title="TOTAL CASH POSITION"
-          value="₹42.8 L"
-          badgeText="+4.2%"
-          badgeType="emerald"
-          footerLabel="Liquid Reserves"
-          footerValue="HDFC + ICICI Pools"
-          sparklineData={[
-            38.2,
-            39.5,
-            40.1,
-            41.2,
-            41.8,
-            42.8,
-          ]}
-          sparklineColor="#10b981"
-          deltaDescription="+₹1.8L vs Target"
-          breakdownItems={[
-            {
-              label:
-                'HDFC Corporate Treasury',
-              value: '₹28.5 L',
-              highlightColor:
-                'emerald',
-            },
-            {
-              label:
-                'ICICI Operations Escrow',
-              value: '₹14.3 L',
-            },
-            {
-              label:
-                'Coverage Runway Ratio',
-              value: '48 Days',
-            },
-          ]}
-        />
-
-
-        {/* Card 2 */}
-
-        <MetricKpiCard
-          id="kpi-revenue"
-          title="MONTHLY REVENUE"
-          value="₹1.82 Cr"
-          badgeText="+12.4%"
-          badgeType="emerald"
-          footerLabel="Target: ₹1.62 Cr"
-          footerValue="112% Target"
-          sparklineData={[
-            1.45,
-            1.52,
-            1.64,
-            1.58,
-            1.71,
-            1.82,
-          ]}
-          sparklineColor="#10b981"
-          deltaDescription="+₹20L Above Plan"
-          breakdownItems={[
-            {
-              label:
-                'Domestic Supply Billing',
-              value: '₹1.24 Cr',
-              highlightColor:
-                'emerald',
-            },
-            {
-              label:
-                'Direct Exports Wire',
-              value: '₹0.58 Cr',
-            },
-            {
-              label:
-                'Collection Realization',
-              value: '96.2%',
-            },
-          ]}
-        />
-
-
-        {/* Card 3 */}
-
-        <MetricKpiCard
-          id="kpi-expenses"
-          title="MONTHLY EXPENSES"
-          value="₹1.31 Cr"
-          badgeText="+18.4%"
-          badgeType="amber"
-          footerLabel="Budget Inflection"
-          footerValue="+₹20.4 L delta"
-          sparklineData={[
-            1.05,
-            1.10,
-            1.18,
-            1.12,
-            1.20,
-            1.31,
-          ]}
-          sparklineColor="#f59e0b"
-          deltaDescription="Breached Limit"
-          breakdownItems={[
-            {
-              label:
-                'Vendor AP Invoices',
-              value: '₹89.2 L',
-              highlightColor:
-                'amber',
-            },
-            {
-              label:
-                'Operational Freight',
-              value: '₹41.8 L',
-            },
-            {
-              label:
-                'Duplicate Surcharge Spike',
-              value: '+₹20.4 L',
-              highlightColor:
-                'rose',
-            },
-          ]}
-        />
-
-
-        {/* Card 4 */}
-
-        <MetricKpiCard
-          id="kpi-exceptions"
-          title="ACTIVE EXCEPTIONS"
-          value={`${activeExceptionsCount} Pending`}
-          badgeText="3 Critical"
-          badgeType="rose"
-          footerLabel="Tiered Gates Armed"
-          footerValue={
-            `₹${(
-              totalAtRisk / 1000
-            ).toFixed(1)}k At Risk`
-          }
-          sparklineData={[
-            5,
-            4,
-            6,
-            3,
-            4,
-            3,
-          ]}
-          sparklineColor="#f43f5e"
-          deltaDescription="Quarantined"
-          breakdownItems={[
-            {
-              label:
-                'EXC-101 Duplicate Pay',
-              value: '₹84,500',
-              highlightColor:
-                'rose',
-            },
-            {
-              label:
-                'EXC-102 Rate Variance',
-              value: '₹15,000',
-              highlightColor:
-                'amber',
-            },
-            {
-              label:
-                'EXC-103 Logistics Spike',
-              value: '₹1,80,000',
-              highlightColor:
-                'amber',
-            },
-          ]}
-        />
-
       </div>
-
-
-      {/* =====================================================
-          Cashflow chart
-          ===================================================== */}
-
-      <div
-        className="
-          transition-all
-          duration-300
-          ease-in-out
-        "
-      >
-        <CashflowTrendChart />
-      </div>
-
-
-      {/* =====================================================
-          Existing exceptions table
-          ===================================================== */}
-
-      <div
-        className="
-          transition-all
-          duration-300
-          ease-in-out
-        "
-      >
-
-        <ExceptionsTable
-          exceptions={exceptions}
-          onRefresh={loadData}
-        />
-
-      </div>
-
     </AppLayout>
   );
 }
